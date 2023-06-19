@@ -6,6 +6,10 @@ class NonceTypes():
     """
     A class that holds the different types of nonce that can be used
     """
+    
+    INTEGER_NONCE = ["integer"]
+    NUMERIC_NONCE = ["integer", "float", "decimal"]
+    STRING_NONCE = ["string", "hexadecimal", "binary", "decimal"]
 
     def __init__(self, nonce_type: Optional[str] = None) -> None:
         """

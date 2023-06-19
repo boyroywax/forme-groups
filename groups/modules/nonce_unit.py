@@ -82,7 +82,7 @@ class NonceUnit():
                 return isinstance(nonce_unit_value, dict)
             case _:
                 return False
-            
+
     def __json__(self) -> dict:
         return {
             'nonce_unit_value': str(self.nonce_unit_value),
@@ -117,8 +117,6 @@ class NonceUnit():
 
     def __repr__(self) -> str:
         return self.__str__()
-
-
 
     def __eq__(self, other: 'NonceUnit') -> bool:
         return self.__json__() == other.__json__()
