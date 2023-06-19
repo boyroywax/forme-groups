@@ -62,6 +62,12 @@ class NonceUnit():
         match nonce_unit_type.get_active_nonce_type():
             case 'string':
                 return isinstance(nonce_unit_value, str)
+            case 'hexadecimal':
+                return isinstance(nonce_unit_value, str) and nonce_unit_value.startswith('0x')
+            case 'binary':
+                return isinstance(nonce_unit_value, str) and nonce_unit_value.startswith('0b')
+            case 'decimal':
+                return isinstance(nonce_unit_value, str) and nonce_unit_value.startswith('0d')
             case 'integer':
                 return isinstance(nonce_unit_value, int)
             case 'float':
@@ -76,6 +82,12 @@ class NonceUnit():
                 return isinstance(nonce_unit_value, dict)
             case _:
                 return False
+            
+    def __json__(self) -> dict:
+        return {
+            'nonce_unit_value': str(self.nonce_unit_value),
+            'nonce_unit_type': str(self.nonce_unit_type)
+        }
 
     def __str__(self) -> str:
         """
@@ -83,28 +95,30 @@ class NonceUnit():
         """
         match self.nonce_unit_type:
             case 'string':
-                return f'{self.nonce_unit}'
+                return f'{self.nonce_unit_value}'
+            case 'hexadecimal':
+                return f'{self.nonce_unit_value}'
+            case 'binary':
+                return f'{self.nonce_unit_value}'
+            case 'decimal':
+                return f'{self.nonce_unit_value}'
             case 'integer':
-                return f'{self.nonce_unit}'
+                return f'{self.nonce_unit_value}'
             case 'float':
-                return f'{self.nonce_unit}'
+                return f'{self.nonce_unit_value}'
             case 'boolean':
-                return f'{self.nonce_unit}'
+                return f'{self.nonce_unit_value}'
             case 'list':
-                return f'{self.nonce_unit}'
+                return f'{self.nonce_unit_value}'
             case 'tuple':
-                return f'{self.nonce_unit}'
+                return f'{self.nonce_unit_value}'
             case 'dictionary':
-                return f'{self.nonce_unit}'
+                return f'{self.nonce_unit_value}'
 
     def __repr__(self) -> str:
         return self.__str__()
 
-    def __json__(self) -> dict:
-        return {
-            'nonce_unit_value': self.nonce_unit_value,
-            'nonce_unit_type': self.nonce_unit_type
-        }
+
 
     def __eq__(self, other: 'NonceUnit') -> bool:
         return self.__json__() == other.__json__()

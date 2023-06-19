@@ -19,6 +19,9 @@ class NonceTypes():
             'list': 'list',
             'tuple': 'tuple',
             'dictionary': 'dictionary',
+            'hexadecimal': 'hex',
+            'binary': 'binary',
+            'decimal': 'decimal',
             'unknown': 'unknown'
         }
         self.active_type: Optional[str] = None
@@ -31,6 +34,19 @@ class NonceTypes():
         Returns the nonce types.
         """
         return self.nonce_types
+    
+    def check_str_for_nonce_type(self, nonce_unit: str) -> str:
+        """
+        Check the nonce unit type.
+        """
+        if nonce_unit.startswith('0x'):
+            return self.nonce_types['hexadecimal']
+        elif nonce_unit.startswith('0b'):
+            return self.nonce_types['binary']
+        elif nonce_unit.startswith('0d'):
+            return self.nonce_types['decimal']
+        else:
+            return self.nonce_types['string']
 
     def check_nonce_unit_type(self, nonce_unit) -> str:
         """
@@ -44,7 +60,7 @@ class NonceTypes():
                 return False
 
         if isinstance(nonce_unit, str):
-            return self.nonce_types['string']
+            return self.check_str_for_nonce_type(nonce_unit)
         elif is_int(nonce_unit) and isinstance(nonce_unit, numbers.Integral):
             return self.nonce_types['integer']
         elif isinstance(nonce_unit, float):
@@ -86,7 +102,7 @@ class NonceTypes():
         return self.__str__()
 
     def __eq__(self, other: 'NonceTypes') -> bool:
-        return self.__json__() == other.__json__()
+        return self.__json__() == other
 
     def __ne__(self, other: 'NonceTypes') -> bool:
         return self.__json__() != other.__json__()
