@@ -102,7 +102,7 @@ class NonceUnit():
 
     def __json__(self) -> dict:
         return {
-            'nonce_unit': self.nonce_unit,
+            'nonce_unit_value': self.nonce_unit_value,
             'nonce_unit_type': self.nonce_unit_type
         }
 
@@ -113,4 +113,4 @@ class NonceUnit():
         return hash(str(self.__json__()))
 
     def __copy__(self) -> 'NonceUnit':
-        return NonceUnit(self.nonce_unit, self.nonce_unit_type)
+        return NonceUnit(self.nonce_unit_value, self.nonce_unit_type)
