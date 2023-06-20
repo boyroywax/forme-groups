@@ -13,5 +13,3 @@ class Link():
         self.blockchain_transaction = None
         self.smart_contract = None
 
-
-

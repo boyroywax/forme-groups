@@ -12,9 +12,14 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### Usage
+### CLI Usage
 
 ```bash
 python3 groups --help
 ```
+
+### Python Usage
+
+```python
+
 

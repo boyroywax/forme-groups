@@ -6,7 +6,7 @@ setup(
     description='A package for managing groups of decentralized objects',
     author='Forme Technologies',
     url='https://github.com/formesbs/forme-groups',
-    packages=find_packages(),
+    packages=find_packages('', 'src/'),
     install_requires=[
         # list your dependencies here
     ]

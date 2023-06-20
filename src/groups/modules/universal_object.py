@@ -58,13 +58,13 @@ class UniversalObject():
         Returns the data of the object.
         """
         return self.data
-    
+
     def get_creds(self) -> Credentials:
         """
         Returns the credentials of the object.
         """
         return self.creds
-    
+
     def set_name(self, name: str) -> None:
         """
         Sets the name of the object.

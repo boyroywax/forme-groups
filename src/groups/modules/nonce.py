@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from groups.modules.nonce_unit import NonceUnit
+from .nonce_unit import NonceUnit
 
 
 class Nonce():
