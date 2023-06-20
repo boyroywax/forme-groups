@@ -9,7 +9,5 @@ setup(
     packages=find_packages(),
     install_requires=[
         # list your dependencies here
-        'dataclasses',
-        'typing',
     ]
 )
