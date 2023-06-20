@@ -6,7 +6,7 @@ class NonceTypes():
     """
     A class that holds the different types of nonce that can be used
     """
-    
+
     INTEGER_NONCE = ["integer"]
     NUMERIC_NONCE = ["integer", "float", "decimal"]
     STRING_NONCE = ["string", "hexadecimal", "binary", "decimal"]
@@ -38,7 +38,7 @@ class NonceTypes():
         Returns the nonce types.
         """
         return self.nonce_types
-    
+
     def check_str_for_nonce_type(self, nonce_unit: str) -> str:
         """
         Check the nonce unit type.
@@ -110,6 +110,6 @@ class NonceTypes():
 
     def __ne__(self, other: 'NonceTypes') -> bool:
         return self.__json__() != other.__json__()
-    
+
     def __hash__(self) -> int:
         return hash(str(self.__json__()))

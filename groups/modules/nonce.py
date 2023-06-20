@@ -49,13 +49,12 @@ class Nonce():
         """
         self.nonce_units[nonce_unit_index] = nonce_unit
 
-
     def get_nonce_length(self) -> int:
         """
         Returns the length of the nonce.
         """
         return len(self.nonce_units)
-    
+
     def add_nonce_unit(self, nonce_unit: NonceUnit) -> None:
         """
         Adds a nonce unit to the nonce.
