@@ -1,5 +1,7 @@
 from datetime import datetime
-from typing import Dict
+from typing import Dict, Optional
+
+from groups.modules.default_schema import DefaultSchema
 
 
 class GenericData():
@@ -7,11 +9,14 @@ class GenericData():
     A generic data class used by the UniversalObject class.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, default_schema: Optional[DefaultSchema] = None) -> None:
         """
         Constructor for the GenericData class.
         """
-        self.data: Dict = {}
+        if default_schema is None:
+            self.data: Dict = {}
+        else:
+            self.data: Dict = default_schema.get_entries()
         self.last_modified: datetime = datetime.now()
 
     def get_data(self) -> Dict:
@@ -81,7 +86,7 @@ class GenericData():
         Returns the JSON representation of the GenericData object.
         """
         return {
-            "data": self.data.__json__(),
+            "data": self.data,
             "last_modified": self.last_modified
         }
 

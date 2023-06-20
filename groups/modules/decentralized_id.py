@@ -1,3 +1,4 @@
+import json
 from typing import Optional
 
 
@@ -6,11 +7,14 @@ class DecentralizedId():
     This class is used to create and manage a decentralized ID for the user.
     """
 
-    def __init__(self, did: Optional[str] = None) -> None:
+    def __init__(self, did: str) -> None:
         """
         Constructor for the DecentralizedId class.
         """
-        self.did: Optional[str] = did
+        if did is None:
+            raise ValueError("DID cannot be None.")
+        else:
+            self.did: Optional[str] = did
 
     def get_did(self) -> Optional[str]:
         """
@@ -28,4 +32,10 @@ class DecentralizedId():
         """
         Returns the string representation of the DecentralizedId object.
         """
-        return str(self.did)
+        return self.did
+
+    def __json__(self) -> dict:
+        """
+        Returns the JSON representation of the DecentralizedId object.
+        """
+        return json.dumps({ "did": self.did })

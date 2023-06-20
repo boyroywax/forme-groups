@@ -10,7 +10,7 @@ class Nonce():
     """
     nonce_units: List
 
-    def __init__(self, nonce_list: Optional[List]) -> None:
+    def __init__(self, nonce_list: Optional[List] = None) -> None:
         """
         Constructor for the Nonce class.
         """
@@ -76,7 +76,7 @@ class Nonce():
         for nonce_unit in self.nonce_units:
             if i != 0:
                 nonce_string += "."
-            nonce_string += nonce_unit.get_nonce_unit_value()
+            nonce_string += str(nonce_unit.get_nonce_unit_value())
             i += 1
         return nonce_string
     
