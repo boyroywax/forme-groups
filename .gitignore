@@ -35,9 +35,9 @@ env/
 *.pydevproject
 
 # Test files
-test_*.py
-*_test.py
-tests/
+# test_*.py
+# *_test.py
+# tests/
 
 # Coverage
 .coverage

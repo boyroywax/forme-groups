@@ -113,10 +113,9 @@ class UniversalObject():
             "data": self.data.__str__(),
             "creds": self.creds.__str__()
         }
-    
+
     def __str__(self) -> str:
         """
         Returns the string representation of the object.
         """
         return json.dumps(self.__json__(), indent=4, sort_keys=True)
-
