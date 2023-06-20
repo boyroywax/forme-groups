@@ -42,8 +42,38 @@ from groups import Groups
 > The architecture of the project is based on the [DIDComm](
 https://identity.foundation/didcomm-messaging/spec/#introduction) specification.
 
-### DIDComm
-> DIDComm is a set of specifications that define a standard way for two parties to communicate with each other in a private, secure, and authenticated fashion. It is designed to be used by any distributed ledger or centralized digital identity system, and to interoperate with any other DIDComm implementation used by any other system.
+### IPv4 and IPv6
+> IPv4 and IPv6 are used to identify the group on the blockchain.  The IPv4 and IPv6 addresses are used to create a decentralized identifier for the group.  Currently only IPv4 is supported with no bytesize limit nor maximum number of items in the dotted-decimal notation.
+
+```text
+# Example Group IPv4 Address
+group://0.0.0.0.0
+```
+
+### Decentralized Identifiers & Identites
+> Decentralized Identifiers are used to identify the group on the blockchain.  The decentralized identifiers are used to create a decentralized identifier for the group.  Currently only the `did:ipid` method is supported.
+> Decentralized Identities are used to identify the owner of the group.  The decentralized identities are used to create a decentralized identity for the owner of the group.  Currently only the `did:ipid` method is supported.
+
+```text
+# Example Group Decentralized Identifier or Owner Decentralized Identity
+did:ipid:Q
+```
+
+### Verified Credentials
+> Verified Credentials are used to identify the members of the group.  The verified credentials are used to create a verified credential for the members of the group.  Currently only the `did:ipid` method is supported.
+
+```text
+# Example Group Member Verified Credential
+did:ipid:Q
+```
+
+### IPFS
+> IPFS is used to store the data of the group.  The IPFS hash is used to create a decentralized identifier for the data of the group.  Currently only the `ipfs` method is supported.
+
+### 
+
+
+
 
 ## Classes
 ### Groups
@@ -108,10 +138,3 @@ The default nonce unit type is `int`, with a default nonce unit value of `0`.
 Nonce chains can hold multiple nonce units of varying types.  The Nonce class checks that the nonce units are valid and that the nonce units are in the correct order.
 
 An active nonce unit is the last nonce unit in the chain.  The active nonce unit is used to create the next nonce unit in the chain.
-
-### Blockchain Persistence
-> The blockchain persistence class is used to store the group on the blockchain.  The blockchain persistence class is used to verify the group on the blockchain.
-
-### IPFS Tools
-> The IPFS tools class is used to store the group on IPFS.  The IPFS tools class is used to verify the group on IPFS.
-
