@@ -94,12 +94,12 @@ The Universal Object holds the following attributes:
 >The default schema is used to create the data schema for the universal object. Data is made up of key value pairs stored in a Dictionary. 
 
 The default schema is a dictionary with the following keys:
-- `title`: The title of the data schema
-- `entries`: The entries of the data schema
+- `title`: [String] The title of the data schema.
+- `entries`: [Dictionary] The entries of the data schema.
 
 The default entries to describe a group with a schema are:
-- `link`: The link to the decentralized asset
-- `schema`: The schema of the data
+- `link`: [List] The link to the decentralized asset.
+- `schema`: [Dictionary] The schema of the data.
 
 ### Nonce
 > A nonce is used to organize items in a group. It is a unique identifier for each item in a group.  Nonces are strung together to create a chain of nonces. The chain of nonces is used to verify the group on the blockchain.
@@ -116,14 +116,14 @@ In the above example, `nonce1` is the parent nonce of `nonce2`.
 In additiion to the two input types, there are many more nonce types that can be used. The nonce types are:
 - `int`: An integer
 - `str`: A string
-- `hexadecimal`: A hexadecimal value
-- `decimal`: A decimal value
-- `binary`: A binary value
+- `hexadecimal`: A string representing a hexadecimal value.  Starts with `0x`.
+- `decimal`: A string representing a decimal value.  Starts with `0d`.
+- `binary`: A string representing a binary value.  Starts with `0b`.
 - `boolean`: A boolean value
 - `float`: A float value
-- `list`: A list of values in string format e.g. `["value1", "value2", "value3"]`
-- `tuple`: A tuple of values in string format e.g. `("value1", "value2", "value3")`
-- `dictionary`: A dictionary of values in string format e.g. `{key1: "value1", key2: "value2", key3: "value3"}`
+- `list`: A list of values in string format e.g. `'["value1", "value2", "value3"]'`
+- `tuple`: A tuple of values in string format e.g. `'("value1", "value2", "value3")'`
+- `dictionary`: A dictionary of values in string format e.g. `'{"key1": "value1", "key2": "value2", "key3": "value3"}'`
 - `unknown`: A value of unknown type, rejected by the NonceType class
 
 ### Nonce Units
