@@ -83,6 +83,7 @@ did:ipid:Q
 > The Universal Object class is used to create a universal object. A universal object is an object that can be used in any group. It is used to create data schemas and data.
 
 The Universal Object holds the following attributes:
+- `nonce`: The nonce of the universal object
 - `name`: The name of the universal object
 - `description`: The description of the universal object
 - `owner`: The owner of the universal object
