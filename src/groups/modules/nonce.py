@@ -79,7 +79,7 @@ class Nonce():
             nonce_string += str(nonce_unit.get_nonce_unit_value())
             i += 1
         return nonce_string
-    
+
     def __json__(self) -> dict:
         """
         Returns the JSON representation of the nonce.
