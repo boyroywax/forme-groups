@@ -14,7 +14,7 @@ _DEFAULT_SCHEMA = {
 
 class DefaultSchema():
     """
-    Default schema for all data models used in the Universal Object.
+    Default schema for group data models used in the Universal Object.
     """
 
     def __init__(

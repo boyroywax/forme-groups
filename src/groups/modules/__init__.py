@@ -12,6 +12,7 @@ from .owner import Owner
 from .universal_object import UniversalObject
 from .groups import Groups
 from .credentials import Credentials
+from .unit_type import UnitType
 
 __all__ = [
     "NonceUnit",
@@ -26,4 +27,5 @@ __all__ = [
     "UniversalObject",
     "Groups",
     "Credentials",
+    "UnitType",
 ]
