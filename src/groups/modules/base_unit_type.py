@@ -15,7 +15,7 @@ from typing import Dict
     slots=False,
     weakref_slot=False
 )
-class UnitType():
+class BaseUnitType():
     """
     The UnitType class manages the unit types.
     A Unit object can only have a single unit type.

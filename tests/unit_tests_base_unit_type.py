@@ -1,11 +1,11 @@
 import unittest
 
-from groups.modules.unit_type import UnitType
+from groups.modules.base_unit_type import BaseUnitType
 
 
 class TestUnitType(unittest.TestCase):
     def setUp(self):
-        self.unit_type = UnitType()
+        self.unit_type = BaseUnitType()
 
     def test_check_for_type(self):
         self.assertTrue(self.unit_type.check_for_type("str"))
