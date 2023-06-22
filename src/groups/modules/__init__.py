@@ -12,9 +12,12 @@ from .owner import Owner
 from .universal_object import UniversalObject
 from .groups import Groups
 from .credentials import Credentials
-from .base_unit_type import BaseUnitType
+from .base_unit import BaseUnitType, BaseUnitTypes, BaseUnit
 
 __all__ = [
+    "Groups",
+    "BaseUnit",
+    "BaseUnitTypes",
     "NonceUnit",
     "NonceTypes",
     "Nonce",

@@ -1,2 +1,2 @@
 #/bin/bash
-python ./tests/unit_tests.py
+python3 ./tests/unit_tests.py

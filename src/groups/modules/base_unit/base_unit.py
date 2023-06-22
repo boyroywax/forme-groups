@@ -2,6 +2,8 @@ import json
 from dataclasses import dataclass
 from typing import Optional, List, Dict
 
+from groups.modules.base_unit import BaseUnitType
+
 
 @dataclass(
     init=True,
@@ -15,35 +17,37 @@ from typing import Optional, List, Dict
     slots=False,
     weakref_slot=False
 )
-class Unit():
+class BaseUnit():
     """
     An UniversalObject's base unit
-    Units are expected to be strings
-    :param unit: The unit
+    Units value is expected to to be string.
+    Unit Type is expected to be supplied a BaseUnitType class.
+    - param value: The value
+    - param type: The type in BaseUnitType class format
     """
 
     _value: str = "Universal serializable object base unit"
-    _type: str = "string"
+    _type: BaseUnitType = BaseUnitType("string")
 
     def get_value(self) -> str:
         """
         Returns the value.
         """
         return self._value
-    
+
     def set_value(self, value: str) -> None:
         """
         Sets the value.
         """
         self._value = value
 
-    def get_type(self) -> str:
+    def get_type(self) -> BaseUnitType:
         """
         Returns the type.
         """
         return self._type
-    
-    def set_type(self, type: str) -> None:
+
+    def set_type(self, type: BaseUnitType) -> None:
         """
         Sets the type.
         """
@@ -60,7 +64,7 @@ class Unit():
         Returns the object in a JSON format.
         """
         return json.loads(self.to_json_string())
-    
+
     def from_json_string(self, json_string: str) -> None:
         """
         Loads the object from a JSON string.
@@ -72,59 +76,3 @@ class Unit():
         Loads the object from a JSON object.
         """
         self.__dict__ = json_object
-
-
-@dataclass(
-    init=True,
-    repr=True,
-    eq=True,
-    order=False,
-    unsafe_hash=False,
-    frozen=False,
-    match_args=True,
-    kw_only=False,
-    slots=False,
-    weakref_slot=False
-)
-class UnitList():
-    """
-    An UniversalObject's unit
-    All units are stored in a list
-    Units are expected to be strings
-    :
-    
-    """
-
-    def __init__(self, unit: List[Unit]) -> None:
-        """
-        Constructor for the Unit class.
-        """
-        self._unit: List[str] = unit
-
-    def get_unit(self) -> List:
-        """
-        Returns the unit.
-        """
-        return self._unit
-    
-    def set_unit(self, unit: List) -> None:
-        """
-        Sets the unit.
-        """
-        self._unit = unit
-
-    def get_unit_length(self) -> int:
-        """
-        Returns the length of the unit.
-        """
-        return len(self._unit)
-    
-    def add_unit(self, unit: str) -> None:
-        """
-        Adds a unit to the unit.
-        """
-        self._unit.append(unit)
-
-    def remove_unit(self, unit_index: int) -> None:
-
-    

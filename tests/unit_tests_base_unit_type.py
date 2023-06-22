@@ -3,7 +3,7 @@ import unittest
 from groups.modules.base_unit_type import BaseUnitType
 
 
-class TestUnitType(unittest.TestCase):
+class TestBaseUnitType(unittest.TestCase):
     def setUp(self):
         self.unit_type = BaseUnitType()
 

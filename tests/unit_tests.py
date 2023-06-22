@@ -11,6 +11,8 @@ from unit_tests_universal_object import TestUniversalObject
 from unit_tests_credentials import TestCredentials
 from unit_tests_owner import TestOwner
 from unit_tests_base_unit_type import TestBaseUnitType
+from unit_tests_base_unit_scanners import TestBaseUnitScanners
+from unit_tests_base_unit_types import TestBaseUnitTypes
 
 
 def main():
@@ -32,6 +34,8 @@ def main():
     test_suite.addTests(test_loader.loadTestsFromTestCase(TestCredentials))
     test_suite.addTests(test_loader.loadTestsFromTestCase(TestOwner))
     test_suite.addTests(test_loader.loadTestsFromTestCase(TestBaseUnitType))
+    test_suite.addTests(test_loader.loadTestsFromTestCase(TestBaseUnitScanners))
+    test_suite.addTests(test_loader.loadTestsFromTestCase(TestBaseUnitTypes))
 
     # Run the test suite
     runner = unittest.TextTestRunner()
