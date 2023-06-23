@@ -1,6 +1,6 @@
 from typing import List
 
-from .base_unit_type import BaseUnitType
+from .type import BaseUnitType
 
 _DEFAULT_UNIT_TYPES_LIST: List[BaseUnitType] = [
     BaseUnitType("string", ["string", "str"]),

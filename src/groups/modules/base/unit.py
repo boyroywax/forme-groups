@@ -2,7 +2,7 @@ import json
 from dataclasses import dataclass
 from typing import Optional, List, Dict
 
-from groups.modules.base_unit import BaseUnitType
+from .type import BaseUnitType
 
 
 @dataclass(

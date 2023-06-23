@@ -2,8 +2,8 @@ import json
 from dataclasses import dataclass, field
 from typing import List, Optional
 
-from .base_unit_type import BaseUnitType
-from .base_unit_types_defaults import _DEFUALT_UNIT_TYPES_LIST
+from .type import BaseUnitType
+from .unit_types_defaults import _DEFUALT_UNIT_TYPES_LIST
 
 
 @dataclass(

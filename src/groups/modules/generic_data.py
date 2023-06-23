@@ -6,7 +6,7 @@ from groups.modules.default_schema import DefaultSchema
 
 class GenericData():
     """
-    A generic data class used by the UniversalObject class.
+    A generic data class used by the UniversalObject class.\
     """
 
     def __init__(self, default_schema: Optional[DefaultSchema] = None) -> None:
