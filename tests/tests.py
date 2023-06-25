@@ -6,6 +6,7 @@ import unittest
 from .tests_system_defaults import TestSystemDefaults
 from .tests_system_check import TestSystemCheck
 from .tests_system import TestSystem
+from .tests_system_type import TestSystemType
 
 
 def main():
@@ -22,6 +23,7 @@ def main():
     test_suite.addTests(test_loader.loadTestsFromTestCase(TestSystemDefaults))
     test_suite.addTests(test_loader.loadTestsFromTestCase(TestSystemCheck))
     test_suite.addTests(test_loader.loadTestsFromTestCase(TestSystem))
+    test_suite.addTests(test_loader.loadTestsFromTestCase(TestSystemType))
 
     # Run the test suite
     runner = unittest.TextTestRunner()
