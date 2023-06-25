@@ -12,11 +12,11 @@ class Test_Value_(unittest.TestCase):
 
     def test_to_json_string(self):
         expected_json = '{"_value": "test"}'
-        self.assertEqual(self._value.to_json_string(), expected_json)
+        self.assertEqual(self._value.value_to_json_string(), expected_json)
 
     def test_from_json_string(self):
         json_string = '{"_value": "test"}'
-        self._value.from_json_string(json_string)
+        self._value.value_from_json_string(json_string)
         self.assertEqual(self._value.get_value(), "test")
 
     def test_str(self):
