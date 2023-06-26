@@ -2,11 +2,10 @@ import json
 from typing import List, Optional, Dict, Any
 
 
-class SystemDefaults():
+class Defaults():
     """
     Default values for system group.
     """
-
     system_types: List[str] = [
         "bytes",
         "str",

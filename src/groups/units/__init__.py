@@ -1,0 +1,66 @@
+from dataclasses import dataclass, field
+from typing import Any, Optional
+
+from .type import Type_ as UnitType
+from .value import Value_ as UnitValue
+from .unit import Unit
+
+
+@dataclass
+class Units():
+    _units: list[Unit] = field(default_factory=list)
+
+    def __init__(self, units: list[Unit] = None) -> None:
+        """
+        Initializes the Units class.
+        """
+        if units is not None:
+            self.set_units(units)
+
+    def set_units(self, units: list[Unit]) -> None:
+        """
+        Sets the units.
+        """
+        self._units = units
+
+    def get_units(self) -> list[Unit]:
+        """
+        Gets the units.
+        """
+        return self._units
+
+    def get_unit(self, unit_index: int) -> Unit:
+        """
+        Gets the unit at the given index.
+        """
+        return self._units[unit_index]
+
+    def add_unit(self, unit: Unit) -> None:
+        """
+        Adds a unit.
+        """
+        self._units.append(unit)
+
+    @staticmethod
+    def generate_unit(unit_value: UnitValue, unit_type: UnitType) -> Unit:
+        """
+        Generates a unit.
+        """
+        return Unit(unit_value, unit_type)
+
+    @staticmethod
+    def generate_value(value: str, super_type: Optional[str] = None) -> UnitValue:
+        """
+        Generates a value.
+        """
+        if super_type is not None:
+            return UnitValue(value, super_type)
+        return UnitValue(value)
+
+
+__all__ = [
+    "Unit",
+    "UnitType",
+    "UnitValue",
+    "Units",
+]

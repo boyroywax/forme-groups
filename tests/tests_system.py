@@ -1,55 +1,52 @@
 import unittest
+from unittest.mock import patch
 from src.groups.system import System
 
 
 class TestSystem(unittest.TestCase):
-    def test_init_with_defaults(self):
-        # Create a new System object with default values
+    def test_init(self):
+        # Create a new System object
         system = System()
 
-        # Verify that the supported types are correct
-        expected_types = [
-            "bytes",
-            "str",
-            "int",
-            "float",
-            "bool",
-            "list",
-            "tuple",
-            "dict",
-            "set",
-            "frozenset",
-            "complex",
-            "range",
-            "memoryview",
-            "None"
-        ]
-        self.assertEqual(system.defaults.get_system_types(), expected_types)
+        # Verify that the ID is not None
+        self.assertIsNotNone(system.id)
 
-    def test_init_with_overrides(self):
-        # Create a new System object with overridden values
-        overrides = {
-            "system_types": ["str", "int", "float"],
-            "system_super_type": "int"
-        }
-        system = System(default_override=True, **overrides)
+        # Verify that the config is None
+        self.assertIsNone(system.config)
 
-        # Verify that the supported types and super type are correct
-        expected_types = ["str", "int", "float"]
-        self.assertEqual(system.defaults.get_system_types(), expected_types)
-        self.assertEqual(system.defaults.system_super_type, "int")
+    def test_init_with_id(self):
+        # Create a new System object with a specific ID
+        system = System(id="test_id")
 
-    def test_init_with_missing_overrides(self):
-        # Verify that an error is raised when overrides are missing
-        with self.assertRaises(ValueError):
-            system = System(default_override=True, **{})
+        # Verify that the ID is set correctly
+        self.assertEqual(system.id, "test_id")
 
-    def test_init_with_invalid_overrides(self):
-        # Verify that an error is raised when overrides are invalid
-        overrides = {
-            "system_types": ["str", "int", "float"],
-            "system_super_type": "int",
-            "invalid": "invalid"
-        }
-        with self.assertRaises(ValueError):
-            system = System(default_override=True, **overrides)
+        # Verify that the config is None
+        self.assertIsNone(system.config)
+
+    def test_init_with_config(self):
+        # Create a mock SystemConfig object
+        mock_config = object()
+
+        # Create a new System object with a specific config
+        system = System(config=mock_config)
+
+        # Verify that the ID is not None
+        self.assertIsNotNone(system.id)
+
+        # Verify that the config is set correctly
+        self.assertEqual(system.config, mock_config)
+
+    @patch("src.groups.system.SystemConfig")
+    def test_set_config(self, mock_config):
+        # Create a new System object
+        system = System()
+
+        # Call set_config with override_defaults=True and overrides={"test": "value"}
+        system.set_config(override_defaults=True, overrides={"test": "value"})
+
+        # Verify that SystemConfig was initialized with the correct arguments
+        mock_config.assert_called_once_with(system, override_defaults=True, overrides={"test": "value"})
+        
+        # Verify that the config is set correctly
+        self.assertEqual(system.config, mock_config.return_value)

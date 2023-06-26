@@ -1,41 +1,42 @@
-from typing import List, Dict, Any, Optional
+from typing import Any, Dict, List, Optional
+import uuid
 
-from .type import SystemType
-from .defaults import SystemDefaults
-# from .check import SystemCheck
+# from .units import Units as SystemUnits
+from .config import Config as SystemConfig
+from .generator import Generator as SystemGenerator
 
 
 class System():
     """
-    A Class that represents a System.
+    The system class.
     """
-    defaults: SystemDefaults = SystemDefaults()
-    supported_types: List[SystemType] = []
 
-    def __init__(
+    id: Optional[str] = uuid.uuid4().hex
+    config: Optional[SystemConfig] = None
+    generator: Optional[SystemGenerator] = None
+
+    def __init__(self, *args, **kwargs) -> None:
+        """
+        Initializes the system class.
+        """
+
+        if "id" in kwargs and kwargs["id"] is not None:
+            self.id = kwargs["id"]
+        if "config" in kwargs and kwargs["config"] is not None:
+            self.config = kwargs["config"]
+        if "generator" in kwargs and kwargs["generator"] is not None:
+            self.generator = kwargs["generator"]
+
+    def set_config(
         self,
-        default_override: Optional[bool] = False,
-        **kwargs: Optional[Dict[str, Any]]
+        override_defaults: Optional[bool] = False,
+        overrides: Optional[Dict[str, Any]] = None
     ) -> None:
         """
-        Initializes the System class.
+        Initializes the system class.
         """
-        if default_override and len(kwargs) > 0:
-            self.defaults.override_defaults(kwargs)
-        elif default_override and len(kwargs) == 0:
-            raise ValueError(
-                "Overrides must be set if override_defaults is True."
-            )
-        
-
-    # def check_system(
-    #     self,
-    #     process: List[str]
-    # ) -> List[str]:
-    #     try:
-    #         checks = SystemCheck(self)
-    #         output: Dict[str, Any] = checks.check_system()
-    #     except Exception as error:
-    #         raise error
-    #     else:
-    #         return output
+        self.config = SystemConfig(
+            self,
+            override_defaults=override_defaults,
+            overrides=overrides
+        )
