@@ -10,7 +10,7 @@ class TypeGenerator():
 
     _prefix: Optional[str] = None
     _suffix: Optional[str] = None
-    _seperator: Optional[str] = None
+    _separator: Optional[str] = None
     _custom_function: Optional[List] = None
 
     def __init__(
@@ -18,7 +18,7 @@ class TypeGenerator():
             parent: Optional[BaseUnitType] = None,
             prefix: Optional[str] = None,
             suffix: Optional[str] = None,
-            seperator: Optional[str] = None,
+            separator: Optional[str] = None,
             custom_function: Optional[List] = None
     ) -> None:
         """
@@ -26,7 +26,7 @@ class TypeGenerator():
         """
         self._prefix = prefix
         self._suffix = suffix
-        self._seperator = seperator
+        self._separator = separator
         self._custom_function = custom_function
 
     def is_string(self, string: str) -> bool:

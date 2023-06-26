@@ -17,7 +17,7 @@ class _Default_Schema():
             "descriptors": ["entry"],
             "prefix": "entry:",
             "suffix": "",
-            "seperator": ",",
+            "separator": ",",
         }
     } 
     _schema_: Dict[str, Any] = {

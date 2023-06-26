@@ -2,6 +2,7 @@ from typing import List, Dict, Any, Optional
 
 from .type import SystemType
 from .defaults import SystemDefaults
+# from .check import SystemCheck
 
 
 class System():
@@ -26,4 +27,15 @@ class System():
                 "Overrides must be set if override_defaults is True."
             )
         
-    
+
+    # def check_system(
+    #     self,
+    #     process: List[str]
+    # ) -> List[str]:
+    #     try:
+    #         checks = SystemCheck(self)
+    #         output: Dict[str, Any] = checks.check_system()
+    #     except Exception as error:
+    #         raise error
+    #     else:
+    #         return output

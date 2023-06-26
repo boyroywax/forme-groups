@@ -11,7 +11,7 @@ class TestSystemType(unittest.TestCase):
             super=None,
             prefix=None,
             suffix=None,
-            seperator=None,
+            separator=None,
             system_function=None
         )
 
@@ -22,7 +22,7 @@ class TestSystemType(unittest.TestCase):
             "super": None,
             "prefix": None,
             "suffix": None,
-            "seperator": None,
+            "separator": None,
             "system_function": None
         }
         self.assertEqual(system_type.to_dict(), expected_dict)
@@ -35,12 +35,12 @@ class TestSystemType(unittest.TestCase):
             super=None,
             prefix=None,
             suffix=None,
-            seperator=None,
+            separator=None,
             system_function=None
         )
 
         # Verify that the to_json() method returns the correct JSON string
-        expected_json = '{"id": "test_type", "alias": ["test_alias"], "super": null, "prefix": null, "suffix": null, "seperator": null, "system_function": null}'
+        expected_json = '{"id": "test_type", "alias": ["test_alias"], "super": null, "prefix": null, "suffix": null, "separator": null, "system_function": null}'
         self.assertEqual(system_type.to_json(), expected_json)
 
     def test_from_dict(self):
@@ -51,7 +51,7 @@ class TestSystemType(unittest.TestCase):
             "super": None,
             "prefix": None,
             "suffix": None,
-            "seperator": None,
+            "separator": None,
             "system_function": None
         }
 
@@ -62,7 +62,7 @@ class TestSystemType(unittest.TestCase):
             super=None,
             prefix=None,
             suffix=None,
-            seperator=None,
+            separator=None,
             system_function=None
         )
         self.assertEqual(SystemType.from_dict(system_type_dict), expected_system_type)

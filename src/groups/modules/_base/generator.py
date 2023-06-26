@@ -12,7 +12,7 @@ class Generator():
 
     _suffix: Optional[str] = None
     _prefix: Optional[str] = None
-    _seperator: Optional[str] = None
+    _separator: Optional[str] = None
     _super: Optional[Type] = None
 
     def __init__(
@@ -20,7 +20,7 @@ class Generator():
         super: Optional[Type] = None,
         prefix: Optional[str] = None,
         suffix: Optional[str] = None,
-        seperator: Optional[str] = None
+        separator: Optional[str] = None
     ) -> None:
         """
         Initializes the Generator class.
@@ -34,8 +34,8 @@ class Generator():
         if suffix is not None:
             self.set_suffix(suffix)
 
-        if seperator is not None:
-            self.set_seperator(seperator)
+        if separator is not None:
+            self.set_separator(separator)
 
     def set_super(self, super: Type) -> None:
         """
@@ -55,11 +55,11 @@ class Generator():
         """
         self._suffix = suffix
 
-    def set_seperator(self, seperator: str) -> None:
+    def set_separator(self, separator: str) -> None:
         """
-        Sets the seperator.
+        Sets the separator.
         """
-        self._seperator = seperator
+        self._separator = separator
 
     def get_super(self) -> Type:
         """
@@ -85,14 +85,14 @@ class Generator():
         else:
             return self._prefix + self._super.get_prefix()
         
-    def get_seperator(self) -> str:
+    def get_separator(self) -> str:
         """
-        Gets the seperator.
+        Gets the separator.
         """
-        if self._seperator is None:
-            return self._super.get_seperator()
+        if self._separator is None:
+            return self._super.get_separator()
         else:
-            return f'{self._seperator}'
+            return f'{self._separator}'
         
     def generate(self, value: Value) -> str:
         """

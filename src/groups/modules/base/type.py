@@ -11,7 +11,7 @@ _DEFUALT_UNIT_TYPE: Dict[str, Optional[List[str]]] = {
     "unit_type_descriptors": ["string", "str"],
     "unit_type_prefix": None,
     "unit_type_suffix": None,
-    "unit_type_seperator": None,
+    "unit_type_separator": None,
 }
 
 
@@ -36,7 +36,7 @@ class BaseUnitType():
     _unit_type_descriptors: List[str] = field(default_factory=list)
     # _unit_type_prefix: Optional[str] = None
     # _unit_type_suffix: Optional[str] = None
-    # _unit_type_seperator: Optional[str] = None
+    # _unit_type_separator: Optional[str] = None
     _unit_type_generator: Optional[TypeGenerator] = None
 
     def __init__(
@@ -46,7 +46,7 @@ class BaseUnitType():
             descriptors: Optional[List[str]] = None,
             prefix: Optional[str] = None,
             suffix: Optional[str] = None,
-            seperator: Optional[str] = None,
+            separator: Optional[str] = None,
     ) -> None:
         """
         Initializes the BaseUnitType class.
@@ -63,13 +63,13 @@ class BaseUnitType():
         if (
             (unit_type_prefix is not None) or
             (unit_type_suffix is not None) or
-            (unit_type_seperator is not None)
+            (unit_type_separator is not None)
         ):
             self._unit_type_generator = TypeGenerator(
                 super_unit_type=super_unit_type,
                 unit_type_prefix=unit_type_prefix,
                 unit_type_suffix=unit_type_suffix,
-                unit_type_seperator=unit_type_seperator,
+                unit_type_separator=unit_type_separator,
             )
         #     self.set_unit_type_prefix(unit_type_prefix)
 

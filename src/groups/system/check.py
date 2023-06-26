@@ -1,40 +1,43 @@
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 
 from . import System
 
 
-class SystemCheck(System):
+class SystemCheck():
     """
     Checks the system for any errors.
     """
 
+    output: Dict[str, Any] = {}
+
     def __init__(
-        self
+        self,
+        system: System
     ) -> None:
         """
         Initializes the SystemCheck class.
         """
-        if super() is None:
-            super().__init__()
+        self._system = system
 
     def check_system(
         self,
         process: List[str]
-    ) -> None:
+    ) -> List[str]:
         """
         Checks the system.
         """
+        output: Dict[str] = {}
         if process is not None and "system_types" in process:
-            self.check_supported_system_types()
+            self.output['supported_types'] = self.check_supported_system_types()
         else:
-            self.check_supported_system_types()
+            self.output['supported_types'] = self.check_supported_system_types()
 
     def check_supported_system_types(self) -> List[str]:
         """
         Checks if the system types are supported.
         """
         supported_system_types: List[str] = []
-        for system_type in self.defaults.system_types:
+        for system_type in self._system.defaults.system_types:
             match system_type:
                 case "bytes":
                     if isinstance(b"string", bytes):

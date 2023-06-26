@@ -13,7 +13,7 @@ class Type():
     _descriptors: Optional[List[str]] = None
     _prefix: Optional[str] = None
     _suffix: Optional[str] = None
-    _seperator: Optional[str] = None
+    _separator: Optional[str] = None
     _generator: Optional[Generator] = None
 
     def __init__(
@@ -23,7 +23,7 @@ class Type():
         descriptors: Optional[List[str]] = None,
         prefix: Optional[str] = None,
         suffix: Optional[str] = None,
-        seperator: Optional[str] = None,
+        separator: Optional[str] = None,
         generator: Optional[Generator] = None,
     ) -> None:
         """
@@ -44,8 +44,8 @@ class Type():
         if suffix is not None:
             self.set_suffix(suffix)
 
-        if seperator is not None:
-            self.set_seperator(seperator)
+        if separator is not None:
+            self.set_separator(separator)
 
         if generator is not None:
             self.set_custom_generator(generator)
@@ -80,11 +80,11 @@ class Type():
         """
         self._suffix = suffix
 
-    def set_seperator(self, seperator: str) -> None:
+    def set_separator(self, separator: str) -> None:
         """
-        Sets the seperator.
+        Sets the separator.
         """
-        self._seperator = seperator
+        self._separator = separator
 
     def set_generator(self, generator: Callable) -> None:
         """

@@ -10,19 +10,20 @@ class SystemType():
     A Class that represents a System Type.
     """
 
-    id: str
+    id: Optional[str] = None
     alias: List[str] = field(default_factory=list)
     super: Optional['SystemType'] = None
     prefix: Optional[str] = None
     suffix: Optional[str] = None
-    seperator: Optional[str] = None
+    separator: Optional[str] = None
     system_function: Optional[Callable[[Any], Any]] = None
 
     def __post_init__(self):
         """
         Initializes the 'SystemType' class.
         """
-        self.set_id(self.id)
+        if self.id is not None:
+            self.set_id(self.id)
 
         if self.alias is not None:
             self.set_alias(self.alias)
@@ -36,8 +37,8 @@ class SystemType():
         if self.suffix is not None:
             self.set_suffix(self.suffix)
 
-        if self.seperator is not None:
-            self.set_separator(self.seperator)
+        if self.separator is not None:
+            self.set_separator(self.separator)
 
     def set_id(self, id: str) -> None:
         """
@@ -69,11 +70,11 @@ class SystemType():
         """
         self.suffix = suffix
 
-    def set_seperator(self, seperator: str) -> None:
+    def set_separator(self, separator: str) -> None:
         """
-        Sets the seperator.
+        Sets the separator.
         """
-        self.seperator = seperator
+        self.separator = separator
 
     def set_system_function(self, system_function: Callable[[Any], Any]) -> None:
         """
@@ -111,11 +112,11 @@ class SystemType():
         """
         return self.suffix
 
-    def get_seperator(self) -> Optional[str]:
+    def get_separator(self) -> Optional[str]:
         """
-        Returns the seperator.
+        Returns the separator.
         """
-        return self.seperator
+        return self.separator
 
     def get_system_function(self) -> Optional[Callable[[Any], Any]]:
         """
@@ -163,7 +164,7 @@ class SystemType():
             "super": self.super,
             "prefix": self.prefix,
             "suffix": self.suffix,
-            "seperator": self.seperator,
+            "separator": self.separator,
             "system_function": self.system_function
         }
 
@@ -191,7 +192,7 @@ class SystemType():
             super=dict["super"],
             prefix=dict["prefix"],
             suffix=dict["suffix"],
-            seperator=dict["seperator"],
+            separator=dict["separator"],
             system_function=dict["system_function"]
         )
 

@@ -1,11 +1,13 @@
 import unittest
 from unittest.mock import MagicMock
+from src.groups.system import System
 from src.groups.system.check import SystemCheck
 
 
 class TestSystemCheck(unittest.TestCase):
     def setUp(self):
-        self.check = SystemCheck()
+        self.system = System()
+        self.check = SystemCheck(self.system)
 
     def test_check_system_with_system_types(self):
         # Mock the check_supported_system_types() method

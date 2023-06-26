@@ -28,7 +28,7 @@ class SystemTypes():
                 descriptors=["str", "string"],
                 prefix="",
                 suffix="",
-                seperator="",
+                separator="",
                 generator=Generator.String()
             )
 

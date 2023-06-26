@@ -13,7 +13,7 @@ class Type_():
     _descriptors: Optional[list[Value_]] = None
     _prefix: Optional[Value_] = None
     _suffix: Optional[Value_] = None
-    _seperator: Optional[Value_] = None
+    _separator: Optional[Value_] = None
     _attrs: Optional[dict[str, Value_]] = None
 
     def __init__(
@@ -23,7 +23,7 @@ class Type_():
         descriptors: Optional[list[Value_]] = None,
         prefix: Optional[Value_] = None,
         suffix: Optional[Value_] = None,
-        seperator: Optional[Value_] = None,
+        separator: Optional[Value_] = None,
         attrs: Optional[dict[str, Value_]] = None
     ) -> None:
         """
@@ -44,8 +44,8 @@ class Type_():
         if suffix is not None:
             self.set_suffix(suffix)
 
-        if seperator is not None:
-            self.set_seperator(seperator)
+        if separator is not None:
+            self.set_separator(separator)
 
         if attrs is not None:
             self.set_attrs(attrs)
