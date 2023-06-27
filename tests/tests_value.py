@@ -1,4 +1,5 @@
 import unittest
+import json
 from src.groups.units.value import Value_
 
 
@@ -125,4 +126,25 @@ class TestValue(unittest.TestCase):
         # Verify that the value was forced to be a dict
         self.assertEqual(self.value.get_value_super_type(), "dict")
         self.assertEqual(self.value.get_value(), {"a": 1, "b": 2, "c": 3})
+
+    def test_to_dict(self):
+        # Set the value of the Value_ object
+        self.value.set_value(42)
+
+        # Convert the Value_ object to a dictionary
+        value_dict = self.value.to_dict()
+
+        # Verify that the dictionary contains the correct value
+        self.assertEqual(value_dict["value"], 42)
+
+    def test_to_json(self):
+        # Set the value of the Value_ object
+        self.value.set_value(42)
+
+        # Convert the Value_ object to a JSON string
+        value_json = self.value.to_json()
+
+        # Parse the JSON string and verify that it contains the correct value
+        value_dict = json.loads(value_json)
+        self.assertEqual(value_dict["value"], 42)
 

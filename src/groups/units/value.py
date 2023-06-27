@@ -1,3 +1,5 @@
+import json
+
 from dataclasses import dataclass
 from typing import Any, Optional
 
@@ -85,14 +87,52 @@ class Value_():
             "value_super_type": self.get_value_super_type(),
         }
 
+    def to_json(self) -> str:
+        """
+        Returns the JSON representation of the value.
+        """
+        return json.dumps(self.to_dict())
+
+    def to_json_file(self, value_json_file_path: str) -> None:
+        """
+        Writes the JSON representation of the value to the given file path.
+        """
+        with open(value_json_file_path, "w") as value_json_file:
+            value_json_file.write(self.to_json())
+
+    @staticmethod
+    def from_dict(value_dict: dict) -> 'Value_':
+        """
+        Returns the value object from the given dictionary.
+        """
+        return Value_(
+            value_dict["value"],
+            value_dict["value_super_type"],
+        )
+
+    @staticmethod
+    def from_json(value_json: str) -> 'Value_':
+        """
+        Returns the value object from the given JSON.
+        """
+        return Value_.from_dict(json.loads(value_json))
+
+    @staticmethod
+    def from_json_file(value_json_file_path: str) -> 'Value_':
+        """
+        Returns the value object from the given JSON file.
+        """
+        with open(value_json_file_path, "r") as value_json_file:
+            return Value_.from_json(value_json_file.read())
+
     def __str__(self) -> str:
-        return str(self.get_value())
+        return str(self.to_json())
 
     def __repr__(self) -> str:
         return str(self)
 
     def __eq__(self, other: Any) -> bool:
-        return self.get_value() == other.get_value()
+        return self.to_json() == other.get_json()
 
     def __ne__(self, other: Any) -> bool:
         return not self.__eq__(other)

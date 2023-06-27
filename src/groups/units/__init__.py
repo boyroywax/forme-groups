@@ -41,6 +41,12 @@ class Units():
         """
         self._units.append(unit)
 
+    def remove_unit(self, unit_index: int) -> None:
+        """
+        Removes a unit.
+        """
+        del self._units[unit_index]
+
     @staticmethod
     def generate_unit(unit_value: UnitValue, unit_type: UnitType) -> Unit:
         """
@@ -56,6 +62,15 @@ class Units():
         if super_type is not None:
             return UnitValue(value, super_type)
         return UnitValue(value)
+    
+    @staticmethod
+    def generate_type(type_: str, super_type: Optional[str] = None) -> UnitType:
+        """
+        Generates a type.
+        """
+        if super_type is not None:
+            return UnitType(type_, super_type)
+        return UnitType(type_)
 
 
 __all__ = [

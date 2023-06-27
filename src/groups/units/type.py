@@ -94,7 +94,7 @@ class Type_():
         Sets the system function of the unit type.
         """
         self.system_function = system_function_
-    
+
     def get_id(self) -> UnitValue:
         """
         Gets the id of the unit type.
@@ -106,37 +106,37 @@ class Type_():
         Gets the alias of the unit type.
         """
         return self.alias
-    
+
     def get_prefix(self) -> UnitValue:
         """
         Gets the prefix of the unit type.
         """
         return self.prefix
-    
+
     def get_suffix(self) -> UnitValue:
         """
         Gets the suffix of the unit type.
         """
         return self.suffix
-    
+
     def get_separator(self) -> UnitValue:
         """
         Gets the separator of the unit type.
         """
         return self.separator
-    
+
     def get_super(self) -> 'Type_':
         """
         Gets the super of the unit type.
         """
         return self.super
-    
+
     def get_system_function(self) -> Callable:
         """
         Gets the system function of the unit type.
         """
         return self.system_function
-    
+
     def to_dict(self) -> dict:
         """
         Returns the JSON representation of the unit type.
@@ -150,13 +150,13 @@ class Type_():
             "super": self.get_super(),
             "system_function": self.get_system_function(),
         }
-    
+
     def to_json(self) -> str:
         """
         Returns the JSON representation of the unit type.
         """
         return json.dumps(self.to_dict())
-    
+
     def to_json_file(self, path: str) -> None:
         """
         Returns the JSON representation of the unit type.
@@ -178,14 +178,14 @@ class Type_():
             super_=data.get("super"),
             system_function_=data.get("system_function"),
         )
-    
+
     @staticmethod
     def from_json(data: str) -> 'Type_':
         """
         Returns the unit type from the JSON representation.
         """
         return Type_.from_dict(json.loads(data))
-    
+
     @staticmethod
     def from_json_file(path: str) -> 'Type_':
         """
@@ -193,13 +193,13 @@ class Type_():
         """
         with open(path, "r") as file:
             return Type_.from_json(file.read())
-    
+
     def __str__(self) -> str:
         """
         Returns the string representation of the unit type.
         """
         return f"{self.get_id()}"
-    
+
     def __repr__(self) -> str:
         """
         Returns the string representation of the unit type.
