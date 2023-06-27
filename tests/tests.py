@@ -1,7 +1,7 @@
 import unittest
 
 # from .tests_super import TestSuper
-
+from .tests_defaults import TestDefaults
 
 
 
@@ -14,6 +14,7 @@ def main():
 
     # Add the test cases to the test suite
     # test_suite.addTests(test_loader.loadTestsFromTestCase(TestSuper))
+    test_suite.addTests(test_loader.loadTestsFromTestCase(TestDefaults))
 
 
     # Run the test suite
