@@ -1,6 +1,6 @@
 import unittest
 import json
-from src.groups.units.value import Value_
+from src.groups.units import UnitValue as Value_
 
 
 class TestValue(unittest.TestCase):
@@ -118,10 +118,10 @@ class TestValue(unittest.TestCase):
 
     def test_force_super_type_dict(self):
         # Set the value of the Value_ object
-        self.value.set_value({"a": 1, "b": 2, "c": 3})
+        self.value.set_value({"a": 1, "b": 2, "c": 3}, super_type="dict")
 
         # Force the value to be a dict
-        self.value.force_super_type("dict")
+        # self.value.force_super_type("dict")
 
         # Verify that the value was forced to be a dict
         self.assertEqual(self.value.get_value_super_type(), "dict")
@@ -129,7 +129,7 @@ class TestValue(unittest.TestCase):
 
     def test_to_dict(self):
         # Set the value of the Value_ object
-        self.value.set_value(42)
+        self.value.set_value(42, super_type="int")
 
         # Convert the Value_ object to a dictionary
         value_dict = self.value.to_dict()

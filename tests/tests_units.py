@@ -11,7 +11,7 @@ class TestUnits(unittest.TestCase):
 
     def test_add_unit(self):
         # Create a mock Type_ object
-        unit = MagicMock()
+        unit = Units().generate_unit()
 
         # Add a unit to the Units object
         self.units.add_unit(unit)

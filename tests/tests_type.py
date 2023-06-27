@@ -81,13 +81,13 @@ class TestType(unittest.TestCase):
     def test_init_with_arguments(self):
         # Create a new Type_ object with arguments
         type_ = Type_(
-            id_="test_id",
-            alias_="test_alias",
-            prefix_="test_prefix",
-            suffix_="test_suffix",
-            separator_="test_separator",
-            super_=MagicMock(),
-            system_function_=MagicMock(),
+            id="test_id",
+            alias="test_alias",
+            prefix="test_prefix",
+            suffix="test_suffix",
+            separator="test_separator",
+            super=None,
+            system_function=str,
         )
 
         # Verify that all the attributes are set correctly
@@ -96,17 +96,19 @@ class TestType(unittest.TestCase):
         self.assertEqual(type_.prefix, "test_prefix")
         self.assertEqual(type_.suffix, "test_suffix")
         self.assertEqual(type_.separator, "test_separator")
-        self.assertIsInstance(type_.super, MagicMock)
-        self.assertIsInstance(type_.system_function, MagicMock)
+        self.assertEqual(type_.super, None)
+        self.assertEqual(type_.system_function.__name__, "str")
 
     def test_to_json_file(self):
         # Create a new Type_ object with some attributes
         type_ = Type_(
-            id_="test_id",
-            alias_="test_alias",
-            prefix_="test_prefix",
-            suffix_="test_suffix",
-            separator_="test_separator",
+            id="test_id",
+            alias="test_alias",
+            prefix="test_prefix",
+            suffix="test_suffix",
+            separator="test_separator",
+            super=None,
+            system_function=str.__name__,
         )
 
         # Write the Type_ object to a JSON file

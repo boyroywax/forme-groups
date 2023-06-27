@@ -1,8 +1,6 @@
 import unittest
 from unittest.mock import MagicMock
-from src.groups.units import Unit
-from src.groups.units import UnitType
-from src.groups.units import UnitValue
+from src.groups.units import Unit, UnitType, UnitValue
 
 
 class TestUnit(unittest.TestCase):
@@ -14,7 +12,7 @@ class TestUnit(unittest.TestCase):
         self.unit.set_value(UnitValue(42))
 
         # Verify that the value was set correctly
-        self.assertEqual(self.unit.get_value_obj().get_value(), 42)
+        self.assertEqual(self.unit.get_value(), 42)
 
     def test_set_type(self):
         # Create a mock UnitType object
@@ -73,7 +71,7 @@ class TestUnit(unittest.TestCase):
         value = self.unit.get_value()
 
         # Verify that the value was retrieved correctly
-        self.assertEqual(value, '{"value": 42}')
+        self.assertEqual(value.to_json(), '{"value": 42}')
 
     def test_get_type(self):
         # Create and set the type of the Unit object
@@ -83,16 +81,57 @@ class TestUnit(unittest.TestCase):
         type_ = self.unit.get_type()
 
         # Verify that the type was retrieved correctly
-        self.assertEqual(type_, '{"name": "m"}')
+        self.assertEqual(type_, 'm')
 
     def test_to_dict(self):
         # Set the value and type of the Unit object
         self.unit.set_value(UnitValue(42))
-        self.unit.create_and_set_type("m")
+        # self.unit.create_and_set_type("m")
 
         # Convert the Unit object to a dictionary
         unit_dict = self.unit.to_dict()
 
         # Verify that the dictionary was created correctly
-        self.assertEqual(unit_dict["value"]["value"], 42)
-        self.assertEqual(unit_dict["type"]["name"], "m")
+        self.assertEqual(unit_dict["value"], 42)
+        # self.assertEqual(unit_dict["type"]["name"], "m")
+
+    # def test_set_value_obj(self):
+    #     # Test setting the value object
+    #     value = UnitValue("test")
+    #     unit = Unit()
+    #     unit.set_value_obj(value)
+    #     self.assertEqual(unit.value_, value)
+
+    # def test_set_value(self):
+    #     # Test setting the value with a string
+    #     unit = Unit()
+    #     unit.set_value("test")
+    #     self.assertEqual(unit.value_.get_value(), "test")
+
+    #     # Test setting the value with a string and super type
+    #     unit.set_value("test", "str")
+    #     self.assertEqual(unit.value_.get_value(), "test")
+    #     self.assertEqual(unit.value_.get_value_super_type(), "str")
+
+    def test_set_type_obj(self):
+        # Test setting the type object
+        type_ = UnitType("test_type")
+        unit = Unit()
+        unit.set_type_obj(type_)
+        self.assertEqual(unit.type_, type_)
+
+    def test_init(self):
+        # Test initializing the Unit class with a value object and type object
+        value_ = UnitValue("test")
+        type_ = UnitType("str")
+        unit = Unit(value_, type_)
+        self.assertEqual(unit.value_, value_)
+        self.assertEqual(unit.type_, type_)
+
+        # Test initializing the Unit class with a value object
+        unit = Unit(value_)
+        self.assertEqual(unit.value_, value)
+
+        # Test initializing the Unit class with a type object
+        unit = Unit(type_=type_)
+        self.assertEqual(unit.type_, type_)

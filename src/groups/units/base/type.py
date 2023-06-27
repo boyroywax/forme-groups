@@ -21,37 +21,37 @@ class Type_():
 
     def __init__(
         self,
-        id_: Optional[UnitValue] = None,
-        alias_: Optional[UnitValue] = None,
-        prefix_: Optional[UnitValue] = None,
-        suffix_: Optional[UnitValue] = None,
-        separator_: Optional[UnitValue] = None,
-        super_: Optional['Type_'] = None,
-        system_function_: Optional[Callable] = None,
+        id: Optional[UnitValue] = None,
+        alias: Optional[UnitValue] = None,
+        prefix: Optional[UnitValue] = None,
+        suffix: Optional[UnitValue] = None,
+        separator: Optional[UnitValue] = None,
+        super: Optional['Type_'] = None,
+        system_function: Optional[Callable] = None
     ) -> None:
         """
         Initializes the Type_ class.
         """
-        if id_ is not None:
-            self.set_id(id_)
+        if id is not None:
+            self.set_id(id)
 
-        if alias_ is not None:
-            self.set_alias(alias_)
+        if alias is not None:
+            self.set_alias(alias)
 
-        if prefix_ is not None:
-            self.set_prefix(prefix_)
+        if prefix is not None:
+            self.set_prefix(prefix)
 
-        if suffix_ is not None:
-            self.set_suffix(suffix_)
+        if suffix is not None:
+            self.set_suffix(suffix)
 
-        if separator_ is not None:
-            self.set_separator(separator_)
+        if separator is not None:
+            self.set_separator(separator)
 
-        if super_ is not None:
-            self.set_super(super_)
+        if super is not None:
+            self.set_super(super)
 
-        if system_function_ is not None:
-            self.set_system_function(system_function_)
+        if system_function is not None:
+            self.set_system_function(system_function)
 
     def set_id(self, id_: UnitValue) -> None:
         """
@@ -77,11 +77,11 @@ class Type_():
         """
         self.suffix = suffix_
 
-    def set_separator(self, separator_: UnitValue) -> None:
+    def set_separator(self, separator: UnitValue) -> None:
         """
         Sets the separator of the unit type.
         """
-        self.separator = separator_
+        self.separator = separator
 
     def set_super(self, super_: 'Type_') -> None:
         """
@@ -142,13 +142,13 @@ class Type_():
         Returns the JSON representation of the unit type.
         """
         return {
-            "id": self.get_id(),
-            "alias": self.get_alias(),
-            "prefix": self.get_prefix(),
-            "suffix": self.get_suffix(),
-            "separator": self.get_separator(),
-            "super": self.get_super(),
-            "system_function": self.get_system_function(),
+            "id": self.get_id().get_value() if self.get_id() is not None else None,
+            "alias": self.get_alias().get_value() if self.get_alias() is not None else None,
+            "prefix": self.get_prefix().get_value() if self.get_prefix() is not None else None,
+            "suffix": self.get_suffix().get_value() if self.get_suffix() is not None else None,
+            "separator": self.get_separator().get_value() if self.get_separator() is not None else None,
+            "super": self.get_super().get_id().get_value() if self.get_super() is not None else None,
+            "system_function": self.get_system_function() if self.get_system_function() is not None else None,
         }
 
     def to_json(self) -> str:
@@ -170,13 +170,13 @@ class Type_():
         Returns the unit type from the JSON representation.
         """
         return Type_(
-            id_=data.get("id"),
-            alias_=data.get("alias"),
-            prefix_=data.get("prefix"),
-            suffix_=data.get("suffix"),
-            separator_=data.get("separator"),
-            super_=data.get("super"),
-            system_function_=data.get("system_function"),
+            id=data.get("id"),
+            alias=data.get("alias"),
+            prefix=data.get("prefix"),
+            suffix=data.get("suffix"),
+            separator=data.get("separator"),
+            super=data.get("super"),
+            system_function=data.get("system_function"),
         )
 
     @staticmethod
@@ -205,4 +205,3 @@ class Type_():
         Returns the string representation of the unit type.
         """
         return f"{self.get_id()}"
-

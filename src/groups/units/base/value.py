@@ -1,9 +1,10 @@
 import json
+import uuid
 
 from dataclasses import dataclass
 from typing import Any, Optional
 
-# from ..system.config import Config as SystemConfig
+_FORCE_SUPER_TYPE = False
 
 
 @dataclass
@@ -13,16 +14,28 @@ class Value_():
     """
     _value: Any = None
 
-    def set_value(self, value: Any, super_type: Optional[str] = None) -> None:
+    def __init__(self, value: Optional[Any] = None, super_type: Optional[str] = None) -> None:
+        """
+        Initializes the Value_ class.
+        """
+        self.set_value(value, super_type)
+
+    def set_value(self, value: Optional[Any] = None, super_type: Optional[str] = None) -> None:
         """
         Set the value of the unit object.
         """
-        self._value = value
+        if value is not None:
+            self._value = value
+        else:
+            self._value = uuid.uuid4().hex
 
-        if super_type is not None:
-            self.force_super_type(super_type)
-        # else:
-        #     self.force_super_type(SystemConfig().get_super_value_type_name())
+        passed_value_type = self.get_value_super_type()
+
+        if passed_value_type == super_type:
+            if super_type is not None:
+                self.force_super_type(super_type)
+        elif _FORCE_SUPER_TYPE:
+            self.force_super_type("str")
 
     def get_value(self) -> Any:
         """
@@ -70,6 +83,7 @@ class Value_():
                     case "bytes":
                         self._value = bytes(self._value)
                     case _:
+                        self._value = self
                         raise ValueError(
                             f"Unknown super type: {value_super_type_name}"
                         )
@@ -86,6 +100,12 @@ class Value_():
             "value": self.get_value(),
             "value_super_type": self.get_value_super_type(),
         }
+
+    # def to_json(self) -> dict:
+    #     """
+    #     Returns the JSON representation of the value.
+    #     """
+    #     return json.loads(self.to_json())
 
     def to_json(self) -> str:
         """

@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import patch
-from src.groups.system import System
+from groups.manager.system import System
 
 
 class TestSystem(unittest.TestCase):
