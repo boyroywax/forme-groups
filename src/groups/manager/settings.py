@@ -1,8 +1,7 @@
-from .defaults import Defaults
+from ..units.base.defaults import Defaults
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
-from ..units import UnitType
-from .. import Config
+from ..units.unit import UnitType
 
 
 @dataclass
@@ -10,34 +9,22 @@ class Settings():
     """
     This class handles the unit system settings
     """
-    config: Optional[Config] = None
-    defaults: Optional[Defaults] = None
-    overrides: Optional[Dict[str, Any]] = None
-    supported: Optional[Dict[str, UnitType]] = None
-    active_types: Optional[Dict[str, UnitType]] = None
+    defaults: Defaults = Defaults()
+    supported: Dict[str, UnitType] = field(default_factory=dict)
+    active_types: Dict[str, UnitType] = field(default_factory=dict)
 
     def __init__(
         self,
+        override_defaults: Optional[bool] = False,
         overrides: Optional[Dict[str, Any]] = None
     ) -> None:
         """
         Initializes the Settings class.
         """
-        if overrides is not None:
-            self.overrides = overrides
-
-    def init_defaults(self) -> None:
-        """
-        Initializes the defaults.
-        """
-        self.defaults = Defaults()
-
-    def init_supported_types(self) -> None:
-        """
-        Initializes the supported types.
-        """
-        self.supported = self.defaults.get_supported_types()
-        
+        self.defaults = Defaults(
+            override_defaults=override_defaults,
+            overrides=overrides
+        )
 
     def get_defaults(self) -> Dict[str, Any]:
         """

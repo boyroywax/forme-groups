@@ -9,11 +9,9 @@ class System():
     """
     Manages the system of the group object.
     """
-    
 
     def __init__(self) -> None:
         """
         Initializes the System class.
         """
         pass
-    

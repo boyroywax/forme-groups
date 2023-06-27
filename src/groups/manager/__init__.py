@@ -30,5 +30,38 @@ class Manager():
         """
         self.settings = Settings()
 
+    def init_system(self) -> None:
+        """
+        Initializes the system.
+        """
+        self.system = System()
+
+    def get_settings(self) -> Settings:
+        """
+        Returns the settings.
+        """
+        return self.settings
+    
+    def get_system(self) -> System:
+        """
+        Returns the system.
+        """
+        return self.system
+    
+    def set_settings(self, settings: Settings) -> None:
+        """
+        Sets the settings.
+        """
+        self.settings = settings
+
+    def set_system(self, system: System) -> None:
+        """
+        Sets the system.
+        """
+        self.system = system
+
+        
+
+
         
 
