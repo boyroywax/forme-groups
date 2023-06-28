@@ -27,3 +27,12 @@ class Type():
         """
         return self.aliases
     
+    def get(self, id: str) -> Optional[Any]:
+        """
+        Get the type by ID.
+        """
+        if self.id == id:
+            return self
+        
+        return None 
+    

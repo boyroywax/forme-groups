@@ -33,6 +33,23 @@ class Defined():
                 defined.append(TypeClass(**d))
 
         return defined
+    
+    def _load_from_list(self, data: List[TypeClass]) -> List[TypeClass]:
+        """
+        Load the defined types from the dictionary.
+        """
+        defined = []
+
+        for d in data:
+            defined.append(TypeClass(d))
+
+        return defined
+    
+    def get_defined(self) -> List[TypeClass]:
+        """
+        Gets the defined types.
+        """
+        return self._defined
 
     def get(self, id: str) -> Optional[TypeClass]:
         """
@@ -53,3 +70,9 @@ class Defined():
                 return defined
 
         return None
+    
+    def set_defined(self, data: List[TypeClass]) -> None:
+        """
+        Sets the defined types.
+        """
+        self._defined = self._load_from_list(data)

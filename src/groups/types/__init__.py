@@ -36,3 +36,35 @@ class Types():
             type = self._supported.get(id)
 
         return type
+
+    def get_by_alias(self, alias: str) -> Optional[Any]:
+        """
+        Get the type by alias.
+        """
+        type = self._defaults.get_by_alias(alias)
+
+        if type is None:
+            type = self._defined.get_by_alias(alias)
+
+        if type is None:
+            type = self._supported.get_by_alias(alias)
+
+        return type
+
+    def get_defaults(self) -> List[Any]:
+        """
+        Gets the defaults.
+        """
+        return self._defaults.get_defaults()
+    
+    def get_defined(self) -> List[Any]:
+        """
+        Gets the defined.
+        """
+        return self._defined.get_defined()
+
+    def get_supported(self) -> List[Any]:
+        """
+        Gets the supported.
+        """
+        return self._supported.get_supported()

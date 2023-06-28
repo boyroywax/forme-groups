@@ -1,0 +1,21 @@
+[ 
+    {
+        "id": "type1",
+        "aliases": ["alias1", "alias2"],
+        "super_type": "string",
+        "prefix": "1:",
+        "suffix": ":1",
+        "separator": "",
+        "system_function": "<class 'string'>"
+      },
+      {
+        "id": "type2",
+        "aliases": ["alias3", "alias4"],
+        "super_type": "string",
+        "prefix": "2:",
+        "suffix": ":2",
+        "separator": "",
+        "system_function": "<class 'string'>"
+
+      }
+]
