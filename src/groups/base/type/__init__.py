@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 
-from ._unit import Unit
+# from ._unit import Unit
+from .id import Id
 from .alias import Alias
 from .super import Super
 from .prefix import Prefix
@@ -10,14 +11,14 @@ from .function import Function
 
 
 @dataclass
-class Base:
+class Type():
     """
     Manages the base of the group object.
     """
+    id: Id
     alias: Alias
     super: Super
     prefix: Prefix
     suffix: Suffix
     separator: Separator
     function: Function
-

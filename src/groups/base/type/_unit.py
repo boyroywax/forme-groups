@@ -1,7 +1,7 @@
 import uuid
 
 from dataclasses import dataclass, InitVar
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Optional
 
 from .checks import Checks
 
@@ -69,14 +69,18 @@ class Unit():
 
     def __post_init__(self, _random_value: bool) -> None:
         """
-        Initializes the Unit class.
+        Post Initializes the Unit class.
+        * If '_random_value' is True, a random value is generated.
+        * If '_random_value' is True, and the value is None, a random value is set.
+        * You cannot overwrite a value with a random value.
+        * You can only set a random value if the value is None.
         """
         if _random_value and self.value is None:
             self.set_value()
 
     def get_type(self) -> str:
         """
-        Returns the type of the unit.
+        Returns the type name of the unit of the value.
         """
         return type(self).__name__
 

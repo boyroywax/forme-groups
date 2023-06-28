@@ -1,5 +1,5 @@
 import unittest
-from src.groups.base.checks import Checks
+from src.groups.base.type.checks import Checks
 
 
 class TestChecks(unittest.TestCase):
