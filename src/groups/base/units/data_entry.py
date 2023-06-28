@@ -1,16 +1,10 @@
 from dataclasses import dataclass
 
-
 from .base import BaseUnit
 
 
 @dataclass
-class Units:
+class Data_Entry(BaseUnit):
     """
     """
     pass
-
-
-__all__ = [
-    BaseUnit,
-]

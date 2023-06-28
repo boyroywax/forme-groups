@@ -70,10 +70,7 @@ class Unit_():
         ```Python
         unit = Unit_("test")
         """
-        print("Unit_.__init__", args, kwargs)
-
-        # self.value = None
-
+        # 
         if len(args) > 0 and 'value' in kwargs:
             raise ValueError("Cannot provide both 'value' and 'kwargs['value']' to Unit_")
 
@@ -147,7 +144,6 @@ class Unit_():
             "value": None
         }
         ```
-
         """
         if "value" in unit_dict:
             if Checks.check_value_for_empty(unit_dict["value"]):
