@@ -18,32 +18,28 @@ class Defined():
         """
         Post initialisation hook.
         """
-        self._defined = self._load()
+        self._defined = []
+        self._load()
 
-    def _load(self) -> List[TypeClass]:
+    def _load(self) -> None:
         """
         Load the defined types from the JSON file.
         """
-        defined = []
+        # defined = []
 
         with open(os.path.join(os.path.dirname(__file__), "defined.json")) as f:
             data = json.load(f)
 
             for d in data:
-                defined.append(TypeClass(**d))
+                self._defined.append(TypeClass(**d))
 
-        return defined
+        # return defined
     
-    def _load_from_list(self, data: List[TypeClass]) -> List[TypeClass]:
+    def _load_from_list(self, data: List[TypeClass]) -> None:
         """
         Load the defined types from the dictionary.
         """
-        defined = []
-
-        for d in data:
-            defined.append(TypeClass(d))
-
-        return defined
+        self._defined = data
     
     def get_defined(self) -> List[TypeClass]:
         """
