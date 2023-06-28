@@ -48,29 +48,60 @@ class Unit_():
 
     def __init__(
         self,
-        value: Optional[Any] = None,
-        _random_value: bool = False
+        *args,
+        **kwargs,
+        # value: Optional[Any] = None,
+        # _random_value: bool = False
     ) -> None:
         """
-        Initializes the Unit_ class.
-        """
+        Initializes the Super Unit_ class.
+        * If 'value' is not None, the value is set.
+        * If 'value' is None, the value is set to None.
+        * If 'random' is True, and the value is None, a random value is set.
+        * If 'random' is True, and the value is not None, a random value is not set.
 
-        if value is not None:
-            self.set_value(value)
-        else:
+        Example (from kwargs):
+        ```Python
+        unit = Unit_(value="test")
+        unit = Unit_(random=True)
+        ```
+
+        Example (from args):
+        ```Python
+        unit = Unit_("test")
+        """
+        print("Unit_.__init__", args, kwargs)
+
+        # self.value = None
+
+        if len(args) > 0 and 'value' in kwargs:
+            raise ValueError("Cannot provide both 'value' and 'kwargs['value']' to Unit_")
+
+        if len(args) > 0 and 'random' in kwargs:
+            raise ValueError("Cannot provide both 'value' and 'args' to Unit_")
+
+        if len(args) == 0 and "value" in kwargs and "random" in kwargs:
+            raise ValueError("Cannot provide both 'value' and 'random' to Unit_")
+
+        if len(args) == 0 and "value" not in kwargs and "random" not in kwargs:
             self.value = None
-        self.__post_init__(_random_value)
+        elif len(args) == 1 and "value" not in kwargs and "random" not in kwargs:
+            self.set_value(args[0])
+        elif len(args) == 0 and "value" not in kwargs and "random" in kwargs:
+            self.set_random_value()
+        elif len(args) == 0 and "value" in kwargs and "random" not in kwargs:
+            self.set_value(kwargs["value"])
 
-    def __post_init__(self, _random_value: bool) -> None:
-        """
-        Post Initializes the Unit_ class.
-        * If '_random_value' is True, a random value is generated.
-        * If '_random_value' is True, and the value is None, a random value is set.
-        * You cannot overwrite a value with a random value.
-        * You can only set a random value if the value is None.
-        """
-        if _random_value and self.value is None:
-            self.set_value()
+    # def __post_init__(self, _random_value: bool) -> None:
+    #     """
+    #     Post Initializes the Unit_ class.
+    #     * If '_random_value' is True, a random value is generated.
+    #     * If '_random_value' is True, and the value is None, a random value is set.
+    #     * You cannot overwrite a value with a random value.
+    #     * You can only set a random value if the value is None.
+    #     """
+    #     if _random_value and self.value is None:
+    #         self.set_random_value()
 
     def get_type(self) -> str:
         """
@@ -81,7 +112,6 @@ class Unit_():
     def set_value(self, value: Optional[Any] = None) -> None:
         """
         Set the value of the unit object.
-        * If the value is None, a random value is generated.
         """
         if value is not None:
             if Checks.check_value_for_empty(value):
@@ -92,8 +122,12 @@ class Unit_():
                     "To create a NoneType unit, use Unit_()."
                 )
             self.value = value
-        else:
-            self.value = uuid.uuid4().hex
+
+    def set_random_value(self) -> None:
+        """
+        Sets a random value.
+        """
+        self.value = uuid.uuid4().hex
 
     def from_dict(unit_dict: Dict) -> 'Unit_':
         """

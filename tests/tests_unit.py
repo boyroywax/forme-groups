@@ -9,9 +9,10 @@ class TestUnit(unittest.TestCase):
         self.assertIsNone(unit.value)
 
         # Test creating a Unit_ object with a value argument
-        unit = Unit_("test")
+        unit = Unit_(value="test")
         self.assertEqual(unit.value, "test")
 
+    def test_dataclass_from_dict(self):
         # Test creating a Unit_ object with a dictionary argument
         unit = Unit_.from_dict({"value": "test"})
         self.assertEqual(unit.value, "test")
@@ -28,6 +29,7 @@ class TestUnit(unittest.TestCase):
         with self.assertRaises(TypeError):
             unit = Unit_.from_dict({"invalid_key": "test"})
 
+    def test_dataclass_from_dict_with_types(self):
         # Test creating a Unit_ object with a dictionary argument that has an integer value
         unit = Unit_.from_dict({"value": 123})
         self.assertEqual(unit.value, 123)
@@ -153,7 +155,7 @@ class TestUnit(unittest.TestCase):
         # Test creating multiple Unit_ objects with random values
         unit_values = set()
         for i in range(100):
-            unit = Unit_(_random_value=True)
+            unit = Unit_(random=True)
             unit_values.add(unit.value)
         self.assertEqual(len(unit_values), 100)
 

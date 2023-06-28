@@ -5,6 +5,7 @@ from .tests_unit import TestUnit
 from .tests_id import TestId
 from .tests_type import TestType
 from .tests_defaults import TestDefaults
+from .tests_base_unit import TestBaseUnit
 
 
 
@@ -22,6 +23,7 @@ def main():
     test_suite.addTests(test_loader.loadTestsFromTestCase(TestId))
     test_suite.addTests(test_loader.loadTestsFromTestCase(TestType))
     test_suite.addTests(test_loader.loadTestsFromTestCase(TestDefaults))
+    test_suite.addTests(test_loader.loadTestsFromTestCase(TestBaseUnit))
 
     # Run the test suite
     runner = unittest.TextTestRunner()
