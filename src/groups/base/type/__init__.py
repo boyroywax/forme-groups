@@ -22,3 +22,15 @@ class Type():
     suffix: Suffix
     separator: Separator
     function: Function
+
+
+__all__ = [
+    "Type",
+    "Id",
+    "Alias",
+    "Super",
+    "Prefix",
+    "Suffix",
+    "Separator",
+    "Function",
+]

@@ -55,13 +55,6 @@ class Unit():
         """
 
         if value is not None:
-            if Checks.check_value_for_empty(value):
-                raise TypeError(
-                    "The value is empty."
-                    "The value must be a non-empty 'string', 'dictionary', 'tuple', or 'list'."
-                    "The value cannot be 'None'."
-                    "To create a NoneType unit, use Unit()."
-                )
             self.set_value(value)
         else:
             self.value = None
@@ -90,6 +83,13 @@ class Unit():
         * If the value is None, a random value is generated.
         """
         if value is not None:
+            if Checks.check_value_for_empty(value):
+                raise TypeError(
+                    "The value is empty."
+                    "The value must be a non-empty 'string', 'dictionary', 'tuple', or 'list'."
+                    "The value cannot be 'None'."
+                    "To create a NoneType unit, use Unit()."
+                )
             self.value = value
         else:
             self.value = uuid.uuid4().hex
@@ -114,8 +114,6 @@ class Unit():
         ```
 
         """
-        print(unit_dict)
-
         if "value" in unit_dict:
             if Checks.check_value_for_empty(unit_dict["value"]):
                 raise TypeError(
