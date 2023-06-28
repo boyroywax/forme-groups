@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 
-from ._unit import Unit
+from ._unit import Unit_ as SuperUnit
 
 
 @dataclass
-class Super(Unit):
+class Super(SuperUnit):
     """
     Manages the super of the group object.
     """

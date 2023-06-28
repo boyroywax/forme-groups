@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 
-from ._unit import Unit
+from ._unit import Unit_ as SuperUnit
 
 
 @dataclass
-class Separator(Unit):
+class Separator(SuperUnit):
     """
     Manages the separator of the group object.
     """

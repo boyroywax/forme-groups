@@ -9,31 +9,32 @@ from .checks import Checks
 @dataclass(
     slots=True,
 )
-class Unit():
+class Unit_():
     """
-    The base class for all units.
+    The super base class for all units.
     * Units can be initialized as a 'value'.
-    * Units can be initialized as a 'dictionary'.
     * Units can be initialized as NoneType.
     * Units can be initialized as a random value.
+    * Units can be initialized from a 'dictionary'.
 
     Example (from NoneType):
     ```Python
-    unit = Unit()
-    unit = Unit(None)
+    unit = Unit_()
+    unit = Unit_(None)
     ```
 
     Example (from value):
     ```Python
-    unit = Unit("test")
+    unit = Unit_("test")
     ```
 
     Example (from dictionary):
     ```Python
-    unit = Unit({
+    unit = Unit_({
         "value": "test"
     })
-
+    ```
+    
     Note: The 'value' is stored as a slot.
     A dataclass 'slot' is used to store the 'value' in memory.
 
@@ -51,7 +52,7 @@ class Unit():
         _random_value: bool = False
     ) -> None:
         """
-        Initializes the Unit class.
+        Initializes the Unit_ class.
         """
 
         if value is not None:
@@ -62,7 +63,7 @@ class Unit():
 
     def __post_init__(self, _random_value: bool) -> None:
         """
-        Post Initializes the Unit class.
+        Post Initializes the Unit_ class.
         * If '_random_value' is True, a random value is generated.
         * If '_random_value' is True, and the value is None, a random value is set.
         * You cannot overwrite a value with a random value.
@@ -88,13 +89,13 @@ class Unit():
                     "The value is empty."
                     "The value must be a non-empty 'string', 'dictionary', 'tuple', or 'list'."
                     "The value cannot be 'None'."
-                    "To create a NoneType unit, use Unit()."
+                    "To create a NoneType unit, use Unit_()."
                 )
             self.value = value
         else:
             self.value = uuid.uuid4().hex
 
-    def from_dict(unit_dict: Dict) -> 'Unit':
+    def from_dict(unit_dict: Dict) -> 'Unit_':
         """
         Sets the unit from a dictionary.
         * Empty and None values are ignored.
@@ -120,10 +121,10 @@ class Unit():
                     "The dictionary's value is empty."
                     "The dictionary's value must be a non-empty 'string', 'dictionary', 'tuple', or 'list'."
                     "The dictionary's value cannot be 'None'."
-                    "To create a NoneType unit, use Unit()."
+                    "To create a NoneType unit, use Unit_()."
                 )
             else:
-                return Unit(unit_dict["value"])
+                return Unit_(unit_dict["value"])
         else:
             raise TypeError("The dictionary is missing the required key 'value'.")
 

@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 
-from ._unit import Unit
+from ._unit import Unit_ as SuperUnit
 
 
 @dataclass
-class Alias(Unit):
+class Alias(SuperUnit):
     """
     Manages the alias of the group object.
     """

@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import List, Optional
 
 from . import Type as BaseType
@@ -9,7 +9,6 @@ from .prefix import Prefix
 from .suffix import Suffix
 from .separator import Separator
 from .function import Function
-from ._unit import Unit
 
 
 @dataclass
