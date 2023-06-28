@@ -42,12 +42,15 @@ class Defaults():
                 return type
         
         return None
-
     
-    def set_defaults(self) -> None:
+    def set_defaults(self, defaults: Optional[List] = None) -> None:
         """
         Sets the defaults.
         """
+        if defaults is not None:
+            self._defaults = defaults
+            return None
+
         self._defaults = [
             TypeClass(
                 id="string",
