@@ -139,3 +139,13 @@ The default nonce unit type is `int`, with a default nonce unit value of `0`.
 Nonce chains can hold multiple nonce units of varying types.  The Nonce class checks that the nonce units are valid and that the nonce units are in the correct order.
 
 An active nonce unit is the last nonce unit in the chain.  The active nonce unit is used to create the next nonce unit in the chain.
+
+
+# Program Pieces
+## Start Up
+1. Load default UnitTypes
+2. Check for supported UnitTypes
+3. Load custom UnitTypes
+
+
+## Super Objects
