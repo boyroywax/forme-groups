@@ -10,28 +10,14 @@ class TestUnits(unittest.TestCase):
 
     def test_load_defaults(self):
         # Test loading default units
-        # with open('src/groups/base/units/default_units.txt', 'r') as f:
-        #     expected_units = json.loads(f.read())
         expected_units = [Type_(id_=Id(value='string'), alias=Alias(value=['string', 'str']), super_=Super(value='RESERVED'), prefix=Prefix(value=None), suffix=Suffix(value=None), separator=Separator(value=None), function_=Function(value=str)), Type_(id_=Id(value='integer'), alias=Alias(value=['integer', 'int']), super_=Super(value='RESERVED'), prefix=Prefix(value=None), suffix=Suffix(value=None), separator=Separator(value=None), function_=Function(value=int)), Type_(id_=Id(value='float'), alias=Alias(value=['float']), super_=Super(value='RESERVED'), prefix=Prefix(value=None), suffix=Suffix(value=None), separator=Separator(value=None), function_=Function(value=float)), Type_(id_=Id(value='boolean'), alias=Alias(value=['boolean', 'bool']), super_=Super(value='RESERVED'), prefix=Prefix(value=None), suffix=Suffix(value=None), separator=Separator(value=None), function_=Function(value=bool)), Type_(id_=Id(value='list'), alias=Alias(value=['list']), super_=Super(value='RESERVED'), prefix=Prefix(value='['), suffix=Suffix(value=']'), separator=Separator(value=','), function_=Function(value=list)), Type_(id_=Id(value='tuple'), alias=Alias(value=['tuple']), super_=Super(value='RESERVED'), prefix=Prefix(value='('), suffix=Suffix(value=')'), separator=Separator(value=','), function_=Function(value=tuple)), Type_(id_=Id(value='dictionary'), alias=Alias(value=['dictionary', 'dict']), super_=Super(value='RESERVED'), prefix=Prefix(value='{'), suffix=Suffix(value='}'), separator=Separator(value=','), function_=Function(value=dict)), Type_(id_=Id(value='bytes'), alias=Alias(value=['bytes']), super_=Super(value='RESERVED'), prefix=Prefix(value="b'"), suffix=Suffix(value="'"), separator=Separator(value=None), function_=Function(value=bytes))]
         self.units._load_defaults()
         self.assertEqual(self.units.types, expected_units)
 
-    # def test_load_custom(self):
-    #     # Test loading custom units
-    #     with patch('src.groups.base.units.open') as mock_open:
-    #         mock_open.return_value.__enter__.return_value.read.return_value = 'test_units'
-    #         self.units._load_custom()
-    #         mock_open.assert_called_once_with('src/groups/base/units/custom_units.txt', 'r')
-    #         self.assertEqual(self.units._units, 'test_units')
+    def test_load_custom(self):
+        # Test loading custom units
+        expected_units = [Type_(id_=Id(value='custom'), alias=Alias(value=['custom']), super_=Super(value='RESERVED'), prefix=Prefix(value='['), suffix=Suffix(value=']'), separator=Separator(value=','), function_=Function(value=list))] 
 
-    # def test_load_all(self):
-    #     # Test loading all units
-    #     with patch('src.groups.base.units.open') as mock_open:
-    #         mock_open.return_value.__enter__.return_value.read.return_value = 'test_units'
-    #         self.units._load_all()
-    #         mock_open.assert_any_call('src/groups/base/units/default_units.txt', 'r')
-    #         mock_open.assert_any_call('src/groups/base/units/custom_units.txt', 'r')
-    #         self.assertEqual(self.units._units, 'test_units')
 
     def test_load_invalid(self):
         # Test loading invalid units

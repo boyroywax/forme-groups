@@ -60,7 +60,7 @@ class Defaults:
                 raise ValueError("'overrides' must be provided if 'override_types' is True")
             self.types = overrides
         else:
-            print("Generating Types from Defaults...")
+            # print("Generating Types from Defaults...")
             self.types = self.generate_defaults()
 
             for type_ in self.types:

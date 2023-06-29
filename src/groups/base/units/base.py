@@ -14,8 +14,8 @@ class BaseUnit(SuperUnit):
     All units are dataclasses.
     All units are initialized with a 'value' and a 'base_type'.
     """
-    # _base_type: Optional[BaseType] = field(default_factory=BaseType)
-    _base_type: Optional[BaseType] = None
+    _base_type: Optional[BaseType] = field(default_factory=BaseType)
+    # _base_type: Optional[BaseType] = None
 
     def __init__(self, *args, **kwargs):
         """
@@ -41,7 +41,7 @@ class BaseUnit(SuperUnit):
         * Receives 'args' and 'kwargs'.
         """
         self.base_type: Optional[BaseType] = None
-        print(f'args - {args}')
+        # print(f'args - {args}')
         if (
             len(args) > 0 and
             args[1] is not None and
@@ -49,7 +49,7 @@ class BaseUnit(SuperUnit):
             'base_type' not in kwargs
             # self.base_type is None
         ):
-            print(f"Post Init - args - {args}")
+            # print(f"Post Init - args - {args}")
             self.base_type = args[1]
         elif (
             'base_type' in kwargs and
@@ -62,8 +62,8 @@ class BaseUnit(SuperUnit):
 
         
 
-        print("Post Init complete")
-        print(self._base_type)
+        # print("Post Init complete")
+        # print(self._base_type)
 
     # @property
     # def value(self) -> Any:

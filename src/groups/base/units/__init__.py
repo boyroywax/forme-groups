@@ -136,7 +136,7 @@ class Units():
         else:
             raise ValueError("The option provided is not supported.")
 
-        print(self.types)
+        # print(self.types)
 
     def _add_type(self, base_type: BaseType) -> None:
         """
@@ -172,7 +172,7 @@ class Units():
         defaults = BaseDefaults()
         defaults.generate()
         loaded_types = defaults.types
-        print(loaded_types)
+        # print(loaded_types)
         for type_ in loaded_types:
             if self._check_system_type(type_):
                 self._add_type(type_)
@@ -197,6 +197,7 @@ class Units():
             return BaseChecks.check_supported_system_type(type_.function_.value)
         else:
             raise ValueError("The type provided is not a RESERVED system type.")
+
     @property
     def types(self) -> List[BaseType]:
         """
@@ -233,6 +234,7 @@ class Units():
 
 
 __all__ = [
+    Units,
     BaseUnit,
     Nonce,
     Owner,

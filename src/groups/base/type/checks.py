@@ -58,9 +58,9 @@ class Checks:
         """
         Checks the supported system types.
         """
-        if system_function == 'type':
-            print(f'Found type: {system_function}')
-        print(system_function.__name__)
+        # if system_function == 'type':
+        #     print(f'Found type: {system_function}')
+        # print(system_function.__name__)
         match system_function.__name__:
             case 'str':
                 return True
