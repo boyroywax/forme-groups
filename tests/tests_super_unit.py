@@ -167,3 +167,47 @@ class TestSuperUnit(unittest.TestCase):
     def test_invalid_value(self):
         # Test creating a Unit_ object with an invalid value
         self.assertIsNotNone(Unit_("test"))
+
+    def test_init_with_value(self):
+        unit = Unit_("test")
+        self.assertEqual(unit.value, "test")
+
+    def test_init_with_none_value(self):
+        unit = Unit_()
+        self.assertIsNone(unit.value)
+
+    def test_init_with_empty_value(self):
+        # Test creating a Unit_ object with an empty value
+        with self.assertRaises(TypeError):
+            Unit_("")
+
+    def test_init_with_dict_value(self):
+        # Test creating a Unit_ object with a dictionary value
+        self.assertIsNotNone(Unit_({"test_key": "test_value"}))
+
+    def test_init_with_tuple_value(self):
+        # Test creating a Unit_ object with a tuple value
+        self.assertIsNotNone(Unit_(("value",)).to_dict()["value"])
+
+    def test_init_with_list_value(self):
+        self.assertIsNotNone(Unit_(["value"]).to_dict()["value"])
+
+    def test_from_dict_with_value(self):
+        unit_dict = {"value": "test"}
+        unit = Unit_.from_dict(unit_dict)
+        self.assertEqual(unit.value, "test")
+
+    def test_from_dict_with_none_value(self):
+        unit_dict = {"value": None}
+        with self.assertRaises(TypeError):
+            Unit_.from_dict(unit_dict)
+
+    def test_from_dict_with_missing_value(self):
+        unit_dict = {}
+        with self.assertRaises(TypeError):
+            Unit_.from_dict(unit_dict)
+
+    def test_to_dict(self):
+        unit = Unit_("test")
+        unit_dict = unit.to_dict()
+        self.assertEqual(unit_dict, {"value": "test"})

@@ -13,7 +13,7 @@ _DEFAULT_SUPER_TYPE = "str"
 )
 class Unit_:
     """
-    The super base class for all units.
+    The super unit class for all units.
     * Units can be initialized as a 'value'.
     * Units can be initialized as NoneType.
     * Units can be initialized as a random value.
@@ -174,14 +174,4 @@ class Unit_:
             "value": self.value
         }
 
-    # def __str__(self) -> str:
-    #     """
-    #     Returns the unit as a string.
-    #     """
-    #     return str("Unit_(value='{}')").format(self.value)
-    
-    # def __repr__(self) -> str:
-    #     """
-    #     Returns the unit as a string.
-    #     """
-    #     return "Unit_(value='{}')".format(self.value)
+
