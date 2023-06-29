@@ -48,16 +48,13 @@ class BaseUnit(SuperUnit):
             args[1] is not None and
             isinstance(args[1], BaseType) and
             'base_type' not in kwargs
-            # self.base_type is None
         ):
-            # print(f"Post Init - args - {args}")
             self.base_type = args[1]
 
         # Check if the 'base_type' is provided as a keyword argument.
         elif (
             'base_type' in kwargs and
             isinstance(kwargs['base_type'], BaseType)
-            # self.base_type is None
         ):
             self.base_type = kwargs["base_type"]
 
@@ -90,20 +87,6 @@ class BaseUnit(SuperUnit):
     def id_(self) -> BaseType:
         """
         The id of the base object.
-        """
-        return self._base_type.id_
-
-    @id_.setter
-    def id_(self, id: Any) -> None:
-        """
-        Sets the id of the base object.
-        """
-        self._base_type.id.value = id
-
-    @id_.getter
-    def id_(self) -> BaseType:
-        """
-        Gets the id of the base object.
         """
         return self._base_type.id_.value
 
