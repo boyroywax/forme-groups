@@ -72,6 +72,8 @@ class Checks():
                 return True
             case 'list':
                 return True
+            case 'tuple':
+                return True
             case 'dict':
                 return True
             case 'bytes':

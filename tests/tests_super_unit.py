@@ -2,7 +2,7 @@ import unittest
 from src.groups.base.type._unit import Unit_
 
 
-class TestUnit(unittest.TestCase):
+class TestSuperUnit(unittest.TestCase):
     def test_dataclass(self):
         # Test creating a Unit_ object with no arguments
         unit = Unit_()

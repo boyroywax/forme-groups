@@ -171,7 +171,7 @@ class Units():
         if type_.super.value == "RESERVED":
             return BaseChecks.check_supported_system_type(type_.function.value)
         else:
-            raise ValueError("The type provided is not a system type.")
+            raise ValueError("The type provided is not a RESERVED system type.")
 
     @property
     def types(self) -> List[BaseType]:

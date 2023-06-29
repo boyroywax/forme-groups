@@ -12,7 +12,7 @@ class TestUnits(unittest.TestCase):
         with open('src/groups/base/units/default_units.txt', 'r') as f:
             expected_units = f.read()
         self.units._load_defaults()
-        self.assertEqual(self.units._units, expected_units)
+        self.assertEqual(self.units.types, expected_units)
 
     # def test_load_custom(self):
     #     # Test loading custom units

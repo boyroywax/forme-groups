@@ -5,6 +5,8 @@ from typing import Any, Dict, Optional
 
 from .checks import Checks
 
+_DEFAULT_SUPER_TYPE = "str"
+
 
 @dataclass(
     slots=True,
@@ -45,6 +47,8 @@ class Unit_():
 
     value: Any = None
     _random_value: InitVar[bool] = None
+    _force_super_type: InitVar[bool] = None
+
 
     def __init__(
         self,
@@ -67,6 +71,7 @@ class Unit_():
         Example (from args):
         ```Python
         unit = Unit_("test")
+        ```
         """
         # 
         if len(args) > 0 and 'value' in kwargs:

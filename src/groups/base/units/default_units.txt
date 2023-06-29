@@ -1,3 +1,9 @@
-{
-    
-}
+[Type(id=Id(value='string'), alias=Alias(['string', 'str']), super=Super(value='RESERVED'), prefix=Prefix(value=''), suffix=Suffix(value=''), seperator=Seperator(value=''), function=Function(<class 'str'>)),
+Type(id=Id(value='integer'), alias=Alias(['integer', 'int']), super=Super(value='RESERVED'), prefix=Prefix(value=''), suffix=Suffix(value=''), seperator=Seperator(value=''), function=Function(<class 'int'>)),
+Type(id=Id(value='float'), alias=Alias(['float']), super=Super(value='RESERVED'), prefix=Prefix(value=''), suffix=Suffix(value=''), seperator=Seperator(value=''), function=Function(<class 'float'>)),
+Type(id=Id(value='bool'), alias=Alias(['boolean', 'bool']), super=Super(value='RESERVED'), prefix=Prefix(value=''), suffix=Suffix(value=''), seperator=Seperator(value=''), function=Function(<class 'bool'>)),
+Type(id=Id(value='list'), alias=Alias(['list']), super=Super(value='RESERVED'), prefix=Prefix(value='['), suffix=Suffix(value=']'), seperator=Seperator(value=','), function=Function(<class 'list'>)),
+Type(id=Id(value='tuple'), alias=Alias(['tuple']), super=Super(value='RESERVED'), prefix=Prefix(value='(value='), suffix=Suffix(value=')'), seperator=Seperator(value=','), function=Function(<class 'tuple'>)),
+Type(id=Id(value='dictionary'), alias=Alias(['dictionary', 'dict']), super=Super(value='RESERVED'), prefix=Prefix(value='{'), suffix=Suffix(value='}'), seperator=Seperator(value=','), function=Function(<class 'dict'>)),
+Type(id=Id(value='bytes'), alias=Alias(['bytes']), super=Super(value='RESERVED'), prefix=Prefix(value=''), suffix=Suffix(value=''), seperator=Seperator(value=''), function=Function(<class 'bytes'>))
+]
