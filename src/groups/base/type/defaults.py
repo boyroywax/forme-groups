@@ -64,8 +64,8 @@ class Defaults:
             self.types = self.generate_defaults()
 
             for type_ in self.types:
-                if Checks.check_supported_system_type(type_.function.value) is False:
-                    print(f"Removing unsupported type: {type_.function.value}")
+                if Checks.check_supported_system_type(type_.function_.value) is False:
+                    print(f"Removing unsupported type: {type_.function_.value}")
                     self.remove(type_)
 
     def generate_defaults(self) -> List[BaseType]:
@@ -73,83 +73,83 @@ class Defaults:
         Generates the defaults for the base type object.
         """
         string_type: BaseType = BaseType(
-            id=Id(value="string"),
+            id_=Id(value="string"),
             alias=Alias(value=["string", "str"]),
-            super=Super(value="RESERVED"),
+            super_=Super(value="RESERVED"),
             prefix=Prefix(),
             suffix=Suffix(),
             separator=Separator(),
-            function=Function(value=str)
+            function_=Function(value=str)
         )
 
         integer_type: BaseType = BaseType(
-            id=Id(value="integer"),
+            id_=Id(value="integer"),
             alias=Alias(value=["integer", "int"]),
-            super=Super(value="RESERVED"),
+            super_=Super(value="RESERVED"),
             prefix=Prefix(),
             suffix=Suffix(),
             separator=Separator(),
-            function=Function(value=int)
+            function_=Function(value=int)
         )
 
         float_type: BaseType = BaseType(
-            id=Id(value="float"),
+            id_=Id(value="float"),
             alias=Alias(value=["float"]),
-            super=Super(value="RESERVED"),
+            super_=Super(value="RESERVED"),
             prefix=Prefix(),
             suffix=Suffix(),
             separator=Separator(),
-            function=Function(value=float)
+            function_=Function(value=float)
         )
 
         boolean_type: BaseType = BaseType(
-            id=Id(value="boolean"),
+            id_=Id(value="boolean"),
             alias=Alias(value=["boolean", "bool"]),
-            super=Super(value="RESERVED"),
+            super_=Super(value="RESERVED"),
             prefix=Prefix(),
             suffix=Suffix(),
             separator=Separator(),
-            function=Function(value=bool)
+            function_=Function(value=bool)
         )
 
         list_type: BaseType = BaseType(
-            id=Id(value="list"),
+            id_=Id(value="list"),
             alias=Alias(value=["list"]),
-            super=Super(value="RESERVED"),
+            super_=Super(value="RESERVED"),
             prefix=Prefix(value="["),
             suffix=Suffix(value="]"),
             separator=Separator(value=","),
-            function=Function(value=list)
+            function_=Function(value=list)
         )
 
         tuple_type: BaseType = BaseType(
-            id=Id(value="tuple"),
+            id_=Id(value="tuple"),
             alias=Alias(value=["tuple"]),
-            super=Super(value="RESERVED"),
+            super_=Super(value="RESERVED"),
             prefix=Prefix(value="("),
             suffix=Suffix(value=")"),
             separator=Separator(value=","),
-            function=Function(value=tuple)
+            function_=Function(value=tuple)
         )
 
         dictionary_type: BaseType = BaseType(
-            id=Id(value="dictionary"),
+            id_=Id(value="dictionary"),
             alias=Alias(value=["dictionary", "dict"]),
-            super=Super(value="RESERVED"),
+            super_=Super(value="RESERVED"),
             prefix=Prefix(value="{"),
             suffix=Suffix(value="}"),
             separator=Separator(value=","),
-            function=Function(value=dict)
+            function_=Function(value=dict)
         )
 
         bytes_type: BaseType = BaseType(
-            id=Id(value="bytes"),
+            id_=Id(value="bytes"),
             alias=Alias(value=["bytes"]),
-            super=Super(value="RESERVED"),
+            super_=Super(value="RESERVED"),
             prefix=Prefix(value="b'"),
             suffix=Suffix(value="'"),
             separator=Separator(),
-            function=Function(value=bytes)
+            function_=Function(value=bytes)
         )
 
         return [

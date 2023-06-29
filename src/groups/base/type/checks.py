@@ -1,7 +1,7 @@
 from typing import Any, Callable
 
 
-class Checks():
+class Checks:
     """
     Checks the system and data values for any errors.
     """

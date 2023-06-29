@@ -11,7 +11,7 @@ _DEFAULT_SUPER_TYPE = "str"
 @dataclass(
     slots=True,
 )
-class Unit_():
+class Unit_:
     """
     The super base class for all units.
     * Units can be initialized as a 'value'.
@@ -72,7 +72,6 @@ class Unit_():
         unit = Unit_("test")
         ```
         """
-        # 
         if len(args) > 0 and 'value' in kwargs:
             raise ValueError("Cannot provide both 'value' and 'kwargs['value']' to Unit_")
 
@@ -173,3 +172,15 @@ class Unit_():
         return {
             "value": self.value
         }
+
+    # def __str__(self) -> str:
+    #     """
+    #     Returns the unit as a string.
+    #     """
+    #     return str("Unit_(value='{}')").format(self.value)
+    
+    # def __repr__(self) -> str:
+    #     """
+    #     Returns the unit as a string.
+    #     """
+    #     return "Unit_(value='{}')".format(self.value)
