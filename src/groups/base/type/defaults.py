@@ -9,6 +9,7 @@ from .prefix import Prefix
 from .suffix import Suffix
 from .separator import Separator
 from .function import Function
+from .checks import Checks
 
 
 @dataclass
@@ -21,6 +22,24 @@ class Defaults:
     def __post_init__(self):
         if self.types is None:
             self.types = list()
+
+    def add(self, type: BaseType) -> None:
+        """
+        Adds a type to the defaults.
+        """
+        self.types.append(type)
+
+    def remove(self, type: BaseType) -> None:
+        """
+        Removes a type from the defaults.
+        """
+        self.types.remove(type)
+
+    def clear(self) -> None:
+        """
+        Clears the defaults.
+        """
+        self.types.clear()
 
     def __iter__(self):
         return iter(self.types)
@@ -44,6 +63,11 @@ class Defaults:
             print("Generating Types from Defaults...")
             self.types = self.generate_defaults()
 
+            for type_ in self.types:
+                if Checks.check_supported_system_type(type_.function.value) is False:
+                    print(f"Removing unsupported type: {type_.function.value}")
+                    self.remove(type_)
+
     def generate_defaults(self) -> List[BaseType]:
         """
         Generates the defaults for the base type object.
@@ -66,7 +90,7 @@ class Defaults:
             suffix=Suffix(),
             separator=Separator(),
             function=Function(value=int)
-        )   
+        )
 
         float_type: BaseType = BaseType(
             id=Id(value="float"),

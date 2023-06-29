@@ -9,6 +9,8 @@ from ..type._unit import Unit_ as SuperUnit
 class BaseUnit(SuperUnit):
     """
     This is the base class for all units.
+    All units are dataclasses.
+    All units are initialized with a 'value' and a 'base_type'.
     """
     _base_type: Optional[BaseType] = None
 

@@ -22,7 +22,6 @@ class TestDefaults(unittest.TestCase):
         self.type_obj = Type(self.id, self.alias, self.super, self.prefix, self.suffix, self.separator, self.function)
         self.defaults_types = [self.type_obj]
     
-    
     def test_init(self):
         # Test creating a Defaults object with no arguments
         defaults_obj = Defaults()

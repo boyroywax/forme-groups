@@ -49,9 +49,7 @@ class Unit_():
     def __init__(
         self,
         *args,
-        **kwargs,
-        # value: Optional[Any] = None,
-        # _random_value: bool = False
+        **kwargs
     ) -> None:
         """
         Initializes the Super Unit_ class.
@@ -119,6 +117,12 @@ class Unit_():
                     "To create a NoneType unit, use Unit_()."
                 )
             self.value = value
+
+    def get_value_type(self) -> str:
+        """
+        Returns the type name of the value.
+        """
+        return type(self.value).__name__
 
     def set_random_value(self) -> None:
         """
