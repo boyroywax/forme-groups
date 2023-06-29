@@ -48,41 +48,48 @@ class Type_:
         Post-initialization.
         """
 
-        if id_ is None or id_.value is None:
-            # self.id = Id("id")
-            self.id_ = None
-        else:
-            self.id_ = id_
+        self.id_ = id_
+        self.alias = alias
+        self.super_ = super_
+        self.prefix = prefix
+        self.suffix = suffix
+        self.separator = separator
+        self.function_ = function_
 
-        if alias is None:
-            self.alias = Alias("alias")
-        else:
-            self.alias = alias
+        # if id_ is None or id_.value is None:
+        #     self.id_ = Id("id")
+        # else:
+        #     self.id_ = id_
 
-        if super_ is None:
-            self.super_ = Super("super")
-        else:
-            self.super_ = super_
+        # if alias is None:
+        #     self.alias = Alias("alias")
+        # else:
+        #     self.alias = alias
 
-        if prefix is None:
-            self.prefix = Prefix("prefix")
-        else:
-            self.prefix = prefix
+        # if super_ is None:
+        #     self.super_ = Super("super")
+        # else:
+        #     self.super_ = super_
 
-        if suffix is None:
-            self.suffix = Suffix("suffix")
-        else:
-            self.suffix = suffix
+        # if prefix is None:
+        #     self.prefix = Prefix("prefix")
+        # else:
+        #     self.prefix = prefix
 
-        if separator is None:
-            self.separator = Separator("separator")
-        else:
-            self.separator = separator
+        # if suffix is None:
+        #     self.suffix = Suffix("suffix")
+        # else:
+        #     self.suffix = suffix
 
-        if function_ is None:
-            self.function_ = Function(str)
-        else:
-            self.function_ = function_
+        # if separator is None:
+        #     self.separator = Separator("separator")
+        # else:
+        #     self.separator = separator
+
+        # if function_ is None:
+        #     self.function_ = Function(str)
+        # else:
+        #     self.function_ = function_
 
     def to_dict(self):
         """

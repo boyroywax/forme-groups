@@ -22,7 +22,7 @@ class TestBaseUnit(unittest.TestCase):
         self.function_ = Function("test_function")
         type_obj = Type_(self.id_, self.alias, self.super_, self.prefix, self.suffix, self.separator, self.function_)
         self.units = Units("default", [type_obj])
-        self.base_unit = BaseUnit(value="test", _base_type=self.units.types[-1])
+        self.base_unit = BaseUnit("test", self.units.types[-1])
 
     def test_base(self):
         # Test setting and getting the base property

@@ -41,6 +41,7 @@ class TestType(unittest.TestCase):
         function_obj = Function()
         
         type_obj = Type_(id_obj, alias_obj, super_obj, prefix_obj, suffix_obj, separator_obj, function_obj)
+        
         self.assertIsNone(type_obj.id_.value)
         self.assertIsNone(type_obj.alias.value)
         self.assertIsNone(type_obj.super_.value)

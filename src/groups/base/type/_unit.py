@@ -72,6 +72,7 @@ class Unit_:
         unit = Unit_("test")
         ```
         """
+        print(f"Unit_ - __init__ - args - {args}")
         if len(args) > 0 and 'value' in kwargs:
             raise ValueError("Cannot provide both 'value' and 'kwargs['value']' to Unit_")
 

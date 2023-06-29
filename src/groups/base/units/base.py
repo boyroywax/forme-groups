@@ -6,7 +6,7 @@ from ..type._unit import Unit_ as SuperUnit
 
 
 @dataclass(
-    # slots=True,
+    slots=True,
 )
 class BaseUnit(SuperUnit):
     """
@@ -40,7 +40,7 @@ class BaseUnit(SuperUnit):
         Post Initializes the BaseUnit class.
         * Receives 'args' and 'kwargs'.
         """
-        self._base_type: Optional[BaseType] = None
+        self.base_type: Optional[BaseType] = None
         print(f'args - {args}')
         if (
             len(args) > 0 and
