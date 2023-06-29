@@ -1,5 +1,5 @@
 import unittest
-from src.groups.base.type import Type
+from src.groups.base.type import Type_
 from src.groups.base.type import Id
 from src.groups.base.type import Alias
 from src.groups.base.type import Super
@@ -21,7 +21,7 @@ class TestType(unittest.TestCase):
 
     def test_init(self):
         # Test creating a Type object with all arguments
-        type_obj = Type(self.id, self.alias, self.super, self.prefix, self.suffix, self.separator, self.function)
+        type_obj = Type_(self.id, self.alias, self.super, self.prefix, self.suffix, self.separator, self.function)
         self.assertEqual(type_obj.id, self.id)
         self.assertEqual(type_obj.alias, self.alias)
         self.assertEqual(type_obj.super, self.super)
@@ -40,7 +40,7 @@ class TestType(unittest.TestCase):
         separator_obj = Separator()
         function_obj = Function()
         
-        type_obj = Type(id_obj, alias_obj, super_obj, prefix_obj, suffix_obj, separator_obj, function_obj)
+        type_obj = Type_(id_obj, alias_obj, super_obj, prefix_obj, suffix_obj, separator_obj, function_obj)
         self.assertIsNone(type_obj.id.value)
         self.assertIsNone(type_obj.alias.value)
         self.assertIsNone(type_obj.super.value)
@@ -51,10 +51,10 @@ class TestType(unittest.TestCase):
 
     def test_str(self):
         # Test getting the string representation of a Type object
-        type_obj = Type(self.id, self.alias, self.super, self.prefix, self.suffix, self.separator, self.function)
-        self.assertEqual(str(type_obj), "Type(id=Id(value='test_id'), alias=Alias(value='test_alias'), super=Super(value='test_super'), prefix=Prefix(value='test_prefix'), suffix=Suffix(value='test_suffix'), separator=Separator(value='test_separator'), function=Function(value='test_function'))")
+        type_obj = Type_(self.id, self.alias, self.super, self.prefix, self.suffix, self.separator, self.function)
+        self.assertEqual(str(type_obj), "Type_(id=Id(value='test_id'), alias=Alias(value='test_alias'), super=Super(value='test_super'), prefix=Prefix(value='test_prefix'), suffix=Suffix(value='test_suffix'), separator=Separator(value='test_separator'), function=Function(value='test_function'))")
 
     def test_repr(self):
         # Test getting the string representation of a Type object
-        type_obj = Type(self.id, self.alias, self.super, self.prefix, self.suffix, self.separator, self.function)
-        self.assertEqual(repr(type_obj), "Type(id=Id(value='test_id'), alias=Alias(value='test_alias'), super=Super(value='test_super'), prefix=Prefix(value='test_prefix'), suffix=Suffix(value='test_suffix'), separator=Separator(value='test_separator'), function=Function(value='test_function'))")
+        type_obj = Type_(self.id, self.alias, self.super, self.prefix, self.suffix, self.separator, self.function)
+        self.assertEqual(repr(type_obj), "Type_(id=Id(value='test_id'), alias=Alias(value='test_alias'), super=Super(value='test_super'), prefix=Prefix(value='test_prefix'), suffix=Suffix(value='test_suffix'), separator=Separator(value='test_separator'), function=Function(value='test_function'))")

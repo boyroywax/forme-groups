@@ -3,7 +3,9 @@ from dataclasses import dataclass
 from ._unit import Unit_ as SuperUnit
 
 
-@dataclass
+@dataclass(
+    slots=True,
+)
 class Super(SuperUnit):
     """
     Manages the super of the group object.

@@ -10,8 +10,10 @@ from .separator import Separator
 from .function import Function
 
 
-@dataclass
-class Type():
+@dataclass(
+    slots=True,
+)
+class Type_():
     """
     Manages the base of the group object.
     """
@@ -25,7 +27,7 @@ class Type():
 
 
 __all__ = [
-    "Type",
+    "Type_",
     "Id",
     "Alias",
     "Super",

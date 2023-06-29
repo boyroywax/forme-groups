@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import List, Optional
 
-from . import Type as BaseType
+from . import Type_ as BaseType
 from .id import Id
 from .alias import Alias
 from .super import Super

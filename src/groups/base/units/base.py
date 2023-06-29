@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 
-from ..type import Type as BaseType
+from ..type import Type_ as BaseType
 from ..type._unit import Unit_ as SuperUnit
 
 
@@ -38,7 +38,7 @@ class BaseUnit(SuperUnit):
             if isinstance(args[1], BaseType):
                 self._base_type = args[1]
         if "base_type" in kwargs:
-            self._base_type: Optional[BaseType] = None
+            self._base_type: Optional[BaseType] = kwargs["base_type"]
 
     @property
     def base(self) -> BaseType:

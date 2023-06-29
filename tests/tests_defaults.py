@@ -1,6 +1,6 @@
 import unittest
 from src.groups.base.type.defaults import Defaults
-from src.groups.base.type import Type
+from src.groups.base.type import Type_
 from src.groups.base.type import Id
 from src.groups.base.type import Alias
 from src.groups.base.type import Super
@@ -19,7 +19,7 @@ class TestDefaults(unittest.TestCase):
         self.suffix = Suffix("test_suffix")
         self.separator = Separator("test_separator")
         self.function = Function("test_function")
-        self.type_obj = Type(self.id, self.alias, self.super, self.prefix, self.suffix, self.separator, self.function)
+        self.type_obj = Type_(self.id, self.alias, self.super, self.prefix, self.suffix, self.separator, self.function)
         self.defaults_types = [self.type_obj]
     
     def test_init(self):

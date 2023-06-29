@@ -49,7 +49,6 @@ class Unit_():
     _random_value: InitVar[bool] = None
     _force_super_type: InitVar[bool] = None
 
-
     def __init__(
         self,
         *args,
@@ -105,7 +104,7 @@ class Unit_():
 
     def get_type(self) -> str:
         """
-        Returns the type name of the unit of the value.
+        Returns the type name of the unit.
         """
         return type(self).__name__
 

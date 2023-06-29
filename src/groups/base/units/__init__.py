@@ -7,7 +7,7 @@ from .owner import Owner
 from .credential import Credential
 from .data_entry import Data_Entry
 
-from ..type import Type as BaseType
+from ..type import Type_ as BaseType
 from ..type.defaults import Defaults as BaseDefaults
 from ..type.checks import Checks as BaseChecks
 
