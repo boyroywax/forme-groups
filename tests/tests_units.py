@@ -1,6 +1,7 @@
 import unittest
-# from io import StringIO
+
 from src.groups.base.units import Units
+from src.groups.base.type import Type, Id, Alias, Super, Prefix, Suffix, Separator, Function
 
 
 class TestUnits(unittest.TestCase):
@@ -9,8 +10,9 @@ class TestUnits(unittest.TestCase):
 
     def test_load_defaults(self):
         # Test loading default units
-        with open('src/groups/base/units/default_units.txt', 'r') as f:
-            expected_units = f.read()
+        # with open('src/groups/base/units/default_units.txt', 'r') as f:
+        #     expected_units = json.loads(f.read())
+        expected_units = [Type(id=Id(value='string'), alias=Alias(value=['string', 'str']), super=Super(value='RESERVED'), prefix=Prefix(value=None), suffix=Suffix(value=None), separator=Separator(value=None), function=Function(value=str)), Type(id=Id(value='integer'), alias=Alias(value=['integer', 'int']), super=Super(value='RESERVED'), prefix=Prefix(value=None), suffix=Suffix(value=None), separator=Separator(value=None), function=Function(value=int)), Type(id=Id(value='float'), alias=Alias(value=['float']), super=Super(value='RESERVED'), prefix=Prefix(value=None), suffix=Suffix(value=None), separator=Separator(value=None), function=Function(value=float)), Type(id=Id(value='boolean'), alias=Alias(value=['boolean', 'bool']), super=Super(value='RESERVED'), prefix=Prefix(value=None), suffix=Suffix(value=None), separator=Separator(value=None), function=Function(value=bool)), Type(id=Id(value='list'), alias=Alias(value=['list']), super=Super(value='RESERVED'), prefix=Prefix(value='['), suffix=Suffix(value=']'), separator=Separator(value=','), function=Function(value=list)), Type(id=Id(value='tuple'), alias=Alias(value=['tuple']), super=Super(value='RESERVED'), prefix=Prefix(value='('), suffix=Suffix(value=')'), separator=Separator(value=','), function=Function(value=tuple)), Type(id=Id(value='dictionary'), alias=Alias(value=['dictionary', 'dict']), super=Super(value='RESERVED'), prefix=Prefix(value='{'), suffix=Suffix(value='}'), separator=Separator(value=','), function=Function(value=dict)), Type(id=Id(value='bytes'), alias=Alias(value=['bytes']), super=Super(value='RESERVED'), prefix=Prefix(value="b'"), suffix=Suffix(value="'"), separator=Separator(value=None), function=Function(value=bytes))]
         self.units._load_defaults()
         self.assertEqual(self.units.types, expected_units)
 

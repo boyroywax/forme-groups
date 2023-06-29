@@ -114,6 +114,8 @@ class Units():
         elif option in _OPTION_ALL:
             self._load_defaults()
             self._load_custom()
+        else:
+            raise ValueError("The option provided is not supported.")
 
         print(self._base_types)
 
