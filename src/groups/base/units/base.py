@@ -2,7 +2,7 @@ from dataclasses import dataclass, field, fields
 from typing import Any, Dict, List, Optional
 
 from ..type import Type_ as BaseType
-from ..super._unit import Unit_ as SuperUnit
+from ..super.unit import Unit_ as SuperUnit
 
 
 @dataclass(

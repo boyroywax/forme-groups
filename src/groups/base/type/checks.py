@@ -42,17 +42,6 @@ class Checks:
         else:
             return False
 
-    # @staticmethod
-    # def check_supported_types(types: List[BaseType]) -> List[BaseType]:
-    #     """
-    #     Checks the supported system types.
-    #     """
-    #     supported_types: List[str] = []
-    #     for type_ in types:
-    #         if Checks.check_supported_system_type(type_):
-    #             supported_types.append(type_)
-    #     return supported_types
-
     @staticmethod
     def check_supported_system_type(system_function: Callable) -> bool:
         """
@@ -63,21 +52,30 @@ class Checks:
         # print(system_function.__name__)
         match system_function.__name__:
             case 'str':
-                return True
+                if isinstance("string_test", str):
+                    return True
             case 'int':
-                return True
+                if isinstance(1, int):
+                    return True
             case 'float':
-                return True
+                if isinstance(1.0, float):
+                    return True
             case 'bool':
-                return True
+                if isinstance(True, bool):
+                    return True
             case 'list':
-                return True
+                if isinstance([], list):
+                    return True
             case 'tuple':
-                return True
+                if isinstance((), tuple):
+                    return True
             case 'dict':
-                return True
+                if isinstance({}, dict):
+                    return True
             case 'bytes':
-                return True
+                if isinstance(b"string", bytes):
+                    return True
             case _:
                 return False
+        return False
 

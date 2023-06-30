@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Optional
 
-from ..super._unit import Unit_ as SuperUnit
+from ..super.unit import Unit_ as SuperUnit
 
 
 @dataclass(
