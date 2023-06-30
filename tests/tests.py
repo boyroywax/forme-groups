@@ -8,6 +8,8 @@ from .tests_defaults import TestDefaults
 from .tests_base_unit import TestBaseUnit
 from .tests_units import TestUnits
 
+from .tests_schema_super_unit import TestSchemaSuperUnit
+
 
 def main():
     # Create the test suite
@@ -24,6 +26,7 @@ def main():
     test_suite.addTests(test_loader.loadTestsFromTestCase(TestDefaults))
     test_suite.addTests(test_loader.loadTestsFromTestCase(TestBaseUnit))
     test_suite.addTests(test_loader.loadTestsFromTestCase(TestUnits))
+    test_suite.addTests(test_loader.loadTestsFromTestCase(TestSchemaSuperUnit))
 
     # Run the test suite
     runner = unittest.TextTestRunner()

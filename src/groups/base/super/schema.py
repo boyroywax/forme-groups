@@ -1,22 +1,161 @@
-from dataclasses import dataclass
+import uuid
+from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
 
 
-@dataclass
+@dataclass(
+    slots=True,
+)
+class SuperUnit:
+    """
+    The super unit class for all units.
+    * Units can be initialized as a 'value'.
+    * Units can be initialized as NoneType.
+    * Units can be initialized as a random value.
+    * Units can be initialized from a 'dictionary'.
+    """
+
+    value: Any = field(default=Any, init=True, repr=True, compare=True, hash=True, metadata=None)
+
+    def __init__(
+        self,
+        *args,
+        **kwargs
+    ) -> None:
+        """
+        Initializes the Super Unit class and sets the value.
+        """
+        self.parse_input(*args, **kwargs)
+
+    def parse_input(self, *args, **kwargs) -> None:
+        """
+        Parses the input.
+        """
+        if (
+            len(args) == 1 and
+            "random" in kwargs and
+            kwargs["random"] is True
+        ):
+            raise ValueError("Cannot set 'random' and 'value' at the same time.")
+
+        if (
+            "random" in kwargs and
+            "value" in kwargs
+        ):
+            raise ValueError("Cannot set 'random' and 'value' at the same time.")
+
+        if (
+            len(args) >= 1 and
+            "value" in kwargs
+        ):
+            raise ValueError("Cannot set 'value' and pass a value at the same time.")
+
+        if (
+            len(args) == 0 and
+            "random" in kwargs and
+            kwargs["random"] is True
+        ):
+            self.value = self.random_value()
+            return
+
+        if (
+            len(args) == 0 and
+            "random" in kwargs and
+            kwargs["random"] is False
+        ):
+            self.value = None
+            return
+
+        if (
+            len(args) == 0 and
+            "random" not in kwargs and
+            "value" not in kwargs
+        ):
+            self.value = None
+            return
+
+        if (
+            len(args) == 0 and
+            "value" in kwargs
+        ):
+            self.value = kwargs["value"]
+            return
+
+        if (
+            len(args) == 1 and
+            "random" not in kwargs and
+            "value" not in kwargs
+        ):
+            self.value = args[0]
+            return
+
+        if (
+            len(args) == 1 and
+            "random" in kwargs and
+            kwargs["random"] is False
+        ):
+            self.value = args[0]
+            return
+
+        if (
+            len(args) == 1 and
+            isinstance(args[0], dict) and 
+            dict(args[0]).get("value") is not None
+        ):
+            self.value = dict(args[0]).get("value")
+            return
+
+    @staticmethod
+    def random_value():
+        """
+        Returns a random value.
+        """
+        return uuid.uuid4().hex
+
+    def get_type(self):
+        """
+        Returns the name of the value's type.
+        """
+        return type(self.value).__name__
+
+    @staticmethod
+    def from_dict(dictionary: Dict[str, Any]):
+        """
+        Returns a Super Unit from a dictionary.
+        """
+        return SuperUnit(
+            value=dictionary["value"]
+        )
+
+    def to_dict(self) -> Dict[str, Any]:
+        """
+        Returns a dictionary from a Super Unit.
+        """
+        return {
+            "value": self.value
+        }
+
+
+@dataclass(
+    slots=True,
+)
 class SchemaEntry:
     level: int
-    schema: Dict[str, Any]
-    types: Dict[Any]
-    functions: Dict[Any]
-    overrides: Dict[str, Any]
+    schema: Dict[str, Any] = field(default_factory=dict)
+    types: Dict[str, Any] = field(default_factory=dict)
+    functions: Dict[str, Any] = field(default_factory=dict)
+    overrides: Dict[str, Any] = field(default_factory=dict)
 
-@dataclass
+
+@dataclass(
+    slots=True,
+)
 class Schema:
     """
     A Super Schema class to control the system of group objects and their units.
     """
 
-    _schema: Optional[List[SchemaEntry]] = []
+    _schema: Optional[List[SchemaEntry]] = None
 
     def __init__(
         self,
@@ -35,7 +174,7 @@ class Schema:
             #
             level=0,
             schema={
-                "expected_system_types_schema": [ Any],
+                "system_types_schema": [Any],
                 "default_super_type_schema": {
                     "id_": List[Any],
                     "aliases": List[Any],
