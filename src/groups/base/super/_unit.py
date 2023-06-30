@@ -3,7 +3,7 @@ import uuid
 from dataclasses import dataclass, InitVar
 from typing import Any, Dict, Optional
 
-from .checks import Checks
+from ..type.checks import Checks
 
 _DEFAULT_SUPER_TYPE = "str"
 
@@ -72,15 +72,29 @@ class Unit_:
         unit = Unit_("test")
         ```
         """
-        print(f"Unit_ - __init__ - args - {args}")
-        if len(args) > 0 and 'value' in kwargs:
+
+        # Checks if the 'value' is in both 'args' and 'kwargs'.
+        if (
+            len(args) > 0 and
+            'value' in kwargs
+        ):
             raise ValueError("Cannot provide both 'value' and 'kwargs['value']' to Unit_")
 
-        if len(args) > 0 and 'random' in kwargs:
+        # Checks if no args are provided and that random is provided as a keyword argument.
+        if (
+            len(args) > 0 and
+            'random' in kwargs
+        ):
             raise ValueError("Cannot provide both 'value' and 'args' to Unit_")
 
-        if len(args) == 0 and "value" in kwargs and "random" in kwargs:
+        # Checks if args are provided and if random is provided as a keyword argument.
+        if (
+            len(args) == 0 and
+            "value" in kwargs and
+            "random" in kwargs
+        ):
             raise ValueError("Cannot provide both 'value' and 'random' to Unit_")
+
 
         if len(args) == 0 and "value" not in kwargs and "random" not in kwargs:
             self.value = None

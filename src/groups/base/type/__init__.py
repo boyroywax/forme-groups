@@ -56,41 +56,6 @@ class Type_:
         self.separator = separator
         self.function_ = function_
 
-        # if id_ is None or id_.value is None:
-        #     self.id_ = Id("id")
-        # else:
-        #     self.id_ = id_
-
-        # if alias is None:
-        #     self.alias = Alias("alias")
-        # else:
-        #     self.alias = alias
-
-        # if super_ is None:
-        #     self.super_ = Super("super")
-        # else:
-        #     self.super_ = super_
-
-        # if prefix is None:
-        #     self.prefix = Prefix("prefix")
-        # else:
-        #     self.prefix = prefix
-
-        # if suffix is None:
-        #     self.suffix = Suffix("suffix")
-        # else:
-        #     self.suffix = suffix
-
-        # if separator is None:
-        #     self.separator = Separator("separator")
-        # else:
-        #     self.separator = separator
-
-        # if function_ is None:
-        #     self.function_ = Function(str)
-        # else:
-        #     self.function_ = function_
-
     def to_dict(self):
         """
         Return the Type_ class as a dictionary.

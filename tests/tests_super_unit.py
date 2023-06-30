@@ -1,5 +1,5 @@
 import unittest
-from src.groups.base.type._unit import Unit_
+from src.groups.base.super._unit import Unit_
 
 
 class TestSuperUnit(unittest.TestCase):

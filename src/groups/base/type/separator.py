@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from ._unit import Unit_ as SuperUnit
+from ..super._unit import Unit_ as SuperUnit
 
 
 @dataclass(
