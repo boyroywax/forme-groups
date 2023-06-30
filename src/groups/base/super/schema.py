@@ -31,6 +31,8 @@ class SuperUnit:
         """
         Parses the input.
         """
+
+        # Check if 'random' kwarg and 'value' arg are set at the same time.
         if (
             len(args) == 1 and
             "random" in kwargs and
@@ -38,17 +40,28 @@ class SuperUnit:
         ):
             raise ValueError("Cannot set 'random' and 'value' at the same time.")
 
+        # Check if 'value' kwarg and 'value' kwarg are set at the same time.
         if (
             "random" in kwargs and
             "value" in kwargs
         ):
             raise ValueError("Cannot set 'random' and 'value' at the same time.")
 
+        # Check if 'value' kwarg and 'value' arg are set at the same time.
         if (
             len(args) >= 1 and
             "value" in kwargs
         ):
             raise ValueError("Cannot set 'value' and pass a value at the same time.")
+        
+
+        if (
+            len(args) == 1 and
+            isinstance(args[0], dict) and
+            dict(args[0]).get("value") is not None
+        ):
+            self.value = dict(args[0]).get("value")
+            return
 
         if (
             len(args) == 0 and
@@ -97,13 +110,18 @@ class SuperUnit:
             self.value = args[0]
             return
 
-        if (
-            len(args) == 1 and
-            isinstance(args[0], dict) and 
-            dict(args[0]).get("value") is not None
-        ):
-            self.value = dict(args[0]).get("value")
-            return
+    def has_type(self, type_: Any) -> bool:
+        """
+        Returns True if the value has the type.
+        """
+        return isinstance(self.value, type_)
+
+    def force_type(self, type_: Any) -> None:
+        """
+        Forces the value to be a type.
+        """
+        if not self.has_type(type_):
+            self.value = type_(self.value)
 
     @staticmethod
     def random_value():
