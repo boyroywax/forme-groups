@@ -225,7 +225,7 @@ class Units():
         The types getter of the units object.
         """
         return self._base_types
-    
+
     def __repr__(self) -> str:
         """
         Represents the 'Units' object.

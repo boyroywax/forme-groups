@@ -47,7 +47,6 @@ class Unit_:
 
     value: Any = None
     _random_value: InitVar[bool] = None
-    _force_super_type: InitVar[bool] = None
 
     def __init__(
         self,
