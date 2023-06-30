@@ -5,8 +5,6 @@ from typing import Any, Dict, Optional
 
 from ..type.checks import Checks
 
-_DEFAULT_SUPER_TYPE = "str"
-
 
 @dataclass(
     slots=True,
@@ -47,6 +45,7 @@ class Unit_:
 
     value: Any = None
     _random_value: InitVar[bool] = None
+    _force_type: InitVar[Optional[str]] = None
 
     def __init__(
         self,
@@ -94,14 +93,34 @@ class Unit_:
         ):
             raise ValueError("Cannot provide both 'value' and 'random' to Unit_")
 
-
-        if len(args) == 0 and "value" not in kwargs and "random" not in kwargs:
+        # Checks if args are provided and if random is provided as a keyword argument.
+        # Will set the value to None.
+        if (
+            len(args) == 0 and
+            "value" not in kwargs and
+            "random" not in kwargs
+        ):
             self.value = None
-        elif len(args) == 1 and "value" not in kwargs and "random" not in kwargs:
+        # Checks if only args are provided.  Assumes it is a value and sets the value.
+        elif (
+            len(args) == 1 and
+            "value" not in kwargs and
+            "random" not in kwargs
+        ):
             self.set_value(args[0])
-        elif len(args) == 0 and "value" not in kwargs and "random" in kwargs:
+        # Checks if only random is passed as a kwarg.  Sets the value as random.
+        elif (
+            len(args) == 0 and
+            "value" not in kwargs and
+            "random" in kwargs
+        ):
             self.set_random_value()
-        elif len(args) == 0 and "value" in kwargs and "random" not in kwargs:
+        # Checks if only value is passed as a kwarg.  Sets the value as the value.
+        elif (
+            len(args) == 0 and
+            "value" in kwargs and
+            "random" not in kwargs
+        ):
             self.set_value(kwargs["value"])
 
     # def __post_init__(self, _random_value: bool) -> None:

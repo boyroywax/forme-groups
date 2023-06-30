@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 
-from .unit import Unit_
+from .unit import Unit_ as SuperUnit
 from .enforcer import Enforcer
 
 
@@ -10,6 +10,7 @@ class Super:
     """
     The super class manages the super units for all units.
     """
+
 
     enforcer: Enforcer = None
     enforcer_activated: bool = False
@@ -25,6 +26,16 @@ class Super:
         """
         self.enforcer = Enforcer()
 
+    def __post_init__(
+        self,
+        *args,
+        **kwargs
+    ) -> None:
+        """
+        Post initializes the Super class.
+        """
+        pass
+
     def set_super_unit_type(
         self,
         super_unit_type: Optional[str] = None
@@ -38,11 +49,11 @@ class Super:
         self,
         *args,
         **kwargs
-    ) -> Unit_:
+    ) -> SuperUnit:
         """
         Creates a super unit.
         """
-        return Unit_(
+        return SuperUnit(
             *args,
             **kwargs
         )
