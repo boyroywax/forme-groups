@@ -61,7 +61,7 @@ class TestSchemaSuperUnit(unittest.TestCase):
 
     def test_get_type_returns_name_of_value_type(self):
         unit = SuperUnit(value=1)
-        self.assertEqual(unit.get_type(), "int")
+        self.assertEqual(unit.get_value_type(), "int")
 
     def test_from_dict_returns_unit_with_correct_value(self):
         unit_dict = {"value": "test"}

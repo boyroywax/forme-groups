@@ -148,4 +148,10 @@ An active nonce unit is the last nonce unit in the chain.  The active nonce unit
 3. Load custom UnitTypes
 
 
-## Super Objects
+## Hierarchy
+
+|- Groups
+|-|- Super
+|-|-|- Unit
+|-|-|- Schema
+

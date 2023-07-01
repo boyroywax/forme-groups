@@ -8,14 +8,38 @@ from typing import Any, Dict, List, Optional
 )
 class SuperUnit:
     """
-    The super unit class for all units.
+    The super unit class for all base units.
     * Units can be initialized as a 'value'.
     * Units can be initialized as NoneType.
     * Units can be initialized as a random value.
     * Units can be initialized from a 'dictionary'.
+
+    Example (from NoneType):
+    ```Python
+    unit = SuperUnit()
+    unit = SuperUnit(None)
+    ```
+
+    Example (from value):
+    ```Python
+    unit = SuperUnit("test")
+    ```
+
+    Example (from dictionary):
+    ```Python
+    unit = SuperUnit({"value": "test"})
+    ```
+
+    Note: The 'value' is stored as a slot.
     """
 
-    value: Any = field(default=Any, init=True, repr=True, compare=True, hash=True, metadata=None)
+    _value: Any = field(
+        default=Any,
+        init=True,
+        repr=True,
+        compare=True,
+        hash=True,
+        metadata=None)
 
     def __init__(
         self,
@@ -24,12 +48,72 @@ class SuperUnit:
     ) -> None:
         """
         Initializes the Super Unit class and sets the value.
+
+        Args:
+            *args: The arguments to initialize the Super Unit class.
+                value (Any): The value to set the unit to.
+                value (Dict[str, Any]): The dictionary to set the unit to. The dictionary must contain a 'value' entry.
+
+        Keyword Args:
+            **kwargs: The keyword arguments to initialize the Super Unit class.
+                random (bool): If True, a random value is set.
+                value (Any): The value to set the unit to.
+                force_type (str): A Callable Type. The type to force the value to.
+
+        Raises:
+            ValueError: If 'random' is True and 'value' are set at the same time.
+            ValueError: If 'force_type' is set and 'value' is None and 'random' is None or False.
         """
         self.parse_input(*args, **kwargs)
+        self.__post_init__(*args, **kwargs)
+
+    def __post_init__(
+        self,
+        *args,
+        **kwargs
+    ) -> None:
+        """
+        Post initializes the Super Unit class.
+
+        Keyword Args:
+            **kwargs: The keyword arguments to post initialize the Super Unit class.
+                force_type (str): A Callable Type. The type to force the value to.
+        """
+        if "force_type" in kwargs and self.value is not None:
+            self.force_type(kwargs["force_type"])
 
     def parse_input(self, *args, **kwargs) -> None:
         """
         Parses the input.
+
+        Args:
+            *args: The arguments to parse.
+                value (Any): The value to set the unit to.
+                value (Dict[str, Any]): The dictionary to set the unit to. The dictionary must contain a 'value' entry.
+
+        Keyword Args:
+            **kwargs: The keyword arguments to parse.
+                random (bool): If True, a random value is set.
+                value (Any): The value to set the unit to.
+                force_type (str): A Callable Type. The type to force the value to.
+
+        Raises:
+            ValueError: If 'random' is True and 'value' are set at the same time.
+            ValueError: If 'force_type' is set and 'value' is None and 'random' is None or False.
+
+        Note:
+            The 'value' is stored as a slot.
+
+        Example:
+        ```Python
+        unit = SuperUnit()
+        unit = SuperUnit(None)
+        unit = SuperUnit("test")
+        unit = SuperUnit({"value": "test"})
+        unit = SuperUnit(random=True)
+        unit = SuperUnit(random=False)
+        unit = SuperUnit(value="test")
+        ```
         """
 
         # Check if 'random' kwarg and 'value' arg are set at the same time.
@@ -58,14 +142,14 @@ class SuperUnit:
         if (
             len(args) == 1 and
             isinstance(args[0], dict) and
-            dict(args[0]).get("value") is not None and 
+            dict(args[0]).get("value") is not None and
             "random" not in kwargs and
             "value" not in kwargs
         ):
             self.value = dict(args[0]).get("value")
             return
 
-        # Check if 'kwargs' contains the random key and that the value is set to True.
+        # Check if 'kwargs' contains the random key and that it is set to True.
         if (
             len(args) == 0 and
             "random" in kwargs and
@@ -123,34 +207,169 @@ class SuperUnit:
 
     def has_type(self, type_: Any) -> bool:
         """
-        Returns True if the value has the type.
+        Checks if the value has a type.
+
+        Args:
+            type_ (Any): The type to check for.
+
+        Returns:
+            bool: True if the value has the type. 
+                  Else False if the value does not have the type or is None.
+
+        Example:
+        ```Python
+        unit = SuperUnit()
+        unit.has_type(str)  # False type is None
+        unit = SuperUnit("test")
+        unit.has_type(str)  # True type is str
+        unit.has_type(int)  # False type is str
+        unit = SuperUnit(1234)
+        unit.has_type(int)  # True type is int
+        ```
         """
-        return isinstance(self.value, type_)
+        if not self.is_none():
+            return isinstance(self.value, type_)
+        return False
 
     def force_type(self, type_: Any) -> None:
         """
         Forces the value to be a type.
-        """
-        if not self.has_type(type_):
-            self.value = type_(self.value)
 
-    @staticmethod
-    def random_value():
+        Args:
+            type_ (Any): The type to force the value to.
+
+        Raises:
+            TypeError: If 'type_' is not a callable type.
+            TypeError: If the value cannot be forced to the type.
+            AttributeError: If the value is None.
+
+        Example:
+        ```Python
+        unit = SuperUnit()
+        unit.force_type(str)
+
+        unit = SuperUnit("test").force_type(str)
+        unit = SuperUnit("1234").force_type(int)
+        unit = SuperUnit("test").force_type(int)  # Raises TypeError
         """
-        Returns a random value.
+
+        # Check if 'type_' is a callable.
+        # if not isinstance(type_, Callable or function or type):
+        if not callable(type_):
+            raise TypeError(f"Type {type_} is not a callable type.")
+
+        if not self.is_none():
+            try:
+                if not self.has_type(type_):
+                    self.value = type_(self.value)
+            except Exception:
+                raise TypeError(f"Cannot force type {type_} on value {self.value}.")
+        else:
+            raise AttributeError(f"Cannot force type {type_} on None value.")
+        
+    @staticmethod
+    def get_none_list() -> list:
+        """
+        Get a list of values representing a NoneType.
+
+        Returns:
+            list: A list of values representing a NoneType.
+
+        Example:
+        ```Python
+        SuperUnit.get_none_list()  # [None, "None", "", "null", "NULL", "none"]
+        ```
+        """
+        return [
+            None,
+            "None",
+            "none",
+            "NONE",
+            "",
+            " ",
+            "null",
+            "Null",
+            "NULL",
+            "nil",
+            "Nil",
+            "NIL",
+            str(""),
+            str(" "),
+            str("''"),
+            str('""'),
+            str(' ')
+        ]
+    
+    @staticmethod
+    def check_none(value: Any) -> bool:
+        """
+        Checks if the value is None or equal to any of the values on from the get_none_list() method.
+
+        Args:
+            value (Any): The value to check.
+
+        Returns:
+            bool: True if the value is None or equal to any of the values on from the get_none_list() method.
+        """
+        return value is None or value in SuperUnit.get_none_list()
+
+    def is_none(self) -> bool:
+        """
+        Checks if the value is None or any of the following values representing a NoneType.
+
+        Returns:
+            bool: True if the value is None or any of the following values representing a NoneType.
+
+        Example:
+        ```Python
+        unit = SuperUnit()
+        unit.is_none()  # True
+
+        unit = SuperUnit(None)
+        unit.is_none()  # True
+
+        unit = SuperUnit("None")
+        unit.is_none()  # True
+        """
+        return SuperUnit.check_none(self.value)
+    
+    @staticmethod
+    def random_value() -> str:
+        """
+        Create a random value based on the uuid4() function.
+
+        Returns:
+            str: A random value.
         """
         return uuid.uuid4().hex
 
-    def get_type(self):
+    def get_value_type(self) -> str:
         """
-        Returns the name of the value's type.
+        Get the name of the value's type as defined by the type() function.
+
+        Returns:
+            str: The name of the value's type.
         """
         return type(self.value).__name__
 
     @staticmethod
-    def from_dict(dictionary: Dict[str, Any]):
+    def from_dict(dictionary: Dict[str, Any]) -> "SuperUnit":
         """
         Returns a Super Unit from a dictionary.
+
+        Args:
+            dictionary (Dict[str, Any]): The dictionary to create the Super Unit from.
+
+        Returns:
+            SuperUnit: The Super Unit created from the dictionary.
+
+        Example:
+        ```Python
+        unit = SuperUnit.from_dict({
+            "value": "test"
+        })
+        unit.value  # "test"
+        ```
         """
         return SuperUnit(
             value=dictionary["value"]
@@ -164,16 +383,192 @@ class SuperUnit:
             "value": self.value
         }
 
+    @property
+    def value(self) -> Any:
+        """
+        Returns the value of the Super Unit.
+        * The value can be set to anything.
+        * It is not type checked upon setting.
+        * If the value is None, it will return None.
+
+
+        Returns:
+            Any: The value of the Super Unit.
+        """
+        return self._value
+
+    @value.setter
+    def value(self, value: Any) -> None:
+        """
+        Sets the value.
+
+        Args:
+            value (Any): The value to set.
+
+        Example:
+        ```Python
+        unit = SuperUnit()
+        unit.value = "test"
+        unit.value  # "test"
+        ```
+        """
+        self._value = value
+
+    @value.getter
+    def value(self) -> Any:
+        """
+        'value' getter -> Gets the value.
+
+        Returns:
+            Any: The value of the Super Unit.
+
+        Example:
+        ```Python
+        unit = SuperUnit()
+        unit.value  # None
+
+        unit = SuperUnit("test")
+        unit.value  # "test"
+        ```
+        """
+        return self._value
+
+    @value.deleter
+    def value(self) -> None:
+        """
+        Deletes the value.
+        * Sets the value to None.
+        * The value will have to be set again, if it is to be used.
+        """
+        self._value = None
+
+    def __str__(self) -> str:
+        """
+        Returns the string representation of the value.
+        """
+        return str(self.value)
+
 
 @dataclass(
     slots=True,
 )
 class SchemaEntry:
+    """
+    A Super Schema Entry class to control the system of grouping and validating values.
+    
+    Args:
+        level (int): The level of the schema entry.
+        schema (Dict[str, Any]): The schema of the schema entry.
+        types (Dict[str, Any]): The types of the schema entry.
+        functions (Dict[str, Any]): The functions of the schema entry.
+        overrides (Dict[str, Any]): The overrides of the schema entry.
+    """
     level: int
     schema: Dict[str, Any] = field(default_factory=dict)
     types: Dict[str, Any] = field(default_factory=dict)
     functions: Dict[str, Any] = field(default_factory=dict)
     overrides: Dict[str, Any] = field(default_factory=dict)
+
+    def __init__(
+        self,
+        level: int,
+        schema: Dict[str, Any],
+        types: Dict[str, Any],
+        functions: Dict[str, Any],
+        overrides: Dict[str, Any],
+    ) -> None:
+        
+        self.validate_level(level)
+        self.validate_schema(schema)
+        self.types = types
+        self.functions = functions
+        self.overrides = overrides
+
+    def validate_level(self, level: int) -> None:
+        """
+        Validates the level of the schema entry.
+        """
+        if not SuperUnit.check_none(level):
+            if not isinstance(level, int):
+                raise TypeError(f"Level must be an integer, not {type(level).__name__}.")
+
+            if level < 0:
+                raise ValueError("Level must be greater than or equal to 0.")
+            
+            self.level = level
+        else:
+            raise TypeError("Level must not be None.")
+
+    def validate_schema(self, schema: Dict[str, Any]) -> None:
+        """
+        Validates the schema of the schema entry.
+        """
+        if SuperUnit.check_none(schema):
+            raise TypeError("Schema must not be None.")
+
+        if not isinstance(schema, dict):
+            raise TypeError(f"Schema must be a dictionary, not {type(schema).__name__}.")
+
+        if len(schema) <= 0:
+            raise ValueError("Schema must not be empty.")
+
+        if not all(isinstance(key, str) for key in schema.keys()):
+            raise TypeError("Schema keys must be strings.")
+
+        if not all(isinstance(value, list) for value in schema.values()):
+            raise TypeError("Schema values must be lists.")
+
+        self.schema = schema
+
+    def validate_types(self, types: Dict[str, Any]) -> None:
+        """
+        Validates the types of the schema entry.
+        """
+        if SuperUnit.check_none(types):
+            raise TypeError("Types must not be None.")
+
+        if not isinstance(types, dict):
+            raise TypeError(f"Types must be a dictionary, not {type(types).__name__}.")
+
+        if len(types) <= 0:
+            raise ValueError("Types must not be empty.")
+
+        if not all(isinstance(key, str) for key in types.keys()):
+            raise TypeError("Types keys must be strings.")
+
+        if not all(isinstance(value, list) for value in types.values()):
+            raise TypeError("Types values must be lists.")
+
+        self.types = types
+
+        if self.schema is not None:
+            if not self.match_schema_and_types(self.schema, self.types):
+                raise ValueError("Types must match the schema.")
+    
+    # def match_schema_and_types_names(self, schema: Dict[str, Any], types: Dict[str, Any]) -> bool:
+    #     """
+    #     Matches the schema and types names of the schema entry.
+    #     """
+    #     if not SuperUnit.check_none(schema):
+    #         if not SuperUnit.check_none(types):
+    #             if len(schema) == len(types):
+    #                 if all(key in schema.keys() for key in types.keys()):
+    #                     return True
+
+    #     return False
+
+    def match_schema_and_types(self, schema: Dict[str, Any], types: Dict[str, Any]) -> bool:
+        """
+        Matches the schema and types of the schema entry.
+        """
+        if not SuperUnit.check_none(schema):
+            if not SuperUnit.check_none(types):
+                if len(schema) == len(types):
+                    if all(key in types.keys() for key in schema.keys()):
+                        if all(any(key in type_key for type_key in types.keys()) for key in schema.keys()):
+                            return True
+        return False
+
 
 
 @dataclass(
@@ -184,7 +579,7 @@ class Schema:
     A Super Schema class to control the system of group objects and their units.
     """
 
-    _schema: Optional[List[SchemaEntry]] = None
+    _schema: Optional[List[SchemaEntry]] = field(default_factory=List, init=True)
 
     def __init__(
         self,
@@ -203,7 +598,7 @@ class Schema:
             #
             level=0,
             schema={
-                "system_types_schema": [Any],
+                "expected_system_types_schema": List[Any],
                 "default_super_type_schema": {
                     "id_": List[Any],
                     "aliases": List[Any],
@@ -241,7 +636,7 @@ class Schema:
                 ]
             }
         )
-        
+
         BASE_SCHEMA: SchemaEntry = SchemaEntry(
             #
             # The default and custom defined base types.
@@ -250,10 +645,12 @@ class Schema:
             #
             level=1,
             schema={
-                "default_base_schema": {
+                "expected_super_types_schema": List[Any],
+                # Any is a placeholder for the supported super types.
+                "default_base_types_schema": {
                     "id_": List[Any],
                     "aliases": List[Any],
-                    "super_base": ["*supported_super_types*"],
+                    "super_type": [Any],
                     "accepts": List[Any],
                     "prefix": List[Any],
                     "suffix": List[Any],
@@ -262,36 +659,37 @@ class Schema:
                 }
             },
             types={
+                "expected_super_types": ["__RESERVED__STR__", "__RESERVED__INT__", "__RESERVED__FLOAT__", "__RESERVED__BOOL__", "__RESERVED__LIST__", "__RESERVED__DICT__", "__RESERVED__TUPLE__", "__RESERVED__BYTES__"],
                 "default_base_types": [
                     # The String Base Type Unit can accept any system type.
                     # Each __RESERVED__XXX__  super unit can only be used on a single base unit.
                     # Base Units cannot share super units.  But, base units can inherit super units from other base units by stacking them.
-                    {"id_": ["str"], "aliases": ["string", "str"], "super_base": ["__RESERVED__STR__"], "accepts": ["*all_supported_super_types*"], "prefix": [None], "suffix": [None], "separator": [None], "base_function": [None]},
-                    {"id_": ["int"], "aliases": ["integer", "int"], "super_base": ["__RESERVED__INT__"], "accepts": ["__RESERVED__INT__"], "prefix": [None], "suffix": [None], "separator": [None], "base_function": [None]},
-                    {"id_": ["float"], "aliases": ["float"], "super_base": ["__RESERVED__FLOAT__"], "accepts": ["__RESERVED__FLOAT__"], "prefix": [None], "suffix": [None], "separator": [None], "base_function": [None]},
-                    {"id_": ["bool"], "aliases": ["boolean", "bool"], "super_base": ["__RESERVED__BOOL__"], "accepts": ["__RESERVED__BOOL__"], "prefix": [None], "suffix": [None], "separator": [None], "base_function": [None]},
-                    {"id_": ["list"], "aliases": ["list"], "super_base": ["__RESERVED__LIST__"], "accepts": ["__RESERVED__LIST__"], "prefix": [None], "suffix": [None], "separator": [None], "base_function": [None]},
-                    {"id_": ["dict"], "aliases": ["dictionary", "dict"], "super_base": ["__RESERVED__DICT__"], "accepts": ["__RESERVED__DICT__"], "prefix": [None], "suffix": [None], "separator": [None], "base_function": [None]},
-                    {"id_": ["tuple"], "aliases": ["tuple"], "super_base": ["__RESERVED__TUPLE__"], "accepts": ["__RESERVED__TUPLE__"], "prefix": [None], "suffix": [None], "separator": [None], "base_function": [None]},
-                    {"id_": ["bytes"], "aliases": ["bytes"], "super_base": ["__RESERVED__BYTES__"], "accepts": ["__RESERVED__BYTES__"], "prefix": [None], "suffix": [None], "separator": [None], "base_function": [None]},
-                    
+                    {"id_": ["str"], "aliases": ["string", "str"], "super_type": ["__RESERVED__STR__"], "accepts": ["*all_supported_super_types*"], "prefix": [None], "suffix": [None], "separator": [None], "base_function": [None]},
+                    {"id_": ["int"], "aliases": ["integer", "int"], "super_type": ["__RESERVED__INT__"], "accepts": ["__RESERVED__INT__"], "prefix": [None], "suffix": [None], "separator": [None], "base_function": [None]},
+                    {"id_": ["float"], "aliases": ["float"], "super_type": ["__RESERVED__FLOAT__"], "accepts": ["__RESERVED__FLOAT__"], "prefix": [None], "suffix": [None], "separator": [None], "base_function": [None]},
+                    {"id_": ["bool"], "aliases": ["boolean", "bool"], "super_type": ["__RESERVED__BOOL__"], "accepts": ["__RESERVED__BOOL__"], "prefix": [None], "suffix": [None], "separator": [None], "base_function": [None]},
+                    {"id_": ["list"], "aliases": ["list"], "super_type": ["__RESERVED__LIST__"], "accepts": ["__RESERVED__LIST__"], "prefix": [None], "suffix": [None], "separator": [None], "base_function": [None]},
+                    {"id_": ["dict"], "aliases": ["dictionary", "dict"], "super_type": ["__RESERVED__DICT__"], "accepts": ["__RESERVED__DICT__"], "prefix": [None], "suffix": [None], "separator": [None], "base_function": [None]},
+                    {"id_": ["tuple"], "aliases": ["tuple"], "super_type": ["__RESERVED__TUPLE__"], "accepts": ["__RESERVED__TUPLE__"], "prefix": [None], "suffix": [None], "separator": [None], "base_function": [None]},
+                    {"id_": ["bytes"], "aliases": ["bytes"], "super_type": ["__RESERVED__BYTES__"], "accepts": ["__RESERVED__BYTES__"], "prefix": [None], "suffix": [None], "separator": [None], "base_function": [None]},
+
                     # Base Units can be stacked.
-                    # Stacking a Base Unit ontop of another Base Unit will inherit the super_base of the Base Unit it is stacked ontop of.
+                    # Stacking a Base Unit ontop of another Base Unit will inherit the super_type of the Base Unit it is stacked ontop of.
                     # Accepted types can be defined for a stacked Base Unit, but the accepted types must be a subset of the accepted types of the Base Unit it is stacked ontop of.
                     # Lets declare a DID Base Type Unit.]
                     # The DID Base Type Unit stacks ontop of String Base Type Unit.
                     # This will be used to store a DID or VC starting with 'did:'
-                    {"id_": ["did"], "aliases": ["did"], "super_base": ["str"], "accepts": ["str"], "prefix": ["did:"], "suffix": [None], "separator": [None], "base_function": [None]},
+                    {"id_": ["did"], "aliases": ["did"], "super_type": ["str"], "accepts": ["str"], "prefix": ["did:"], "suffix": [None], "separator": [None], "base_function": [None]},
                 ]
             },
             functions={
                 "default_base_level_functions": [
                     {"prepare_base_types()": "Prepares the base types for use."},
-                    {"create_base_type(id_, aliases, super_base, accepts, prefix, suffix, separator, base_function)": "Creates a base type."},
+                    {"create_base_type(id_, aliases, super_type, accepts, prefix, suffix, separator, base_function)": "Creates a base type."},
                     {"get_base_types()": "Returns a list of the *supported_base_types*."},
                     {"get_base_type(id_)": "Returns the base type for the given id_."},
                     {"get_base_type_by_alias(alias)": "Returns the base type for the given alias."},
-                    {"get_base_type_by_super_base(super_base)": "Returns the base type for the given super base."},
+                    {"get_base_type_by_super_type(super_type)": "Returns the base type for the given super base."},
                     {"get_base_type_by_accepts(accepts)": "Returns the base type for the given accepts."},
                     {"get_base_type_by_prefix(prefix)": "Returns the base type for the given prefix."},
                     {"get_base_type_by_suffix(suffix)": "Returns the base type for the given suffix."},
@@ -305,8 +703,8 @@ class Schema:
                 # Instead, new base types should be created that inherit from the default base types.
                 "custom_base_types": [
                     # Example (Simplified Base Types)
-                    {"id_": ["text"], "aliases": ["text"], "super_base": ["str"], "accepts": ["str"], "prefix": [None], "suffix": [None], "separator": [None], "base_function": [None]},
-                    {"id_": ["number"], "aliases": ["number"], "super_base": ["int", "float"], "accepts": ["int", "float"], "prefix": [None], "suffix": [None], "separator": [None], "base_function": [None]},
+                    {"id_": ["text"], "aliases": ["text"], "super_type": ["str"], "accepts": ["str"], "prefix": [None], "suffix": [None], "separator": [None], "base_function": [None]},
+                    {"id_": ["number"], "aliases": ["number"], "super_type": ["int", "float"], "accepts": ["int", "float"], "prefix": [None], "suffix": [None], "separator": [None], "base_function": [None]},
                 ]
             }
         )
@@ -317,11 +715,12 @@ class Schema:
             #
             level=2,
             schema={
+                "expected_base_types_schema": List[Any],
                 # Inherits from the default base unit schema.
-                "default_unit_type_schema": {
+                "default_group_unit_types_schema": {
                     "id_": List[Any],
                     "aliases": List[Any],
-                    "super_base": List[Any],
+                    "super_type": List[Any],
                     "accepts": List[Any],
                     "prefix": Optional[Any],
                     "suffix": Optional[Any],
@@ -341,19 +740,20 @@ class Schema:
                 }
             },
             types={
+                "expected_base_types": ["str", "int", "float", "bool", "list", "dict", "tuple", "bytes", "did"],
                 "default_group_unit_types": [
-                    # If the group type has a super_base that contains a "prefix", "suffix", "separator", or "base_function", the "accepts" value defines the types that can be passed to the unit.
+                    # If the group type has a super_type that contains a "prefix", "suffix", "separator", or "base_function", the "accepts" value defines the types that can be passed to the unit.
                     # For ex
-                    {"id_": ["nonce"], "aliases": ["nonce"], "super_base": ["str", 'int'], "accepts": ["str, int"], "prefix": [None], "suffix": [None], "separator": [None], "base_function": [None]},
-                    {"id_": ["nonce_chain"], "aliases": ["nonce_chain"], "super_base": ["list"], "accepts": ["nonce"], "prefix": [None], "suffix": [None], "separator": [None], "base_function": [None]},
-                    {"id_": ["owner"], "aliases": ["owner"], "super_base": ["did"], "accepts": ["did"], "prefix": [None], "suffix": [None], "separator": [None], "base_function": [None]},
-                    {"id_": ["owners"], "aliases": ["owners"], "super_base": ["list"], "accepts": ["owner"], "prefix": [None], "suffix": [None], "separator": [None], "base_function": [None]},
-                    {"id_": ["credential"], "aliases": ["credential, cred"], "super_base": ["did"], "accepts": ["did"], "prefix": [None], "suffix": [None], "separator": [None], "base_function": [None]},
-                    {"id_": ["credentials"], "aliases": ["credentials, creds"], "super_base": ["list"], "accepts": ["credential"], "prefix": [None], "suffix": [None], "separator": [None], "base_function": [None]},
-                    {"id_": ["data_entry"], "aliases": ["data_entry", "data"], "super_base": ["*all_supported_base_types*"], "accepts": ["*all_supported_base_types"], "prefix": [None], "suffix": [None], "separator": [None], "base_function": [None]},
-                    {"id_": ["data"], "aliases": ["data"], "super_base": ["dict"], "accepts": ["data_entry"], "prefix": [None], "suffix": [None], "separator": [None], "base_function": [None]},
-                    {"id_": ["group_unit"], "aliases": ["group_unit, unit"], "super_base": ["dict"], "accepts": ["nonce_chain", "owners", "creds", "data"], "prefix": [None], "suffix": [None], "separator": [None], "base_function": [None]},
-                    {"id_": ["group"], "aliases": ["group"], "super_base": ["dict"], "accepts": ["group_unit"], "prefix": [None], "suffix": [None], "separator": [None], "base_function": [None]},
+                    {"id_": ["nonce"], "aliases": ["nonce"], "super_type": ["str", 'int'], "accepts": ["str, int"], "prefix": [None], "suffix": [None], "separator": [None], "base_function": [None]},
+                    {"id_": ["nonce_chain"], "aliases": ["nonce_chain"], "super_type": ["list"], "accepts": ["nonce"], "prefix": [None], "suffix": [None], "separator": [None], "base_function": [None]},
+                    {"id_": ["owner"], "aliases": ["owner"], "super_type": ["did"], "accepts": ["did"], "prefix": [None], "suffix": [None], "separator": [None], "base_function": [None]},
+                    {"id_": ["owners"], "aliases": ["owners"], "super_type": ["list"], "accepts": ["owner"], "prefix": [None], "suffix": [None], "separator": [None], "base_function": [None]},
+                    {"id_": ["credential"], "aliases": ["credential, cred"], "super_type": ["did"], "accepts": ["did"], "prefix": [None], "suffix": [None], "separator": [None], "base_function": [None]},
+                    {"id_": ["credentials"], "aliases": ["credentials, creds"], "super_type": ["list"], "accepts": ["credential"], "prefix": [None], "suffix": [None], "separator": [None], "base_function": [None]},
+                    {"id_": ["data_entry"], "aliases": ["data_entry", "data"], "super_type": ["*all_supported_base_types*"], "accepts": ["*all_supported_base_types"], "prefix": [None], "suffix": [None], "separator": [None], "base_function": [None]},
+                    {"id_": ["data"], "aliases": ["data"], "super_type": ["dict"], "accepts": ["data_entry"], "prefix": [None], "suffix": [None], "separator": [None], "base_function": [None]},
+                    {"id_": ["group_unit"], "aliases": ["group_unit, unit"], "super_type": ["dict"], "accepts": ["nonce_chain", "owners", "creds", "data"], "prefix": [None], "suffix": [None], "separator": [None], "base_function": [None]},
+                    {"id_": ["group"], "aliases": ["group"], "super_type": ["dict"], "accepts": ["group_unit"], "prefix": [None], "suffix": [None], "separator": [None], "base_function": [None]},
                 ]
             },
             functions={
@@ -371,8 +771,8 @@ class Schema:
                 # Instead, new group unit types should be created that inherit from the default group unit types.
                 "custom_group_unit_types": [
                     # Example (Creating a group with a custom group unit type)
-                    {"id_": ["my_custom_group_value"], "aliases": ["my_custom_group_value"], "super_base": ["str"], "accepts": ["str"], "prefix": [None], "suffix": [None], "separator": [None], "base_function": [None]},
-                    {"id_": ["custom_group_unit"], "aliases": ["custom_group_unit"], "super_base": ["group_unit"], "accepts": ["group_unit", "my_custom_group_value"], "prefix": [None], "suffix": [None], "separator": [None], "base_function": [None]},
+                    {"id_": ["my_custom_group_value"], "aliases": ["my_custom_group_value"], "super_type": ["str"], "accepts": ["str"], "prefix": [None], "suffix": [None], "separator": [None], "base_function": [None]},
+                    {"id_": ["custom_group_unit"], "aliases": ["custom_group_unit"], "super_type": ["group_unit"], "accepts": ["group_unit", "my_custom_group_value"], "prefix": [None], "suffix": [None], "separator": [None], "base_function": [None]},
                 ]
             }
         )
@@ -382,4 +782,54 @@ class Schema:
             BASE_SCHEMA,
             GROUP_SCHEMA
         ]
-        
+
+    @property
+    def schema(self) -> List[SchemaEntry]:
+        return self._schema
+
+    @schema.setter
+    def schema(self, value) -> None:
+        self._schema = value
+
+    @schema.deleter
+    def schema(self) -> None:
+        del self._schema
+
+    def load_schema(self, schema: List[SchemaEntry]) -> None:
+        """
+        Loads a schema into the generator.
+        """
+        self.schema = schema
+
+    def validate_schema(self) -> None:
+        """
+        Validates the schema.
+        """
+        pass
+
+
+
+
+class Generator(Schema):
+    """
+    The Generator class is used to generate units of different types and levels.
+    """
+
+    def __init__(self, *args, **kwargs):
+        """
+        Initializes the Generator class.
+        """
+        Schema.__init__(self, *args, **kwargs)
+        self.__post_init__(*args, **kwargs)
+
+    def __post_init__(self, *args, **kwargs):
+        """
+        Post-initializes the Generator class.
+        """
+        pass
+
+    def create_unit_type(self, unit_type: str, level: int = 0, **kwargs) -> Any:
+        """
+        Creates a unit type from the loaded schema
+        """
+
