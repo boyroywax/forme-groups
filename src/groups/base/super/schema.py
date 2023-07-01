@@ -53,24 +53,29 @@ class SuperUnit:
             "value" in kwargs
         ):
             raise ValueError("Cannot set 'value' and pass a value at the same time.")
-        
 
+        # Check if 'args' is a dictionary with a value entry.
         if (
             len(args) == 1 and
             isinstance(args[0], dict) and
-            dict(args[0]).get("value") is not None
+            dict(args[0]).get("value") is not None and 
+            "random" not in kwargs and
+            "value" not in kwargs
         ):
             self.value = dict(args[0]).get("value")
             return
 
+        # Check if 'kwargs' contains the random key and that the value is set to True.
         if (
             len(args) == 0 and
             "random" in kwargs and
-            kwargs["random"] is True
+            kwargs["random"] is True and
+            "value" not in kwargs
         ):
             self.value = self.random_value()
             return
 
+        # Check if 'kwargs' contains the random key and that it is set to False.
         if (
             len(args) == 0 and
             "random" in kwargs and
@@ -79,6 +84,7 @@ class SuperUnit:
             self.value = None
             return
 
+        # Check for an empty input.
         if (
             len(args) == 0 and
             "random" not in kwargs and
@@ -87,13 +93,17 @@ class SuperUnit:
             self.value = None
             return
 
+        # Check if 'kwargs' contains the value key. And that the value is not None.
         if (
             len(args) == 0 and
-            "value" in kwargs
+            "value" in kwargs and
+            kwargs["value"] is not None
+            and "random" not in kwargs
         ):
             self.value = kwargs["value"]
             return
 
+        # Check if 'args' contains a value. And that 'kwargs' does not contain and keys.
         if (
             len(args) == 1 and
             "random" not in kwargs and
@@ -102,6 +112,7 @@ class SuperUnit:
             self.value = args[0]
             return
 
+        # Check if 'args' contains a value. And that 'kwargs' contains the random key and that it is set to False.
         if (
             len(args) == 1 and
             "random" in kwargs and
