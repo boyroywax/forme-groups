@@ -480,7 +480,7 @@ class SchemaEntry:
         
         self.validate_level(level)
         self.validate_schema(schema)
-        self.types = types
+        self.validate_types(types)
         self.functions = functions
         self.overrides = overrides
 
@@ -544,18 +544,6 @@ class SchemaEntry:
         if self.schema is not None:
             if not self.match_schema_and_types(self.schema, self.types):
                 raise ValueError("Types must match the schema.")
-    
-    # def match_schema_and_types_names(self, schema: Dict[str, Any], types: Dict[str, Any]) -> bool:
-    #     """
-    #     Matches the schema and types names of the schema entry.
-    #     """
-    #     if not SuperUnit.check_none(schema):
-    #         if not SuperUnit.check_none(types):
-    #             if len(schema) == len(types):
-    #                 if all(key in schema.keys() for key in types.keys()):
-    #                     return True
-
-    #     return False
 
     def match_schema_and_types(self, schema: Dict[str, Any], types: Dict[str, Any]) -> bool:
         """
