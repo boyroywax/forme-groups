@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 
 from .unit import Unit_ as SuperUnit
-from .enforcer import Enforcer
+# from .enforcer import Enforcer
 
 
 @dataclass
@@ -12,8 +12,8 @@ class Super:
     """
 
 
-    enforcer: Enforcer = None
-    enforcer_activated: bool = False
+    # enforcer: Enforcer = None
+    # enforcer_activated: bool = False
     super_unit_type: Optional[str] = None
 
     def __init__(
@@ -24,7 +24,7 @@ class Super:
         """
         Initializes the Super class.
         """
-        self.enforcer = Enforcer()
+        # self.enforcer = Enforcer()
 
     def __post_init__(
         self,

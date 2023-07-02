@@ -332,7 +332,7 @@ class SuperUnit:
         unit.is_none()  # True
         """
         return SuperUnit.check_none(self.value)
-    
+
     @staticmethod
     def random_value() -> str:
         """
@@ -458,7 +458,7 @@ class SchemaEntry:
     
     Args:
         level (int): The level of the schema entry.
-        schema (Dict[str, Any]): The schema of the schema entry.
+        schema (Dict[str, Any]): The schema of the included 'types' entry.
         types (Dict[str, Any]): The types of the schema entry.
         functions (Dict[str, Any]): The functions of the schema entry.
         overrides (Dict[str, Any]): The overrides of the schema entry.
@@ -539,11 +539,11 @@ class SchemaEntry:
         if not all(isinstance(value, list) for value in types.values()):
             raise TypeError("Types values must be lists.")
 
-        self.types = types
-
         if self.schema is not None:
-            if not self.match_schema_and_types(self.schema, self.types):
+            if not self.match_schema_and_types(self.schema, types):
                 raise ValueError("Types must match the schema.")
+
+        self.types = types
 
     def match_schema_and_types(self, schema: Dict[str, Any], types: Dict[str, Any]) -> bool:
         """
@@ -776,7 +776,7 @@ class Schema:
         return self._schema
 
     @schema.setter
-    def schema(self, value) -> None:
+    def schema(self, value: List[SchemaEntry]) -> None:
         self._schema = value
 
     @schema.deleter
@@ -816,8 +816,8 @@ class Generator(Schema):
         """
         pass
 
-    def create_unit_type(self, unit_type: str, level: int = 0, **kwargs) -> Any:
+    def create_unit_type(self, unit_type: str, **kwargs) -> Any:
         """
         Creates a unit type from the loaded schema
         """
-
+        pass
