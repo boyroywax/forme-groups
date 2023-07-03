@@ -64,6 +64,7 @@ class SuperUnit:
             ValueError: If 'random' is True and 'value' are set at the same time.
             ValueError: If 'force_type' is set and 'value' is None and 'random' is None or False.
         """
+        self._value: Any = None
         self.parse_input(*args, **kwargs)
         self.__post_init__(*args, **kwargs)
 
@@ -78,9 +79,45 @@ class SuperUnit:
         Keyword Args:
             **kwargs: The keyword arguments to post initialize the Super Unit class.
                 force_type (str): A Callable Type. The type to force the value to.
+                
         """
-        if "force_type" in kwargs and self.value is not None:
+        if (
+            "random" in kwargs and
+            kwargs["random"] is not None and
+            kwargs["random"] is True and
+            "force_type" in kwargs and
+            kwargs["force_type"] is not None
+        ):
+            return
+
+        if (
+            "random" in kwargs and
+            kwargs["random"] is not None and
+            kwargs["random"] is True and
+            self.value is not None and
+            ("force_type" in kwargs and kwargs["force_type"] is not None)
+        ):
+            return
+
+        if (
+            "force_type" in kwargs and
+            kwargs["force_type"] is not None and
+            self.value is not None and
+            ("random" in kwargs and (kwargs["random"] is None or kwargs["random"] is False))
+        ):
             self.force_type(kwargs["force_type"])
+
+        if (
+            "force_type" in kwargs and
+            kwargs["force_type"] is not None and
+            self.value is None and
+            ("random" not in kwargs or kwargs["random"] is None or kwargs["random"] is False)
+        ):
+            raise ValueError("Cannot force a type if the value is None.")
+        
+
+        
+
 
     def parse_input(self, *args, **kwargs) -> None:
         """
@@ -149,12 +186,13 @@ class SuperUnit:
             self.value = dict(args[0]).get("value")
             return
 
-        # Check if 'kwargs' contains the random key and that it is set to True.
+        #Check if 'kwargs' contains the random key and that it is set to True.
         if (
             len(args) == 0 and
             "random" in kwargs and
             kwargs["random"] is True and
-            "value" not in kwargs
+            "value" not in kwargs and 
+            "force_type" not in kwargs
         ):
             self.value = self.random_value()
             return
@@ -203,6 +241,17 @@ class SuperUnit:
             kwargs["random"] is False
         ):
             self.value = args[0]
+            return
+        
+        if (
+            "random" in kwargs and
+            kwargs["random"] is not None and
+            kwargs["random"] is True and
+            # self.value is None and
+            "force_type" in kwargs and
+            kwargs["force_type"] is not None
+        ):
+            self.value = self.random_value(type_ =kwargs["force_type"])
             return
 
     def has_type(self, type_: Any) -> bool:
@@ -266,7 +315,7 @@ class SuperUnit:
                 raise TypeError(f"Cannot force type {type_} on value {self.value}.")
         else:
             raise AttributeError(f"Cannot force type {type_} on None value.")
-        
+
     @staticmethod
     def get_none_list() -> list:
         """
@@ -299,7 +348,7 @@ class SuperUnit:
             str('""'),
             str(' ')
         ]
-    
+
     @staticmethod
     def check_none(value: Any) -> bool:
         """
@@ -334,14 +383,18 @@ class SuperUnit:
         return SuperUnit.check_none(self.value)
 
     @staticmethod
-    def random_value() -> str:
+    def random_value(type_: Optional[Any] = None) -> Any:
         """
         Create a random value based on the uuid4() function.
 
         Returns:
             str: A random value.
         """
-        return uuid.uuid4().hex
+        if type_ is int or type_ is float:
+            return int(uuid.uuid4().int)
+        if type_ is str or type_ is None:
+            return str(uuid.uuid4().hex)
+
 
     def get_value_type(self) -> str:
         """
@@ -375,7 +428,7 @@ class SuperUnit:
             value=dictionary["value"]
         )
 
-    def to_dict(self) -> Dict[str, Any]:
+    def __dict__(self) -> Dict[str, Any]:
         """
         Returns a dictionary from a Super Unit.
         """
@@ -710,10 +763,10 @@ class Schema:
                     "aliases": List[Any],
                     "super_type": List[Any],
                     "accepts": List[Any],
-                    "prefix": Optional[Any],
-                    "suffix": Optional[Any],
-                    "separator": Optional[Any],
-                    "base_function": Optional[Any]
+                    "prefix": List[Any],
+                    "suffix": List[Any],
+                    "separator": List[Any],
+                    "base_function": List[Any]
                 },
                 # A new schema that defines the default group unit types.
                 "default_group_unit_type_schema": {
@@ -793,9 +846,16 @@ class Schema:
         """
         Validates the schema.
         """
-        pass
+        try:
+            self.order_schema_by_level()
+        except Exception as e:
+            raise Exception(f"Error ordering schema by level: {e}")
 
-
+    def order_schema_by_level(self) -> None:
+        """
+        Orders the schema by level.
+        """
+        self.schema = sorted(self.schema, key=lambda x: x.level)
 
 
 class Generator(Schema):
@@ -816,8 +876,9 @@ class Generator(Schema):
         """
         pass
 
-    def create_unit_type(self, unit_type: str, **kwargs) -> Any:
+    def create_super(self, *args, **kwargs) -> SuperUnit:
         """
         Creates a unit type from the loaded schema
         """
         pass
+
