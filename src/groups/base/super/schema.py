@@ -81,43 +81,66 @@ class SuperUnit:
                 force_type (str): A Callable Type. The type to force the value to.
                 
         """
-        if (
-            "random" in kwargs and
-            kwargs["random"] is not None and
-            kwargs["random"] is True and
-            "force_type" in kwargs and
-            kwargs["force_type"] is not None
-        ):
-            return
+        # if (
+        #     "random" in kwargs and
+        #     kwargs["random"] is not None and
+        #     kwargs["random"] is True and
+        #     "force_type" in kwargs and
+        #     kwargs["force_type"] is not None
+        # ):
+        #     return
 
-        if (
-            "random" in kwargs and
-            kwargs["random"] is not None and
-            kwargs["random"] is True and
-            self.value is not None and
-            ("force_type" in kwargs and kwargs["force_type"] is not None)
-        ):
-            return
+        # args = list(args)
+        # kwargs = dict(kwargs)
 
-        if (
-            "force_type" in kwargs and
-            kwargs["force_type"] is not None and
-            self.value is not None and
-            ("random" in kwargs and (kwargs["random"] is None or kwargs["random"] is False))
-        ):
-            self.force_type(kwargs["force_type"])
+        # random = kwargs.pop("random", None)
+        # force_type = kwargs.pop("force_type", None)
+        # value = self.value
 
-        if (
-            "force_type" in kwargs and
-            kwargs["force_type"] is not None and
-            self.value is None and
-            ("random" not in kwargs or kwargs["random"] is None or kwargs["random"] is False)
-        ):
-            raise ValueError("Cannot force a type if the value is None.")
+        # if random is not None and random is True:
+        #     if self._value is not None:
+        #         print('value already set')
+        #     self._value = self.random_value()
+        #     return
         
-
+        # if force_type is not None and force_type is not False and value is not None:
+        #     # if random is None:
+        #     #     raise ValueError("Cannot force a type if the value is None.")
+        #     self.value = self.force_type(force_type)
+        #     return
+        # if (
+        #     "random" in kwargs and
+        #     kwargs["random"] is not None and
+        #     kwargs["random"] is True and
+        #     # self.value is not None and
+        #     ("force_type" in kwargs and kwargs["force_type"] is not None)
+        # ):
+        #     raise ValueError("Cannot set a random value if the value is not None.")
         
+        # if (
+        #     "random" in kwargs and
+        #     kwargs["random"] is not None and
+        #     kwargs["random"] is True and
+        #     self.value is not None and
+        #     ("force_type" in kwargs and kwargs["force_type"] is True)
+        # ):
+        #     return
+        
+        # if (
+        #     "force_type" in kwargs and
+        #     kwargs["force_type"] is not None and
+        #     kwargs["force_type"] is not False and
+        #     # self.value is not None and
+        #     ("random" not in kwargs or kwargs["random"] is not None or kwargs["random"] is False)):
+        #     return self.force_type(kwargs["force_type"])
 
+        # if (
+        #     "force_type" in kwargs and
+        #     kwargs["force_type"] is not None and
+        #     self.value is None and
+        #     ("random" not in kwargs or (kwargs["random"] is None or kwargs["random"] is False))
+        # ):
+        #     raise ValueError("Cannot force a type if the value is None.")
 
     def parse_input(self, *args, **kwargs) -> None:
         """
@@ -153,106 +176,206 @@ class SuperUnit:
         ```
         """
 
-        # Check if 'random' kwarg and 'value' arg are set at the same time.
-        if (
-            len(args) == 1 and
-            "random" in kwargs and
-            kwargs["random"] is True
-        ):
-            raise ValueError("Cannot set 'random' and 'value' at the same time.")
+        args: List[Any] = list(args)
+        kwargs: Dict[str, Any] = dict(kwargs)
 
-        # Check if 'value' kwarg and 'value' kwarg are set at the same time.
-        if (
-            "random" in kwargs and
-            "value" in kwargs
-        ):
-            raise ValueError("Cannot set 'random' and 'value' at the same time.")
+        value: Any = None
+        force_type: Any = None
+        random: bool = False
 
-        # Check if 'value' kwarg and 'value' arg are set at the same time.
-        if (
-            len(args) >= 1 and
-            "value" in kwargs
-        ):
-            raise ValueError("Cannot set 'value' and pass a value at the same time.")
-
-        # Check if 'args' is a dictionary with a value entry.
-        if (
-            len(args) == 1 and
-            isinstance(args[0], dict) and
-            dict(args[0]).get("value") is not None and
-            "random" not in kwargs and
-            "value" not in kwargs
-        ):
-            self.value = dict(args[0]).get("value")
-            return
-
-        #Check if 'kwargs' contains the random key and that it is set to True.
-        if (
-            len(args) == 0 and
-            "random" in kwargs and
-            kwargs["random"] is True and
-            "value" not in kwargs and 
-            "force_type" not in kwargs
-        ):
-            self.value = self.random_value()
-            return
-
-        # Check if 'kwargs' contains the random key and that it is set to False.
-        if (
-            len(args) == 0 and
-            "random" in kwargs and
-            kwargs["random"] is False
-        ):
-            self.value = None
-            return
-
-        # Check for an empty input.
-        if (
-            len(args) == 0 and
-            "random" not in kwargs and
-            "value" not in kwargs
-        ):
-            self.value = None
-            return
-
-        # Check if 'kwargs' contains the value key. And that the value is not None.
-        if (
-            len(args) == 0 and
-            "value" in kwargs and
-            kwargs["value"] is not None
-            and "random" not in kwargs
-        ):
-            self.value = kwargs["value"]
-            return
-
-        # Check if 'args' contains a value. And that 'kwargs' does not contain and keys.
-        if (
-            len(args) == 1 and
-            "random" not in kwargs and
-            "value" not in kwargs
-        ):
-            self.value = args[0]
-            return
-
-        # Check if 'args' contains a value. And that 'kwargs' contains the random key and that it is set to False.
-        if (
-            len(args) == 1 and
-            "random" in kwargs and
-            kwargs["random"] is False
-        ):
-            self.value = args[0]
-            return
+        value_arg: Any = None
+        value_kwarg: Any = None
         
-        if (
-            "random" in kwargs and
-            kwargs["random"] is not None and
-            kwargs["random"] is True and
-            # self.value is None and
-            "force_type" in kwargs and
-            kwargs["force_type"] is not None
-        ):
-            self.value = self.random_value(type_ =kwargs["force_type"])
-            return
+        # collect args
+        if len(args) > 0:
+            value_arg = args.pop(0)
+
+        # collect kwargs
+        if "value" in kwargs:
+            value_kwarg = kwargs.pop("value", None)
+
+        if "force_type" in kwargs:
+            force_type = kwargs.pop("force_type")
+
+        if "random" in kwargs:
+            random = kwargs.pop("random")
+
+        # check if value is set
+        if value_arg is not None:
+            if value_kwarg is not None:
+                raise ValueError("Cannot set 'value' arg and 'value' kwarg at the same time.")
+            value = value_arg
+        else:
+            value = value_kwarg
+        
+        # check if value is set
+        if value is not None:
+            if isinstance(value, dict):
+                if "value" not in value:
+                    raise ValueError("Cannot set 'value' if 'value' is not in the dictionary.")
+                value = value["value"]
+
+        # check if random is set    
+        if random is True:
+            if value is not None:
+                raise ValueError("Cannot set 'random' if 'value' is not None.")
+            if force_type is not None and force_type is not False:
+                value = self.random_value(force_type)
+            else:
+                value = self.random_value()
+
+        self.value = value
+
+        if force_type is not None and force_type is not False and value is not None and random is not True:
+            self.value = self.force_type(force_type)
+
+        # # Check if 'value' arg is set.
+        # if len(args) == 1:
+        #     value = args.pop(0)
+
+        # # Check if 'value' kwarg is set.
+        # if "value" in kwargs:
+        #     if value is not None:
+        #         raise ValueError("Cannot set 'value' and 'value' at the same time.")
+        #     else:
+        #         value = kwargs.pop("value", None)
+
+        #     if value is not None and isinstance(value, dict):
+        #         if "value" not in value:
+        #             raise ValueError("Cannot set 'value' if 'value' is not in the dictionary.")
+        #         value = value["value"]
+
+        # # Check if 'random' kwarg is set.
+        # if "random" in kwargs:
+        #     random = kwargs.pop("random")
+        #     if value is not None:
+        #         if random is True:
+        #             raise ValueError("Cannot set 'random' and 'value' at the same time.")
+        #     else:
+        #         if random is True:
+        #             value = self.random_value()
+
+        # # Check if 'force_type' kwarg is set.
+        # if "force_type" in kwargs:
+        #     if value is None:
+        #         if kwargs["force_type"] is not False and random is None or random is False:
+        #             raise ValueError("Cannot set 'force_type' if 'value' is None.")
+                
+        #     force_type = kwargs.pop("force_type")
+
+        #     if force_type is not False:
+        #         if value is None:
+        #             raise ValueError("Cannot set 'force_type' if 'value' is None.")
+                
+        #         value = self.force_type(force_type)
+
+        # self.value = value
+
+        
+
+            
+
+        # Check if 'random' kwarg and 'value' arg are set at the same time.
+        # if (
+        #     len(args) == 1 and
+        #     "random" in kwargs and
+        #     kwargs["random"] is True
+        # ):
+        #     raise ValueError("Cannot set 'random' and 'value' at the same time.")
+
+        # # Check if 'value' kwarg and 'value' kwarg are set at the same time.
+        # if (
+        #     "random" in kwargs and
+        #     "value" in kwargs
+        # ):
+        #     raise ValueError("Cannot set 'random' and 'value' at the same time.")
+
+        # # Check if 'value' kwarg and 'value' arg are set at the same time.
+        # if (
+        #     len(args) >= 1 and
+        #     "value" in kwargs
+        # ):
+        #     raise ValueError("Cannot set 'value' and pass a value at the same time.")
+
+        # # Check if 'args' is a dictionary with a value entry.
+        # if (
+        #     len(args) == 1 and
+        #     isinstance(args[0], dict) and
+        #     dict(args[0]).get("value") is not None and
+        #     "random" not in kwargs and
+        #     "value" not in kwargs
+        # ):
+        #     self.value = dict(args[0]).get("value")
+        #     return
+
+        # #Check if 'kwargs' contains the random key and that it is set to True.
+        # if (
+        #     len(args) == 0 and
+        #     "random" in kwargs and
+        #     kwargs["random"] is True and
+        #     "value" not in kwargs and
+        #     "force_type" not in kwargs
+        # ):
+        #     self.value = self.random_value()
+        #     return None
+    
+        # if (
+        #     "random" in kwargs and
+        #     kwargs["random"] is True and
+        #     # self.value is None and
+        #     'value' not in kwargs and
+        #     "force_type" in kwargs and
+        #     kwargs["force_type"] is not None and
+        #     kwargs["force_type"] is not False
+        # ):
+        #     self.value = self.random_value(type_=kwargs["force_type"])
+        #     return None
+
+        # # Check if 'kwargs' contains the random key and that it is set to False.
+        # if (
+        #     len(args) == 0 and
+        #     "random" in kwargs and
+        #     kwargs["random"] is False
+        # ):
+        #     self.value = None
+        #     return None
+
+        # # Check for an empty input.
+        # if (
+        #     len(args) == 0 and
+        #     "random" not in kwargs and
+        #     "value" not in kwargs
+        # ):
+        #     self.value = None
+        #     return
+
+        # # Check if 'kwargs' contains the value key. And that the value is not None.
+        # if (
+        #     len(args) == 0 and
+        #     "value" in kwargs and
+        #     kwargs["value"] is not None
+        #     and "random" not in kwargs
+        # ):
+        #     self.value = kwargs["value"]
+        #     return
+
+        # # Check if 'args' contains a value. And that 'kwargs' does not contain and keys.
+        # if (
+        #     len(args) == 1 and
+        #     "random" not in kwargs and
+        #     "value" not in kwargs
+        # ):
+        #     self.value = args[0]
+        #     return
+
+        # # Check if 'args' contains a value. And that 'kwargs' contains the random key and that it is set to False.
+        # if (
+        #     len(args) == 1 and
+        #     "random" in kwargs and
+        #     kwargs["random"] is False
+        # ):
+        #     self.value = args[0]
+        #     return
 
     def has_type(self, type_: Any) -> bool:
         """
@@ -307,7 +430,7 @@ class SuperUnit:
         if not callable(type_):
             raise TypeError(f"Type {type_} is not a callable type.")
 
-        if not self.is_none():
+        if self.is_none() is False:
             try:
                 if not self.has_type(type_):
                     self.value = type_(self.value)
@@ -390,11 +513,14 @@ class SuperUnit:
         Returns:
             str: A random value.
         """
-        if type_ is int or type_ is float:
+        if type_ is int or type_ is float or type_ == "int":
             return int(uuid.uuid4().int)
-        if type_ is str or type_ is None:
+        if type_ is bool or type_ == "bool":
+            return bool(uuid.uuid4().int % 2)
+        if type_ is str or type_ is None or type_ == "str":
             return str(uuid.uuid4().hex)
 
+        return uuid.uuid4()
 
     def get_value_type(self) -> str:
         """
