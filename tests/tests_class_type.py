@@ -1,55 +1,8 @@
 import unittest
-from src.groups.classes.type import ValueType
+from src.groups.classes.type import ValueType, ValueTypeGroup
 
 
 class TestType(unittest.TestCase):
-    # def setUp(self):
-    #     self.type_ = ValueType(["int", "integer"], [int])
-
-    # def test_type(self):
-    #     # Test initialization
-    #     self.assertEqual(self.type_.aliases, ["int", "integer"])
-    #     self.assertEqual(self.type_.type, [int])
-
-    #     # Test check_alias method
-    #     self.assertTrue(self.type_.check_alias("int"))
-    #     self.assertTrue(self.type_.check_alias("integer"))
-    #     self.assertFalse(self.type_.check_alias("float"))
-
-    # def test_name(self):
-    #     # Test name method
-    #     self.assertEqual(self.type_.name(), "ValueType")
-
-    # def test_freeze(self):
-    #     # Test freeze method
-    #     self.type_.freeze()
-    #     self.assertTrue(self.type_.frozen)
-
-    # def test_frozen(self):
-    #     # Test try_frozen method
-    #     self.type_.freeze()
-    #     with self.assertRaises(Exception):
-    #         self.type_.aliases = ["float"]
-
-    # def test_not_frozen(self):
-    #     # Test inputing data into a non frozen class.
-    #     # Expect an error for no setter.
-    #     # This is desired behavior as value types should not be changed.
-    #     with self.assertRaises(Exception):
-    #         self.type_.aliases = ["float"]
-
-    # def test_repr_not_frozen(self):
-    #     # Test __repr__ method
-    #     self.assertEqual(repr(self.type_), "ValueType(aliases=['int', 'integer'], type=[<class 'int'>], frozen=False)")
-
-    # def test_repr_frozen(self):
-    #     # Test __repr__ method
-    #     self.type_.freeze()
-    #     self.assertEqual(repr(self.type_), "ValueType(aliases=['int', 'integer'], type=[<class 'int'>], frozen=True)")
-
-
-
-# class TestValueType(unittest.TestCase):
     def test_type_property(self):
         aliases = ['int', 'integer']
         type_ = [int]
@@ -149,3 +102,61 @@ class TestType(unittest.TestCase):
 
         frozen_value_type = ValueType(aliases=aliases, type_=type_, freeze=True)
         self.assertTrue(frozen_value_type.frozen)
+
+
+class TestValueTypeGroup(unittest.TestCase):
+    def test_name_property(self):
+        # test name property
+        group = {'int': ValueType(aliases=['int'], type_=['int'])}
+        value_type_group = ValueTypeGroup(name='test', group=group)
+        self.assertEqual(value_type_group.name, 'test')
+
+    def test_group_property(self):
+        # test group property
+        group = {'int': ValueType(aliases=['int'], type_=['int'])}
+        value_type_group = ValueTypeGroup(name='test', group=group)
+        self.assertEqual(value_type_group.group, group)
+
+    def test_freeze_property(self):
+        # test freeze property
+        group = {'int': ValueType(aliases=['int'], type_=['int'])}
+        value_type_group = ValueTypeGroup(name='test', group=group)
+        self.assertFalse(value_type_group.frozen)
+
+    def test_check_alias_method(self):
+        group = {'int': ValueType(aliases=['int'], type_=['int'])}
+        value_type_group = ValueTypeGroup(name='test', group=group)
+        self.assertTrue(value_type_group.check_alias('int'))
+        self.assertFalse(value_type_group.check_alias('float'))
+
+    def test_freeze_method(self):
+        group = {'int': ValueType(aliases=['int'], type_=['int'])}
+        value_type_group = ValueTypeGroup(name='test', group=group)
+        value_type_group.freeze()
+        self.assertTrue(value_type_group.frozen)
+        with self.assertRaises(Exception):
+            value_type_group.group['int'].aliases = ['integer']
+
+    def test_init_method(self):
+        group = {'int': ValueType(aliases=['int'], type_=['int'])}
+        value_type_group = ValueTypeGroup(name='test', group=group)
+        self.assertEqual(value_type_group.name, 'test')
+        self.assertEqual(value_type_group.group, group)
+        self.assertFalse(value_type_group.frozen)
+
+    def test_frozen_setter_frozen(self):
+        group = {'int': ValueType(aliases=['int'], type_=['int'])}
+        value_type_group = ValueTypeGroup(name='test', group=group, freeze=True)
+        with self.assertRaises(Exception):
+            value_type_group.frozen = False
+
+    def test_frozen_setter_unfrozen(self):
+        group = {'int': ValueType(aliases=['int'], type_=['int'])}
+        value_type_group = ValueTypeGroup(name='test', group=group)
+        value_type_group.frozen = True
+        self.assertTrue(value_type_group.frozen)
+
+    def test_frozen_getter(self):
+        group = {'int': ValueType(aliases=['int'], type_=['int'])}
+        value_type_group = ValueTypeGroup(name='test', group=group)
+        self.assertFalse(value_type_group.frozen)

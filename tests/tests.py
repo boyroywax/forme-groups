@@ -10,7 +10,7 @@ import unittest
 
 # from .tests_schema_super_unit import TestSchemaSuperUnit
 # from .tests_schema_entry import TestSchemaEntry
-from .tests_class_type import  TestType
+from .tests_class_type import  TestType, TestValueTypeGroup
 
 
 def main():
@@ -32,6 +32,7 @@ def main():
     # test_suite.addTests(test_loader.loadTestsFromTestCase(TestSchemaEntry))
     # test_suite.addTests(test_loader.loadTestsFromTestCase(TestTypeInterface))
     test_suite.addTests(test_loader.loadTestsFromTestCase(TestType))
+    test_suite.addTests(test_loader.loadTestsFromTestCase(TestValueTypeGroup))
 
     # Run the test suite
     runner = unittest.TextTestRunner()
