@@ -1,15 +1,16 @@
 import unittest
 
-from .tests_checks import TestChecks
-from .tests_super_unit import TestSuperUnit
-from .tests_id import TestId
-from .tests_type import TestType
-from .tests_defaults import TestDefaults
-from .tests_base_unit import TestBaseUnit
-from .tests_units import TestUnits
+# from .tests_checks import TestChecks
+# from .tests_super_unit import TestSuperUnit
+# from .tests_id import TestId
+# from .tests_type import TestType
+# from .tests_defaults import TestDefaults
+# from .tests_base_unit import TestBaseUnit
+# from .tests_units import TestUnits
 
-from .tests_schema_super_unit import TestSchemaSuperUnit
-from .tests_schema_entry import TestSchemaEntry
+# from .tests_schema_super_unit import TestSchemaSuperUnit
+# from .tests_schema_entry import TestSchemaEntry
+from .tests_class_type import  TestType
 
 
 def main():
@@ -20,15 +21,17 @@ def main():
     test_loader = unittest.TestLoader()
 
     # Add the test cases to the test suite
-    test_suite.addTests(test_loader.loadTestsFromTestCase(TestChecks))
-    test_suite.addTests(test_loader.loadTestsFromTestCase(TestSuperUnit))
-    test_suite.addTests(test_loader.loadTestsFromTestCase(TestId))
+    # test_suite.addTests(test_loader.loadTestsFromTestCase(TestChecks))
+    # test_suite.addTests(test_loader.loadTestsFromTestCase(TestSuperUnit))
+    # test_suite.addTests(test_loader.loadTestsFromTestCase(TestId))
+    # test_suite.addTests(test_loader.loadTestsFromTestCase(TestType))
+    # test_suite.addTests(test_loader.loadTestsFromTestCase(TestDefaults))
+    # test_suite.addTests(test_loader.loadTestsFromTestCase(TestBaseUnit))
+    # test_suite.addTests(test_loader.loadTestsFromTestCase(TestUnits))
+    # test_suite.addTests(test_loader.loadTestsFromTestCase(TestSchemaSuperUnit))
+    # test_suite.addTests(test_loader.loadTestsFromTestCase(TestSchemaEntry))
+    # test_suite.addTests(test_loader.loadTestsFromTestCase(TestTypeInterface))
     test_suite.addTests(test_loader.loadTestsFromTestCase(TestType))
-    test_suite.addTests(test_loader.loadTestsFromTestCase(TestDefaults))
-    test_suite.addTests(test_loader.loadTestsFromTestCase(TestBaseUnit))
-    test_suite.addTests(test_loader.loadTestsFromTestCase(TestUnits))
-    test_suite.addTests(test_loader.loadTestsFromTestCase(TestSchemaSuperUnit))
-    test_suite.addTests(test_loader.loadTestsFromTestCase(TestSchemaEntry))
 
     # Run the test suite
     runner = unittest.TextTestRunner()

@@ -1,12 +1,31 @@
 import uuid
-from dataclasses import dataclass, field
+from abc import ABC, abstractmethod
+from dataclasses import dataclass, field, InitVar
 from typing import Any, Dict, List, Optional
+
+
+class UnitInterface(ABC):
+    """
+    The interface for all units.
+    """
+    @abstractmethod
+    def has_type(self, type_: Any) -> None:
+        pass
+
+    @abstractmethod
+    def get_value_type(self) -> Any:
+        pass
+
+    @abstractmethod
+    def force_type(self, type_: Any) -> None:
+        pass
+
 
 
 @dataclass(
     slots=True,
 )
-class SuperUnit:
+class SuperUnit(UnitInterface):
     """
     The super unit class for all base units.
     * Units can be initialized as a 'value'.
@@ -34,12 +53,28 @@ class SuperUnit:
     """
 
     _value: Any = field(
-        default=Any,
+        default=None,
         init=True,
         repr=True,
         compare=True,
         hash=True,
         metadata=None)
+
+    # _random: InitVar(bool) = field(
+    #     default=False,
+    #     init=False,
+    #     repr=False,
+    #     compare=False,
+    #     hash=False,
+    #     metadata=None)
+
+    # _force_type: InitVar(Any) = field(
+    #     default=None,
+    #     init=False,
+    #     repr=False,
+    #     compare=False,
+    #     hash=False,
+    #     metadata=None)
 
     def __init__(
         self,
@@ -64,7 +99,9 @@ class SuperUnit:
             ValueError: If 'random' is True and 'value' are set at the same time.
             ValueError: If 'force_type' is set and 'value' is None and 'random' is None or False.
         """
-        self._value: Any = None
+        # self._force_type = kwargs.pop("force_type", None)
+        # self._random = kwargs.pop("random", None)
+
         self.parse_input(*args, **kwargs)
         self.__post_init__(*args, **kwargs)
 
@@ -465,7 +502,9 @@ class SuperUnit:
         ```
         """
         return SuperUnit(
-            value=dictionary["value"]
+            value=dictionary.get("value", None),
+            random=dictionary.get("random", False),
+            force_type=dictionary.get("force_type", None)
         )
 
     def __dict__(self) -> Dict[str, Any]:
