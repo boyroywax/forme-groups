@@ -1,6 +1,8 @@
 import unittest
 
-from .tests_class_type import TestType, TestTypeGroup
+from .tests_decorators import TestCheckFrozen
+from .tests_type import TestType
+from .tests_type_group import TestTypeGroup
 
 
 def main():
@@ -11,6 +13,7 @@ def main():
     test_loader = unittest.TestLoader()
 
     # Add the test cases to the test suite
+    test_suite.addTests(test_loader.loadTestsFromTestCase(TestCheckFrozen))
     test_suite.addTests(test_loader.loadTestsFromTestCase(TestType))
     test_suite.addTests(test_loader.loadTestsFromTestCase(TestTypeGroup))
 
