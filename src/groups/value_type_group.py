@@ -4,13 +4,13 @@ from typing import Any, Dict, List, Optional
 from uuid import uuid4
 
 from .decorators import check_frozen
-from .type import TypeInterface, Type
+from .value_type import ValueTypeInterface, ValueType
 
 
-@dataclass(frozen=False, slots=True)
-class TypeGroupInterface(ABC):
+@dataclass(slots=True)
+class ValueTypeGroupInterface(ABC):
     _name: str
-    _group: Dict[str, TypeInterface]
+    _group: Dict[str, ValueTypeInterface]
     _frozen: bool = field(init=False, default=False)
 
     @property
@@ -23,7 +23,7 @@ class TypeGroupInterface(ABC):
 
     @property
     @abstractmethod
-    def group(self) -> Dict[str, TypeInterface]:
+    def group(self) -> Dict[str, ValueTypeInterface]:
         """
         The group of the value types.
         """
@@ -38,7 +38,7 @@ class TypeGroupInterface(ABC):
         pass
 
     @abstractmethod
-    def add(self, alias: str, type_: TypeInterface) -> None:
+    def add(self, alias: str, type_: ValueTypeInterface) -> None:
         """
         Add a value type to the group.
         """
@@ -66,16 +66,16 @@ class TypeGroupInterface(ABC):
         pass
 
 
-@dataclass(frozen=False, slots=True)
-class TypeGroup(TypeGroupInterface):
+@dataclass(slots=True)
+class ValueTypeGroup(ValueTypeGroupInterface):
     """
     This class manages a group of values.
     """
     _name: str
-    _group: Dict[str, Type]
+    _group: Dict[str, ValueType]
     _frozen: bool = field(init=False, default=False)
 
-    def __init__(self, name: Optional[str] = None, group: Dict[str, Type] = Dict, freeze: Optional[bool] = False) -> None:
+    def __init__(self, name: Optional[str] = None, group: Dict[str, ValueType] = Dict, freeze: Optional[bool] = False) -> None:
         """
         Initialize the class.
         """
@@ -114,7 +114,7 @@ class TypeGroup(TypeGroupInterface):
         del self._frozen
 
     @property
-    def group(self) -> Dict[str, Type]:
+    def group(self) -> Dict[str, ValueType]:
         """
         The group of the value types.
         """
@@ -122,14 +122,14 @@ class TypeGroup(TypeGroupInterface):
 
     @group.setter
     @check_frozen
-    def group(self, value: Dict[str, Type]) -> None:
+    def group(self, value: Dict[str, ValueType]) -> None:
         """
         Set the group of the value types.
         """
         self._group = value
 
     @group.getter
-    def group(self) -> Dict[str, Type]:
+    def group(self) -> Dict[str, ValueType]:
         """
         Get the group of the value types.
         """
@@ -196,7 +196,7 @@ class TypeGroup(TypeGroupInterface):
         else:
             return False
 
-    def check_type(self, type_: Type) -> bool:
+    def check_type(self, type_: ValueType) -> bool:
         for value_type in self.group.values():
             if value_type.type == type_.type:
                 return True
@@ -204,7 +204,7 @@ class TypeGroup(TypeGroupInterface):
             return False
 
     @check_frozen
-    def add(self, type_: Type, name: Optional[str] = None) -> None:
+    def add(self, type_: ValueType, name: Optional[str] = None) -> None:
         """
         Add a value type to the group.
         """
@@ -298,7 +298,7 @@ class TypeGroup(TypeGroupInterface):
                 aliases.append(alias)
         return aliases
 
-    def get_value_type(self, alias: Optional[str] = None, value_type_id: Optional[str] = None) -> Type:
+    def get_value_type(self, alias: Optional[str] = None, value_type_id: Optional[str] = None) -> ValueType:
         """
         Returns the value type.
         """

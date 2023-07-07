@@ -3,9 +3,9 @@ from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
 
 from .value import ValueInterface, Value
-from .type import TypeInterface, Type
+from .value_type import ValueType
 
-class UnitInterface(ValueInterface, TypeInterface):
+class UnitInterface(ABC):
     """
     The interface for the Unit class.
     """
@@ -15,23 +15,14 @@ class UnitInterface(ValueInterface, TypeInterface):
 
 
 @dataclass(
-    init=False,
-    repr=False,
-    eq=False,
-    order=False,
-    unsafe_hash=True,
-    frozen=True,
-    match_args=True,
-    kw_only=False,
-    slots=True,
-    weakref_slot=False
+    slots=True
 )
-class Unit(UnitInterface, Value, Type):
+class Unit(UnitInterface):
     """
     This class manages a unit.
     """
-    _type: str = field(
-        default=None,
+    _type: ValueType = field(
+        default=ValueType,
         init=False,
         repr=False,
         compare=False,
@@ -39,8 +30,8 @@ class Unit(UnitInterface, Value, Type):
         metadata=None
     )
 
-    _value: Any = field(
-        default=None,
+    _value: Value = field(
+        default=Value,
         init=False,
         repr=False,
         compare=False,
@@ -50,8 +41,8 @@ class Unit(UnitInterface, Value, Type):
 
     def __init__(
         self,
-        type: Optional[str] = None,
-        value: Optional[Any] = None
+        type: ValueType
+        value: Optional[Value] = None
     ) -> None:
         """
         Initializes the Unit class.

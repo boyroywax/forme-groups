@@ -6,7 +6,7 @@ from .decorators import check_frozen
 
 
 @dataclass(frozen=False, slots=True)
-class TypeInterface(ABC):
+class ValueTypeInterface(ABC):
     """
     The interface for the Type class.
     """
@@ -61,7 +61,7 @@ class TypeInterface(ABC):
 
 
 @dataclass(frozen=False, slots=True)
-class Type(TypeInterface):
+class ValueType(ValueTypeInterface):
     """
     The Value Type class.
     """
