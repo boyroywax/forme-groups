@@ -9,6 +9,7 @@ from .frozen import Frozen, FrozenInterface
 _NONE = [None, "None", "NONE", "none", "null", "Null", "NULL", "nil", "Nil", "NIL", "NoneType", "nonetype", "NONETYPE"]
 _EMPTY = ["", " ", "''", '""', str(""), str(" "), str("''"), str('""'), str(' ')]
 
+
 @dataclass(
     slots=True,
 )
@@ -32,7 +33,7 @@ class ValueInterface(FrozenInterface):
 
 
 @dataclass(
-    slots=True,
+    slots=True
 )
 class Value(ValueInterface, Frozen):
     """
@@ -42,7 +43,7 @@ class Value(ValueInterface, Frozen):
     _value: Any = field(
         default=Any,
         init=False,
-        repr=False,
+        repr=True,
         compare=False,
         hash=False,
         metadata=None
@@ -108,3 +109,9 @@ class Value(ValueInterface, Frozen):
         Hashes the Value.
         """
         return hash(self.value)
+    
+    # def __repr__(self) -> str:
+    #     """
+    #     Represents the Value.
+    #     """
+    #     return f"{self.__class__.__name__}({self.value!r})"

@@ -57,9 +57,9 @@ class ValueType(ValueTypeInterface, Frozen):
     """
     The Value Type class.
     """
-    _aliases: Tuple[str, ...] = field(default_factory=tuple)
-    _type: Tuple[Any, ...] = field(default_factory=tuple)
-    _frozen: bool = field(init=False, default=False)
+    _aliases: Tuple[str, ...] = field(default_factory=tuple, repr=True)
+    _type: Tuple[Any, ...] = field(default_factory=tuple, repr=True)
+    _frozen: bool = field(init=False, default=False, repr=True)
 
     def __init__(self, aliases: Tuple[str, ...], type_: Tuple[Any, ...], freeze: Optional[bool] = False) -> None:
         """
@@ -68,6 +68,13 @@ class ValueType(ValueTypeInterface, Frozen):
         self._aliases = aliases
         self._type = type_
         self._frozen = freeze
+
+    def __post_init__(self) -> None:
+        """
+        Post initialization.
+        """
+        # self.freeze()
+        pass
 
     @property
     def type(self) -> Tuple[Any, ...]:
@@ -162,3 +169,6 @@ class ValueType(ValueTypeInterface, Frozen):
         Hash the class.
         """
         return hash(tuple(self.type))
+    
+    # def __repr__(self) -> str:
+    #     return f"{self.__class__.__name__}(aliases={self.aliases}, type={self.type}, frozen={self.frozen}, _aliases={self._aliases}, _type={self._type}, _frozen={self._frozen})"
