@@ -48,29 +48,16 @@ class UnitInterface(FrozenInterface):
 
 
 @dataclass(
+    # unsafe_hash=True,
     slots=True
 )
 class Unit(UnitInterface, Frozen):
     """
     This class manages a unit.
     """
-    _type: ValueType = field(
-        default=ValueType,
-        init=False,
-        repr=False,
-        compare=False,
-        hash=False,
-        metadata=None
-    )
+    _type: ValueType = field(default_factory=ValueType)
 
-    _value: Value = field(
-        default=Value,
-        init=False,
-        repr=False,
-        compare=False,
-        hash=False,
-        metadata=None
-    )
+    _value: Value = field(default_factory=Value)
 
     # _frozen: bool = field(default_factory=bool)
 
@@ -78,7 +65,7 @@ class Unit(UnitInterface, Frozen):
         self,
         type_: ValueType,
         value_: Optional[Value] = None,
-        frozen: bool = False
+        frozen: Optional[bool] = False
     ) -> None:
         """
         Initializes the Unit class.
@@ -147,16 +134,5 @@ class Unit(UnitInterface, Frozen):
         """
         del self._value
 
-    # @property
-    # def frozen(self) -> bool:
-    #     """
-    #     Checks if the class is frozen.
-    #     """
-    #     return self._frozen
-
-    # @check_frozen
-    # def freeze(self) -> None:
-    #     """
-    #     Freezes the class.
-    #     """
-    #     self._frozen = True
+    def __hash__(self) -> int:
+        return hash((self._type, self._value))

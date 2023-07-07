@@ -5,6 +5,7 @@ from .tests_value import TestValue
 from .tests_value_type import TestValueType
 from .tests_value_type_group import TestValueTypeGroup
 from .tests_unit import TestUnit
+# from .tests_generator import TestGenerator
 
 
 def main():
@@ -20,6 +21,7 @@ def main():
     test_suite.addTests(test_loader.loadTestsFromTestCase(TestValueType))
     test_suite.addTests(test_loader.loadTestsFromTestCase(TestValueTypeGroup))
     test_suite.addTests(test_loader.loadTestsFromTestCase(TestUnit))
+    # test_suite.addTests(test_loader.loadTestsFromTestCase(TestGenerator))
 
     # Run the test suite
     runner = unittest.TextTestRunner()

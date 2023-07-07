@@ -38,6 +38,7 @@ class GeneratorInterface(FrozenInterface):
         """
         pass
 
+
 @dataclass(
     slots=True
 )
@@ -68,10 +69,12 @@ class Generator(GeneratorInterface, Frozen):
         """
         The types of the generator.
         """
-        return {
-            for group in self._type_groups.values()
-            for alias, type_ in group.group.items()
-        }
+        types = {}
+
+        for type_group in self._type_groups.values():
+            types.update(type_group.group)
+
+        return types
 
     @property
     def units(self) -> Dict[str, UnitInterface]:

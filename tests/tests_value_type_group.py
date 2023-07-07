@@ -115,7 +115,7 @@ class TestValueTypeGroup(unittest.TestCase):
             'float': ValueType(aliases=['float', 'double'], type_=['float'])
         }
         self.value_type_group = ValueTypeGroup(name='test', group=self.group)
-        self.assertEqual(self.value_type_group.get_aliases(), ['int', 'float', 'double'])
+        self.assertEqual(self.value_type_group.get_aliases(), ('int', 'float', 'double'))
 
     def test_get_value_type_method(self):
         self.group = {
@@ -148,8 +148,10 @@ class TestValueTypeGroup(unittest.TestCase):
 
     def test_group_deleter(self):
         self.setUp__()
-        del self.group.group
-        self.assertEqual(self.group.types, [])
+        self.group.group.__delitem__('int')
+        self.assertEqual(self.group.group, {'float': self.float_type})
+        self.group.group.__delitem__('float')
+        self.assertEqual(self.group.types, ())
 
     def test_freeze(self):
         self.setUp__()

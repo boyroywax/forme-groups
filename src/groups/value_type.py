@@ -1,6 +1,6 @@
 from abc import abstractmethod
 from dataclasses import dataclass, field
-from typing import Any, List, Optional
+from typing import Any, List, Optional, Tuple
 
 from .decorators import check_frozen
 from .frozen import Frozen, FrozenInterface
@@ -11,8 +11,8 @@ class ValueTypeInterface(FrozenInterface):
     """
     The interface for the Type class.
     """
-    _aliases: List[str]
-    _type: List[Any]
+    _aliases: Tuple[str, ...] = field(default_factory=tuple)
+    _type: Tuple[Any, ...] = field(default_factory=tuple)
 
     @property
     @abstractmethod
@@ -24,7 +24,7 @@ class ValueTypeInterface(FrozenInterface):
 
     @property
     @abstractmethod
-    def aliases(self) -> List[str]:
+    def aliases(self) -> Tuple[str, ...]:
         """
         The aliases of the value.
         """
@@ -50,11 +50,11 @@ class ValueType(ValueTypeInterface, Frozen):
     """
     The Value Type class.
     """
-    _aliases: List[str]
-    _type: List[Any]
+    _aliases: Tuple[str, ...] = field(default_factory=tuple)
+    _type: Tuple[Any, ...] = field(default_factory=tuple)
     _frozen: bool = field(init=False, default=False)
 
-    def __init__(self, aliases: List[str], type_: List[Any], freeze: Optional[bool] = False) -> None:
+    def __init__(self, aliases: Tuple[str, ...], type_: Tuple[Any, ...], freeze: Optional[bool] = False) -> None:
         """
         Initialize the class.
         """
@@ -63,24 +63,26 @@ class ValueType(ValueTypeInterface, Frozen):
         self._frozen = freeze
 
     @property
-    def type(self) -> List[Any]:
+    def type(self) -> Tuple[Any, ...]:
         """
         The type of the value.
         """
+
         return self._type
 
     @type.setter
     @check_frozen
-    def type(self, value: List[str]) -> None:
+    def type(self, value: Tuple[str, ...]) -> None:
         """
         Set the type of the value.
         """
-        # if self.frozen:
-        #     raise Exception("Cannot set type of frozen class.")
+        for type_ in value:
+            if isinstance(type_, list):
+                type_ = tuple(type_)
         self._type = value
 
     @type.getter
-    def type(self) -> List[str]:
+    def type(self) -> Tuple[str, ...]:
         """
         Get the type of the value.
         """
@@ -95,7 +97,7 @@ class ValueType(ValueTypeInterface, Frozen):
         del self._type
 
     @property
-    def aliases(self) -> List[str]:
+    def aliases(self) -> Tuple[str, ...]:
         """
         The aliases of the value.
         """
@@ -103,14 +105,14 @@ class ValueType(ValueTypeInterface, Frozen):
 
     @aliases.setter
     @check_frozen
-    def aliases(self, value: List[str]) -> None:
+    def aliases(self, value: Tuple[str, ...]) -> None:
         """
         Set the aliases of the value.
         """
         self._aliases = value
 
     @aliases.getter
-    def aliases(self) -> List[str]:
+    def aliases(self) -> Tuple[str, ...]:
         """
         Get the aliases of the value.
         """
@@ -136,4 +138,10 @@ class ValueType(ValueTypeInterface, Frozen):
         Add an alias to the aliases list.
         """
         if not self.check_alias(alias):
-            self.aliases.append(alias)
+            self.aliases += (alias,)
+
+    def __hash__(self) -> int:
+        """
+        Hash the class.
+        """
+        return hash(tuple(self.type))

@@ -100,3 +100,9 @@ class Value(ValueInterface, Frozen):
         Checks if the value is None.
         """
         return self.value is None or self.value in _NONE
+
+    def __hash__(self) -> int:
+        """
+        Hashes the Value.
+        """
+        return hash(self.value)
