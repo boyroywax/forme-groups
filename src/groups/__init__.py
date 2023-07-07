@@ -1,4 +1,4 @@
-from .base.units import Units
+
 
 """
 CREATING A COMPLETE SYSTEM OF UNITS
@@ -30,8 +30,3 @@ The following is a list of the steps required to create a complete system of uni
 14. Check if the group Schema is valid.  This is the Schema that will be used to define the group.
 15. Create the group.
 """
-
-
-__all__ = [
-    'Units'
-]
