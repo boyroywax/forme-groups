@@ -6,7 +6,7 @@ from .decorators import check_frozen
 from .frozen import Frozen, FrozenInterface
 
 
-@dataclass(slots=True)
+# @dataclass(slots=True)
 class ValueTypeInterface(FrozenInterface):
     """
     The interface for the Type class.

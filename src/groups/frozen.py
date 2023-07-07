@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 from .decorators import check_frozen
 
 
-@dataclass(slots=True)
+# @dataclass(slots=True)
 class FrozenInterface(ABC):
     """
     The interface for the Frozen class.
