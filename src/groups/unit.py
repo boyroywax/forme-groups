@@ -1,13 +1,14 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
 
 from .decorators import check_frozen
+from .frozen import Frozen, FrozenInterface
 from .value import Value
 from .value_type import ValueType
 
 
-class UnitInterface(ABC):
+class UnitInterface(FrozenInterface):
     """
     The interface for the Unit class.
     """
@@ -16,7 +17,7 @@ class UnitInterface(ABC):
 
     @property
     @abstractmethod
-    def type(self) -> str:
+    def type(self) -> ValueType:
         """
         The type of the value.
         """
@@ -24,36 +25,32 @@ class UnitInterface(ABC):
 
     @property
     @abstractmethod
-    def value(self) -> Any:
+    def value(self) -> Value:
         """
         The value of the value.
         """
         pass
 
-    @abstractmethod
-    def force_type(self) -> None:
-        pass
+    # @property
+    # @abstractmethod
+    # def frozen(self) -> bool:
+    #     """
+    #     Check if the class is frozen.
+    #     """
+    #     pass
 
-    @property
-    @abstractmethod
-    def frozen(self) -> bool:
-        """
-        Check if the class is frozen.
-        """
-        pass
-
-    @abstractmethod
-    def freeze(self) -> None:
-        """
-        Freeze the class.
-        """
-        pass
+    # @abstractmethod
+    # def freeze(self) -> None:
+    #     """
+    #     Freeze the class.
+    #     """
+    #     pass
 
 
 @dataclass(
     slots=True
 )
-class Unit(UnitInterface):
+class Unit(UnitInterface, Frozen):
     """
     This class manages a unit.
     """
@@ -75,7 +72,7 @@ class Unit(UnitInterface):
         metadata=None
     )
 
-    _frozen: bool = field(default_factory=bool)
+    # _frozen: bool = field(default_factory=bool)
 
     def __init__(
         self,
@@ -96,9 +93,9 @@ class Unit(UnitInterface):
         Returns the type.
         """
         return self._type
-    
+
     @type.setter
-    @check_frozen   
+    @check_frozen
     def type(self, type_: ValueType) -> None:
         """
         Sets the type.
@@ -111,7 +108,7 @@ class Unit(UnitInterface):
         Gets the type.
         """
         return self._type
-    
+
     @type.deleter
     @check_frozen
     def type(self) -> None:
@@ -126,7 +123,7 @@ class Unit(UnitInterface):
         Returns the value.
         """
         return self._value
-    
+
     @value.setter
     @check_frozen
     def value(self, value_: Value) -> None:
@@ -150,26 +147,16 @@ class Unit(UnitInterface):
         """
         del self._value
 
-    def force_type(self) -> None:
-        """
-        Forces the type.
-        """
-        pass
+    # @property
+    # def frozen(self) -> bool:
+    #     """
+    #     Checks if the class is frozen.
+    #     """
+    #     return self._frozen
 
-    @property
-    def frozen(self) -> bool:
-        """
-        Checks if the class is frozen.
-        """
-        return self._frozen
-
-    @check_frozen
-    def freeze(self) -> None:
-        """
-        Freezes the class.
-        """
-        self._frozen = True
-        for attr in self.__dict__:
-            if isinstance(self.__dict__[attr], UnitInterface):
-                if self.__dict__[attr].frozen is False:
-                    self.__dict__[attr].freeze()
+    # @check_frozen
+    # def freeze(self) -> None:
+    #     """
+    #     Freezes the class.
+    #     """
+    #     self._frozen = True

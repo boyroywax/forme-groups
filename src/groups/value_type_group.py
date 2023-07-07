@@ -12,15 +12,6 @@ from .value_type import ValueTypeInterface, ValueType
 class ValueTypeGroupInterface(FrozenInterface):
     _name: str
     _group: Dict[str, ValueTypeInterface]
-    # _frozen: bool = field(init=False, default=False)
-
-    # @property
-    # @abstractmethod
-    # def frozen(self) -> bool:
-    #     """
-    #     Check if the class is frozen.
-    #     """
-    #     pass
 
     @property
     @abstractmethod
@@ -35,6 +26,22 @@ class ValueTypeGroupInterface(FrozenInterface):
     def name(self) -> str:
         """
         The name of the group.
+        """
+        pass
+
+    @property
+    @abstractmethod
+    def aliases(self) -> List[str]:
+        """
+        The aliases of the group.
+        """
+        pass
+
+    @property
+    @abstractmethod
+    def types(self) -> List[ValueTypeInterface]:
+        """
+        The types of the group.
         """
         pass
 
@@ -59,13 +66,6 @@ class ValueTypeGroupInterface(FrozenInterface):
         """
         pass
 
-    # @abstractmethod
-    # def freeze(self) -> None:
-    #     """
-    #     Freeze the class group.
-    #     """
-    #     pass
-
 
 @dataclass(slots=True)
 class ValueTypeGroup(ValueTypeGroupInterface, Frozen):
@@ -73,17 +73,16 @@ class ValueTypeGroup(ValueTypeGroupInterface, Frozen):
     This class manages a group of values.
     """
     _name: str
-    _group: Dict[str, ValueType]
-    _frozen: bool = field(init=False, default=False)
+    _group: Dict[str, ValueType] = field(default_factory=Dict[str, ValueType], repr=False)
+    _frozen: bool = field(default_factory=bool)
 
-    def __init__(self, name: Optional[str] = None, group: Dict[str, ValueType] = Dict, freeze: Optional[bool] = False) -> None:
+    def __init__(self, name: Optional[str] = None, group: Dict[str, ValueType] = Dict[str, ValueType], freeze: Optional[bool] = False) -> None:
         """
         Initialize the class.
         """
         self._name = name
         self._group = group
         self._frozen = freeze
-
 
     @property
     def group(self) -> Dict[str, ValueType]:
@@ -113,7 +112,9 @@ class ValueTypeGroup(ValueTypeGroupInterface, Frozen):
         """
         Delete the group of the value types.
         """
-        del self._group
+        for key in list(self.group.keys()):
+            del self.group[key]
+        # self.group = Dict[str, ValueType]
 
     @check_frozen
     def freeze(self) -> None:
@@ -219,8 +220,6 @@ class ValueTypeGroup(ValueTypeGroupInterface, Frozen):
         """
         Remove a value type from the group.
         """
-
-        print(aliases, name)
         if aliases is None and name is None:
             raise ValueError("You must specify at least one of the two parameters.")
 
@@ -230,20 +229,14 @@ class ValueTypeGroup(ValueTypeGroupInterface, Frozen):
         entries = []
 
         if aliases is not None:
-            print(aliases)
             if not self.check_alias(aliases):
                 raise ValueError(f"The alias '{aliases}' is not in use.")
             else:
-                # for alias in aliases:
                 for key, entry in self.group.items():
-                    print(entry)
                     for alias in aliases:
-                        print(alias)
                         if entry.check_alias(alias):
-                            print("ok")
                             entries.append(key)
 
-        print(entries)
         if name is not None:
             if not self.check_name(name):
                 raise ValueError(f"The name '{name}' is not in use.")
@@ -252,15 +245,6 @@ class ValueTypeGroup(ValueTypeGroupInterface, Frozen):
 
         for entry in entries:
             del self.group[entry]
-
-    # @check_frozen
-    # def freeze(self) -> None:
-    #     """
-    #     Freeze the class group.
-    #     """
-    #     self.frozen = True
-    #     for value_type in self.group.values():
-    #         value_type.freeze()
 
     def has_alias(self, alias: str) -> Any:
         """
@@ -289,3 +273,35 @@ class ValueTypeGroup(ValueTypeGroupInterface, Frozen):
                 return value_type
             if id_ == value_type_id:
                 return value_type
+
+    @property
+    def aliases(self) -> List[str]:
+        """
+        Returns the aliases.
+        """
+        return self.get_aliases()
+
+    @property
+    def types(self) -> List[ValueType]:
+        """
+        Returns the value types.
+        """
+        return list(value for value in self.group.values())
+
+    @types.getter
+    def types(self) -> List[ValueType]:
+        """
+        Returns the value types.
+        """
+        return list(value.type for value in self.group)
+
+    @types.setter
+    @check_frozen
+    def types(self, value: List[ValueType]) -> None:
+        """
+        Set the value types.
+        """
+        raise AttributeError("You can't set the value 'types'. Value 'types' are added and removed with the 'add' and 'remove' methods.")
+    
+    # def __repr__(self) -> str:
+    #     return f"ValueTypeGroup(name='{self.name}', _group={self._group}, group={self.group}, frozen={self.frozen})"

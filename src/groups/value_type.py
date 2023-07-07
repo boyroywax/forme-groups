@@ -13,7 +13,6 @@ class ValueTypeInterface(FrozenInterface):
     """
     _aliases: List[str]
     _type: List[Any]
-    # _frozen: bool = field(init=False, default=False)
 
     @property
     @abstractmethod
@@ -44,21 +43,6 @@ class ValueTypeInterface(FrozenInterface):
         Add an alias to the aliases list.
         """
         pass
-
-    # @abstractmethod
-    # def freeze(self) -> None:
-    #     """
-    #     Freeze the class.
-    #     """
-    #     pass
-
-    # @property
-    # @abstractmethod
-    # def frozen(self) -> bool:
-    #     """
-    #     Check if the class is frozen.
-    #     """
-    #     pass
 
 
 @dataclass(frozen=False, slots=True)
@@ -153,32 +137,3 @@ class ValueType(ValueTypeInterface, Frozen):
         """
         if not self.check_alias(alias):
             self.aliases.append(alias)
-
-    # @property
-    # def frozen(self) -> bool:
-    #     """
-    #     Check if the class is frozen.
-    #     """
-    #     return self._frozen
-
-    # @frozen.setter
-    # @check_frozen
-    # def frozen(self, value: bool) -> None:
-    #     """
-    #     Set the frozen value.
-    #     """
-    #     raise AssertionError("Cannot set frozen value, use freeze() method instead.")
-
-    # @frozen.getter
-    # def frozen(self) -> bool:
-    #     """
-    #     Get the frozen value.
-    #     """
-    #     return self._frozen
-
-    # @check_frozen
-    # def freeze(self) -> None:
-    #     """
-    #     Freeze the class.
-    #     """
-    #     self._frozen = True

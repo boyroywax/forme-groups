@@ -1,4 +1,4 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -100,17 +100,3 @@ class Value(ValueInterface, Frozen):
         Checks if the value is None.
         """
         return self.value is None or self.value in _NONE
-
-    # @property
-    # def frozen(self) -> bool:
-    #     """
-    #     Checks if the class is frozen.
-    #     """
-    #     return self._frozen
-
-    # @check_frozen
-    # def freeze(self) -> None:
-    #     """
-    #     Freezes the class.
-    #     """
-    #     self._frozen = True

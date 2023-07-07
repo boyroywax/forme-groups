@@ -129,3 +129,47 @@ class TestValueTypeGroup(unittest.TestCase):
         self.assertEqual(self.value_type_group.get_value_type(value_type_id='int'), self.group['int'])
         self.assertEqual(self.value_type_group.get_value_type(value_type_id='float'), self.group['float'])
         self.assertIsNone(self.value_type_group.get_value_type(value_type_id='str'))
+
+
+    def setUp__(self):
+        self.int_type = ValueType(['int'], ['int'])
+        self.float_type = ValueType(['float'], ['float'])
+        self.group = ValueTypeGroup('numbers', {'int': self.int_type, 'float': self.float_type})
+
+    def test_group_getter(self):
+        self.setUp__()
+        self.assertEqual(self.group.group, {'int': self.int_type, 'float': self.float_type})
+
+    def test_group_setter(self):
+        self.setUp__()
+        new_group = {'int': self.int_type}
+        self.group.group = new_group
+        self.assertEqual(self.group.group, new_group)
+
+    def test_group_deleter(self):
+        self.setUp__()
+        del self.group.group
+        self.assertEqual(self.group.types, [])
+
+    def test_freeze(self):
+        self.setUp__()
+        self.assertFalse(self.group.frozen)
+        self.group.freeze()
+        self.assertTrue(self.group.frozen)
+        self.assertTrue(self.int_type.frozen)
+        self.assertTrue(self.float_type.frozen)
+
+    def test_name_getter(self):
+        self.setUp__()
+        self.assertEqual(self.group.name, 'numbers')
+
+    def test_name_setter(self):
+        self.setUp__()
+        new_name = 'new_numbers'
+        self.group.name = new_name
+        self.assertEqual(self.group.name, new_name)
+
+    def test_name_setter_with_existing_name(self):
+        self.setUp__()
+        with self.assertRaises(ValueError):
+            self.group.name = 'numbers'

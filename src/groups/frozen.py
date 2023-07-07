@@ -43,7 +43,7 @@ class Frozen(FrozenInterface):
         Check if the class is frozen.
         """
         return self._frozen
-    
+
     @frozen.setter
     @check_frozen
     def frozen(self, frozen: bool) -> None:
