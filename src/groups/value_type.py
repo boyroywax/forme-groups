@@ -1,18 +1,19 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 from dataclasses import dataclass, field
 from typing import Any, List, Optional
 
 from .decorators import check_frozen
+from .frozen import Frozen, FrozenInterface
 
 
-@dataclass(frozen=False, slots=True)
-class ValueTypeInterface(ABC):
+@dataclass(slots=True)
+class ValueTypeInterface(FrozenInterface):
     """
     The interface for the Type class.
     """
     _aliases: List[str]
     _type: List[Any]
-    _frozen: bool = field(init=False, default=False)
+    # _frozen: bool = field(init=False, default=False)
 
     @property
     @abstractmethod
@@ -44,24 +45,24 @@ class ValueTypeInterface(ABC):
         """
         pass
 
-    @abstractmethod
-    def freeze(self) -> None:
-        """
-        Freeze the class.
-        """
-        pass
+    # @abstractmethod
+    # def freeze(self) -> None:
+    #     """
+    #     Freeze the class.
+    #     """
+    #     pass
 
-    @property
-    @abstractmethod
-    def frozen(self) -> bool:
-        """
-        Check if the class is frozen.
-        """
-        pass
+    # @property
+    # @abstractmethod
+    # def frozen(self) -> bool:
+    #     """
+    #     Check if the class is frozen.
+    #     """
+    #     pass
 
 
 @dataclass(frozen=False, slots=True)
-class ValueType(ValueTypeInterface):
+class ValueType(ValueTypeInterface, Frozen):
     """
     The Value Type class.
     """
@@ -153,31 +154,31 @@ class ValueType(ValueTypeInterface):
         if not self.check_alias(alias):
             self.aliases.append(alias)
 
-    @property
-    def frozen(self) -> bool:
-        """
-        Check if the class is frozen.
-        """
-        return self._frozen
+    # @property
+    # def frozen(self) -> bool:
+    #     """
+    #     Check if the class is frozen.
+    #     """
+    #     return self._frozen
 
-    @frozen.setter
-    @check_frozen
-    def frozen(self, value: bool) -> None:
-        """
-        Set the frozen value.
-        """
-        raise AssertionError("Cannot set frozen value, use freeze() method instead.")
+    # @frozen.setter
+    # @check_frozen
+    # def frozen(self, value: bool) -> None:
+    #     """
+    #     Set the frozen value.
+    #     """
+    #     raise AssertionError("Cannot set frozen value, use freeze() method instead.")
 
-    @frozen.getter
-    def frozen(self) -> bool:
-        """
-        Get the frozen value.
-        """
-        return self._frozen
+    # @frozen.getter
+    # def frozen(self) -> bool:
+    #     """
+    #     Get the frozen value.
+    #     """
+    #     return self._frozen
 
-    @check_frozen
-    def freeze(self) -> None:
-        """
-        Freeze the class.
-        """
-        self._frozen = True
+    # @check_frozen
+    # def freeze(self) -> None:
+    #     """
+    #     Freeze the class.
+    #     """
+    #     self._frozen = True

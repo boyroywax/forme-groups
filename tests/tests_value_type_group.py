@@ -53,8 +53,9 @@ class TestValueTypeGroup(unittest.TestCase):
     def test_frozen_setter_unfrozen(self):
         group = {'int': ValueType(aliases=['int'], type_=[int])}
         value_type_group = ValueTypeGroup(name='test', group=group)
-        value_type_group.frozen = True
-        self.assertTrue(value_type_group.frozen)
+        with self.assertRaises(Exception):
+            value_type_group.frozen = True
+        # self.assertTrue(value_type_group.frozen)
 
     def test_frozen_getter(self):
         group = {'int': ValueType(aliases=['int'], type_=[int])}

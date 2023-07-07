@@ -4,22 +4,23 @@ from typing import Any, Dict, List, Optional
 from uuid import uuid4
 
 from .decorators import check_frozen
+from .frozen import Frozen, FrozenInterface
 from .value_type import ValueTypeInterface, ValueType
 
 
 @dataclass(slots=True)
-class ValueTypeGroupInterface(ABC):
+class ValueTypeGroupInterface(FrozenInterface):
     _name: str
     _group: Dict[str, ValueTypeInterface]
-    _frozen: bool = field(init=False, default=False)
+    # _frozen: bool = field(init=False, default=False)
 
-    @property
-    @abstractmethod
-    def frozen(self) -> bool:
-        """
-        Check if the class is frozen.
-        """
-        pass
+    # @property
+    # @abstractmethod
+    # def frozen(self) -> bool:
+    #     """
+    #     Check if the class is frozen.
+    #     """
+    #     pass
 
     @property
     @abstractmethod
@@ -58,16 +59,16 @@ class ValueTypeGroupInterface(ABC):
         """
         pass
 
-    @abstractmethod
-    def freeze(self) -> None:
-        """
-        Freeze the class group.
-        """
-        pass
+    # @abstractmethod
+    # def freeze(self) -> None:
+    #     """
+    #     Freeze the class group.
+    #     """
+    #     pass
 
 
 @dataclass(slots=True)
-class ValueTypeGroup(ValueTypeGroupInterface):
+class ValueTypeGroup(ValueTypeGroupInterface, Frozen):
     """
     This class manages a group of values.
     """
@@ -83,35 +84,6 @@ class ValueTypeGroup(ValueTypeGroupInterface):
         self._group = group
         self._frozen = freeze
 
-    @property
-    def frozen(self) -> bool:
-        """
-        Check if the class is frozen.
-        """
-        return self._frozen
-
-    @frozen.setter
-    @check_frozen
-    def frozen(self, value: bool) -> None:
-        """
-        Set the frozen value.
-        """
-        self._frozen = value
-
-    @frozen.getter
-    def frozen(self) -> bool:
-        """
-        Get the frozen value.
-        """
-        return self._frozen
-
-    @frozen.deleter
-    @check_frozen
-    def frozen(self) -> None:
-        """
-        Delete the frozen value.
-        """
-        del self._frozen
 
     @property
     def group(self) -> Dict[str, ValueType]:
@@ -142,6 +114,16 @@ class ValueTypeGroup(ValueTypeGroupInterface):
         Delete the group of the value types.
         """
         del self._group
+
+    @check_frozen
+    def freeze(self) -> None:
+        """
+        Check if the class is frozen.
+        """
+        for value in self.group.values():
+            if value.frozen is False:
+                value.freeze()
+        self._frozen = True
 
     @property
     def name(self) -> str:
@@ -271,14 +253,14 @@ class ValueTypeGroup(ValueTypeGroupInterface):
         for entry in entries:
             del self.group[entry]
 
-    @check_frozen
-    def freeze(self) -> None:
-        """
-        Freeze the class group.
-        """
-        self.frozen = True
-        for value_type in self.group.values():
-            value_type.freeze()
+    # @check_frozen
+    # def freeze(self) -> None:
+    #     """
+    #     Freeze the class group.
+    #     """
+    #     self.frozen = True
+    #     for value_type in self.group.values():
+    #         value_type.freeze()
 
     def has_alias(self, alias: str) -> Any:
         """

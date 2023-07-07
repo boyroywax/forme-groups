@@ -3,13 +3,14 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from .decorators import check_frozen
+from .frozen import Frozen, FrozenInterface
 
 
 _NONE = [None, "None", "NONE", "none", "null", "Null", "NULL", "nil", "Nil", "NIL", "NoneType", "nonetype", "NONETYPE"]
 _EMPTY = ["", " ", "''", '""', str(""), str(" "), str("''"), str('""'), str(' ')]
 
 
-class ValueInterface(ABC):
+class ValueInterface(FrozenInterface):
     """
     The interface for the Value class.
     """
@@ -27,20 +28,11 @@ class ValueInterface(ABC):
     def check_none(self) -> bool:
         pass
 
-    @property
-    @abstractmethod
-    def frozen(self) -> bool:
-        pass
-
-    @abstractmethod
-    def freeze(self) -> None:
-        pass
-
 
 @dataclass(
     slots=True,
 )
-class Value(ValueInterface):
+class Value(ValueInterface, Frozen):
     """
     The Value class.
     """
@@ -54,7 +46,7 @@ class Value(ValueInterface):
         metadata=None
     )
 
-    _frozen: bool = field(default_factory=bool)
+    # _frozen: bool = field(default_factory=bool)
 
     def __init__(
         self,
@@ -109,16 +101,16 @@ class Value(ValueInterface):
         """
         return self.value is None or self.value in _NONE
 
-    @property
-    def frozen(self) -> bool:
-        """
-        Checks if the class is frozen.
-        """
-        return self._frozen
+    # @property
+    # def frozen(self) -> bool:
+    #     """
+    #     Checks if the class is frozen.
+    #     """
+    #     return self._frozen
 
-    @check_frozen
-    def freeze(self) -> None:
-        """
-        Freezes the class.
-        """
-        self._frozen = True
+    # @check_frozen
+    # def freeze(self) -> None:
+    #     """
+    #     Freezes the class.
+    #     """
+    #     self._frozen = True
