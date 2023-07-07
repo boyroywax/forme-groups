@@ -6,13 +6,59 @@ from .decorators import check_frozen
 from .frozen import Frozen, FrozenInterface
 
 
-# @dataclass(slots=True)
+
+class ValueTypeRefInterface(FrozenInterface):
+    """
+    The interface for the ValueTypeRef class.
+    """
+    _alias: str
+
+    @property
+    @abstractmethod
+    def alias(self) -> str:
+        """
+        The alias of the value type.
+        """
+        pass
+
+
+@dataclass(slots=True)
+class ValueTypeRef(ValueTypeRefInterface, Frozen):
+    """
+    The Value Type Ref class.
+    """
+    _alias: str = field(default_factory=str, repr=True)
+
+    def __init__(self, alias: str) -> None:
+        """
+        Initializes the ValueTypeRef class.
+        """
+        self._alias = alias
+
+    @property
+    def alias(self) -> str:
+        """
+        The alias of the value type.
+        """
+        return self._alias
+
+    @alias.setter
+    @check_frozen
+    def alias(self, alias: str) -> None:
+        """
+        Sets the alias of the value type.
+        """
+        self._alias = alias
+
+
+@dataclass(slots=True)
 class ValueTypeInterface(FrozenInterface):
     """
     The interface for the Type class.
     """
-    _aliases: Tuple[str, ...] = field(default_factory=tuple)
+    _aliases: Tuple[ValueTypeRefInterface, ...] = field(default_factory=tuple)
     _type: Tuple[Any, ...] = field(default_factory=tuple)
+    _frozen: bool = field(init=False, default=False, repr=True)
 
     @property
     @abstractmethod
@@ -24,7 +70,7 @@ class ValueTypeInterface(FrozenInterface):
 
     @property
     @abstractmethod
-    def aliases(self) -> Tuple[str, ...]:
+    def aliases(self) -> Tuple[ValueTypeRef, ...]:
         """
         The aliases of the value.
         """
@@ -38,14 +84,14 @@ class ValueTypeInterface(FrozenInterface):
         pass
 
     @abstractmethod
-    def add_alias(self, alias: str) -> None:
+    def add_alias(self, alias: ValueTypeRef) -> None:
         """
         Add an alias to the aliases list.
         """
         pass
 
     @abstractmethod
-    def remove_alias(self, alias: str) -> None:
+    def remove_alias(self, alias: ValueTypeRef) -> None:
         """
         Remove an alias from the aliases list.
         """
@@ -57,11 +103,11 @@ class ValueType(ValueTypeInterface, Frozen):
     """
     The Value Type class.
     """
-    _aliases: Tuple[str, ...] = field(default_factory=tuple, repr=True)
-    _type: Tuple[Any, ...] = field(default_factory=tuple, repr=True)
-    _frozen: bool = field(init=False, default=False, repr=True)
+    # _aliases: Tuple[ValueTypeRef, ...] = field(default_factory=tuple, repr=True)
+    # _type: Tuple[Any, ...] = field(default_factory=tuple, repr=True)
+    # _frozen: bool = field(init=False, default=False, repr=True)
 
-    def __init__(self, aliases: Tuple[str, ...], type_: Tuple[Any, ...], freeze: Optional[bool] = False) -> None:
+    def __init__(self, aliases: Tuple[ValueTypeRef, ...], type_: Tuple[Any, ...], freeze: Optional[bool] = False) -> None:
         """
         Initialize the class.
         """
@@ -111,7 +157,7 @@ class ValueType(ValueTypeInterface, Frozen):
         del self._type
 
     @property
-    def aliases(self) -> Tuple[str, ...]:
+    def aliases(self) -> Tuple[ValueTypeRef, ...]:
         """
         The aliases of the value.
         """
@@ -119,14 +165,14 @@ class ValueType(ValueTypeInterface, Frozen):
 
     @aliases.setter
     @check_frozen
-    def aliases(self, value: Tuple[str, ...]) -> None:
+    def aliases(self, value: Tuple[ValueTypeRef, ...]) -> None:
         """
         Set the aliases of the value.
         """
         self._aliases = value
 
     @aliases.getter
-    def aliases(self) -> Tuple[str, ...]:
+    def aliases(self) -> Tuple[ValueTypeRef, ...]:
         """
         Get the aliases of the value.
         """

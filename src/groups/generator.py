@@ -47,8 +47,8 @@ class Generator(GeneratorInterface, Frozen):
     This class manages the generator.
     """
 
-    _type_groups: Dict[str, ValueTypeGroup]
-    _units: Dict[str, UnitInterface]
+    _type_groups: Dict[str, ValueTypeGroup] = field(default_factory=dict)
+    _units: Dict[str, UnitInterface] = field(default_factory=dict)
 
     def __init__(self) -> None:
         """
