@@ -61,7 +61,7 @@ class Unit(UnitInterface, Frozen):
         self._frozen = frozen
 
     @property
-    def type(self) -> str:
+    def type(self) -> ValueTypeRef:
         """
         Returns the type.
         """

@@ -30,13 +30,13 @@ class TestValueType(unittest.TestCase):
         aliases = ['int', 'integer']
         type_ = [int]
         value_type = ValueType(aliases=aliases, type_=type_)
-        self.assertEqual(str(value_type), "ValueType(_aliases=['int', 'integer'], _type=[<class 'int'>], _frozen=False)")
+        self.assertEqual(str(value_type), "ValueType(_aliases=['int', 'integer'], _type=[<class 'int'>], _frozen=False, _super_type=None, _prefix=None, _suffix=None, _separator=None)")
 
     def test_repr_method(self):
         aliases = ['int', 'integer']
         type_ = [int]
         value_type = ValueType(aliases=aliases, type_=type_)
-        self.assertEqual(repr(value_type), "ValueType(_aliases=['int', 'integer'], _type=[<class 'int'>], _frozen=False)")
+        self.assertEqual(repr(value_type), "ValueType(_aliases=['int', 'integer'], _type=[<class 'int'>], _frozen=False, _super_type=None, _prefix=None, _suffix=None, _separator=None)")
 
     def test_init_method(self):
         aliases = ['int', 'integer']
