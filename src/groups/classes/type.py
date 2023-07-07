@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field, InitVar, is_dataclass
 from typing import Any, Dict, List, Optional
+from uuid import uuid4
 
 
 def check_frozen(cls):
@@ -25,7 +26,7 @@ class ValueTypeInterface(ABC):
 
     @property
     @abstractmethod
-    def type(self) -> str:
+    def type(self) -> Any:
         """
         The type of the value.
         """
@@ -87,7 +88,7 @@ class ValueType(ValueTypeInterface):
         self._frozen = freeze
 
     @property
-    def type(self) -> List[str]:
+    def type(self) -> List[Any]:
         """
         The type of the value.
         """
@@ -153,7 +154,7 @@ class ValueType(ValueTypeInterface):
         Check if the alias is in the aliases list.
         """
         return alias in self.aliases
-    
+
     @check_frozen
     def add_alias(self, alias: str) -> None:
         """
@@ -260,7 +261,7 @@ class ValueTypeGroup(ValueTypeGroupInterface):
     _group: Dict[str, ValueType]
     _frozen: bool = field(init=False, default=False)
 
-    def __init__(self, name: str, group: Dict[str, ValueType], freeze: Optional[bool] = False) -> None:
+    def __init__(self, name: Optional[str] = None, group: Dict[str, ValueType] = Dict, freeze: Optional[bool] = False) -> None:
         """
         Initialize the class.
         """
@@ -274,7 +275,7 @@ class ValueTypeGroup(ValueTypeGroupInterface):
         Check if the class is frozen.
         """
         return self._frozen
-    
+
     @frozen.setter
     @check_frozen
     def frozen(self, value: bool) -> None:
@@ -289,7 +290,7 @@ class ValueTypeGroup(ValueTypeGroupInterface):
         Get the frozen value.
         """
         return self._frozen
-    
+
     @frozen.deleter
     @check_frozen
     def frozen(self) -> None:
@@ -299,27 +300,27 @@ class ValueTypeGroup(ValueTypeGroupInterface):
         del self._frozen
 
     @property
-    def group(self) -> Dict[str, ValueTypeInterface]:
+    def group(self) -> Dict[str, ValueType]:
         """
         The group of the value types.
         """
         return self._group
-    
+
     @group.setter
     @check_frozen
-    def group(self, value: Dict[str, ValueTypeInterface]) -> None:
+    def group(self, value: Dict[str, ValueType]) -> None:
         """
         Set the group of the value types.
         """
         self._group = value
 
     @group.getter
-    def group(self) -> Dict[str, ValueTypeInterface]:
+    def group(self) -> Dict[str, ValueType]:
         """
         Get the group of the value types.
         """
         return self._group
-    
+
     @group.deleter
     @check_frozen
     def group(self) -> None:
@@ -334,13 +335,15 @@ class ValueTypeGroup(ValueTypeGroupInterface):
         The name of the group.
         """
         return self._name
-    
+
     @name.setter
     @check_frozen
     def name(self, value: str) -> None:
         """
         Set the name of the group.
         """
+        if self.check_name(value):
+            raise ValueError("The group name is already in use.")
         self._name = value
 
     @name.getter
@@ -349,7 +352,7 @@ class ValueTypeGroup(ValueTypeGroupInterface):
         Get the name of the group.
         """
         return self._name
-    
+
     @name.deleter
     @check_frozen
     def name(self) -> None:
@@ -358,39 +361,101 @@ class ValueTypeGroup(ValueTypeGroupInterface):
         """
         del self._name
 
-    def check_alias(self, alias: str) -> bool:
-        for value_type in self.group.values():
-            if value_type.check_alias(alias):
-                return True
-            
+    def check_alias(self, aliases: List[str]) -> bool:
+        for value in self.group.values():
+            for alias in aliases:
+                if value.check_alias(alias):
+                    return True
+        else:
+            return False
+
     def check_name(self, name: str) -> bool:
-        for value_type in self.group.values():
-            if value_type.name == name:
+        if self.name == name:
+            return True
+        else:
+            return False
+
+    def check_value_type_key(self, key: str) -> bool:
+        for k in self.group.keys():
+            if k == key:
                 return True
+        else:
+            return False
+
+    def check_type(self, type_: ValueType) -> bool:
+        for value_type in self.group.values():
+            if value_type.type == type_.type:
+                return True
+        else:
+            return False
 
     @check_frozen
-    def add(self, alias: str, type_: ValueTypeInterface) -> None:
+    def add(self, type_: ValueType, name: Optional[str] = None) -> None:
         """
         Add a value type to the group.
         """
-        if self.check_alias(alias):
-            raise ValueError(f"The alias '{alias}' is already in use.")
-        if self.check_name(type_.name):
-            raise ValueError(f"The name '{type_.name}' is already in use.")
-        self.group[alias] = type_
+        _name = name
+        if _name is None:
+            if type_.type is None:
+                raise Exception("The type is None.")
+            else:
+                try:
+                    _name = type(type_.type).__name__()
+                except Exception:
+                    _name = str(uuid4())
+
+        if self.check_alias(type_.aliases):
+            raise ValueError(f"The alias '{type_.aliases}' is already in use.")
+
+        if self.check_name(_name):
+            raise ValueError(f"The group name '{_name}' is already in use.")
+
+        if self.check_type(type_):
+            raise ValueError(f"The type '{type_}' is already in use.")
+
+        if self.check_value_type_key(_name):
+            raise ValueError(f"The key '{_name}' is already in use.")
+
+        self.group[_name] = type_
 
     @check_frozen
-    def remove(self, alias: str) -> None:
+    def remove(self, aliases: Optional[List[str]] = None, name: Optional[str] = None) -> None:
         """
         Remove a value type from the group.
         """
-        if not self.check_alias(alias):
-            for group in self.group.values():
-                if group.check_alias(alias):
-                    alias = group.alias
-                    break
-            raise ValueError(f"The alias '{alias}' is not in use.")
-        del self.group[alias]
+
+        print(aliases, name)
+        if aliases is None and name is None:
+            raise ValueError("You must specify at least one of the two parameters.")
+
+        if aliases is not None and name is not None:
+            raise ValueError("You must specify only one of the two parameters.")
+
+        entries = []
+
+        if aliases is not None:
+            print(aliases)
+            if not self.check_alias(aliases):
+                raise ValueError(f"The alias '{aliases}' is not in use.")
+            else:
+                # for alias in aliases:
+                for key, entry in self.group.items():
+                    print(entry)
+                    for alias in aliases:
+                        print(alias)
+                        if entry.check_alias(alias):
+                            print("ok")
+                            entries.append(key)
+
+        print(entries)
+        if name is not None:
+            if not self.check_name(name):
+                raise ValueError(f"The name '{name}' is not in use.")
+            else:
+                entries.append(self.group[name])
+
+        for entry in entries:
+            del self.group[entry]
 
     @check_frozen
     def freeze(self) -> None:
@@ -401,4 +466,30 @@ class ValueTypeGroup(ValueTypeGroupInterface):
         for value_type in self.group.values():
             value_type.freeze()
 
+    def has_alias(self, alias: str) -> Any:
+        """
+        Returns the alias.
+        """
+        for key, value_type in self.group.items():
+            if value_type.check_alias(alias):
+                return key
 
+    def get_aliases(self) -> List[str]:
+        """
+        Returns the aliases.
+        """
+        aliases = []
+        for type_ in self.group.values():
+            for alias in type_.aliases:
+                aliases.append(alias)
+        return aliases
+
+    def get_value_type(self, alias: Optional[str] = None, value_type_id: Optional[str] = None) -> ValueType:
+        """
+        Returns the value type.
+        """
+        for id_, value_type in self.group.items():
+            if value_type.check_alias(alias):
+                return value_type
+            if id_ == value_type_id:
+                return value_type

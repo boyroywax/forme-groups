@@ -141,7 +141,7 @@ class TypesGroup(TypesGroupInterface):
         """
         for type_ in self.types:
             if alias in self.get_aliases(type_):
-                return type_
+                return alias
         return None
 
     def get_aliases(self, type_: Optional[Any] = None) -> List[str]:

@@ -11,6 +11,7 @@ class ValueInterface(ABC):
     """
     The interface for the Value class.
     """
+
     @property
     @abstractmethod
     def value(self) -> Any:
@@ -22,6 +23,11 @@ class ValueInterface(ABC):
 
     @abstractmethod
     def check_none(self) -> bool:
+        pass
+
+    @property
+    @abstractmethod
+    def frozen(self) -> bool:
         pass
 
 
