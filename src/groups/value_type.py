@@ -44,8 +44,15 @@ class ValueTypeInterface(FrozenInterface):
         """
         pass
 
+    @abstractmethod
+    def remove_alias(self, alias: str) -> None:
+        """
+        Remove an alias from the aliases list.
+        """
+        pass
 
-@dataclass(frozen=False, slots=True)
+
+@dataclass(slots=True)
 class ValueType(ValueTypeInterface, Frozen):
     """
     The Value Type class.
@@ -139,6 +146,16 @@ class ValueType(ValueTypeInterface, Frozen):
         """
         if not self.check_alias(alias):
             self.aliases += (alias,)
+
+    @check_frozen
+    def remove_alias(self, alias: str) -> None:
+        """
+        Remove an alias from the aliases list.
+        """
+        if self.check_alias(alias):
+            aliases = list(self.aliases)
+            aliases.remove(alias)
+            self.aliases = tuple(aliases)
 
     def __hash__(self) -> int:
         """

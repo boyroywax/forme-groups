@@ -67,14 +67,14 @@ class ValueTypeGroupInterface(FrozenInterface):
         pass
 
 
-@dataclass(slots=True, unsafe_hash=True)
-class ValueTypeGroup:
+@dataclass(slots=True)
+class ValueTypeGroup(ValueTypeGroupInterface, Frozen):
 
     _name: str
     _group: Dict[str, ValueType] = field(default_factory=dict)
-    _frozen: bool = field(default_factory=bool)
+    # _frozen: bool = field(default_factory=bool)
 
-    def __init__(self, name: Optional[str] = None, group: Dict[str, ValueType] = Dict[str, ValueType], freeze: Optional[bool] = None) -> None:
+    def __init__(self, name: Optional[str] = None, group: Dict[str, ValueType] = Dict[str, ValueType], freeze: Optional[bool] = False) -> None:
         self._name = name
         self._group = group
         self._frozen = freeze

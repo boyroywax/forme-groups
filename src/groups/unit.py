@@ -7,7 +7,7 @@ from .frozen import Frozen, FrozenInterface
 from .value import Value
 from .value_type import ValueType
 
-
+@dataclass(slots=True)
 class UnitInterface(FrozenInterface):
     """
     The interface for the Unit class.
@@ -30,21 +30,6 @@ class UnitInterface(FrozenInterface):
         The value of the value.
         """
         pass
-
-    # @property
-    # @abstractmethod
-    # def frozen(self) -> bool:
-    #     """
-    #     Check if the class is frozen.
-    #     """
-    #     pass
-
-    # @abstractmethod
-    # def freeze(self) -> None:
-    #     """
-    #     Freeze the class.
-    #     """
-    #     pass
 
 
 @dataclass(

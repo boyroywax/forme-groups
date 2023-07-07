@@ -1,8 +1,9 @@
 from abc import ABC, abstractmethod
-
+from dataclasses import dataclass, field
 from .decorators import check_frozen
 
 
+@dataclass(slots=True)
 class FrozenInterface(ABC):
     """
     The interface for the Frozen class.
@@ -24,12 +25,13 @@ class FrozenInterface(ABC):
         pass
 
 
+# @dataclass(slots=True)
 class Frozen(FrozenInterface):
     """
     This class manages the frozen state of a class.
     """
 
-    _frozen: bool
+    _frozen: bool = field(default_factory=bool)
 
     def __init__(self, frozen: bool = False) -> None:
         """

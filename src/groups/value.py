@@ -9,7 +9,9 @@ from .frozen import Frozen, FrozenInterface
 _NONE = [None, "None", "NONE", "none", "null", "Null", "NULL", "nil", "Nil", "NIL", "NoneType", "nonetype", "NONETYPE"]
 _EMPTY = ["", " ", "''", '""', str(""), str(" "), str("''"), str('""'), str(' ')]
 
-
+@dataclass(
+    slots=True,
+)
 class ValueInterface(FrozenInterface):
     """
     The interface for the Value class.
