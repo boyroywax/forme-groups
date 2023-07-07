@@ -1,5 +1,6 @@
 from abc import abstractmethod
 from dataclasses import dataclass, field
+from typing import Any, Dict, List, Optional
 
 from .decorators import check_frozen
 from .frozen import Frozen, FrozenInterface
@@ -27,11 +28,12 @@ class ValueTypeRef(ValueTypeRefInterface, Frozen):
     """
     _alias: str = field(default_factory=str, repr=True)
 
-    def __init__(self, alias: str) -> None:
+    def __init__(self, alias: str, freeze: Optional[bool] = False) -> None:
         """
         Initializes the ValueTypeRef class.
         """
         self._alias = alias
+        self._frozen = freeze
 
     @property
     def alias(self) -> str:
@@ -47,3 +49,11 @@ class ValueTypeRef(ValueTypeRefInterface, Frozen):
         Sets the alias of the value type.
         """
         self._alias = alias
+
+    @alias.getter
+    def alias(self) -> str:
+        """
+        Gets the alias of the value type.
+        """
+        return self._alias
+    
