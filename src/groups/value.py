@@ -2,6 +2,8 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import Any
 
+from .decorators import check_frozen
+
 
 _NONE = [None, "None", "NONE", "none", "null", "Null", "NULL", "nil", "Nil", "NIL", "NoneType", "nonetype", "NONETYPE"]
 _EMPTY = ["", " ", "''", '""', str(""), str(" "), str("''"), str('""'), str(' ')]
@@ -30,18 +32,13 @@ class ValueInterface(ABC):
     def frozen(self) -> bool:
         pass
 
+    @abstractmethod
+    def freeze(self) -> None:
+        pass
+
 
 @dataclass(
-    init=False,
-    repr=True,
-    eq=True,
-    order=False,
-    unsafe_hash=True,
-    frozen=True,
-    match_args=True,
-    kw_only=False,
     slots=True,
-    weakref_slot=False
 )
 class Value(ValueInterface):
     """
@@ -49,7 +46,7 @@ class Value(ValueInterface):
     """
 
     _value: Any = field(
-        default=None,
+        default=Any,
         init=False,
         repr=False,
         compare=False,
@@ -57,14 +54,18 @@ class Value(ValueInterface):
         metadata=None
     )
 
+    _frozen: bool = field(default_factory=bool)
+
     def __init__(
         self,
         value: Any,
+        freeze: bool = False
     ) -> None:
         """
         Initializes the Value class.
         """
         self._value = value
+        self._frozen = freeze
 
     @property
     def value(self) -> Any:
@@ -74,6 +75,7 @@ class Value(ValueInterface):
         return self._value
 
     @value.setter
+    @check_frozen
     def value(self, value: Any) -> None:
         """
         Sets the value of the Value.
@@ -81,6 +83,7 @@ class Value(ValueInterface):
         self._value = value
 
     @value.deleter
+    @check_frozen
     def value(self) -> None:
         """
         Deletes the value of the Value.
@@ -105,3 +108,17 @@ class Value(ValueInterface):
         Checks if the value is None.
         """
         return self.value is None or self.value in _NONE
+
+    @property
+    def frozen(self) -> bool:
+        """
+        Checks if the class is frozen.
+        """
+        return self._frozen
+
+    @check_frozen
+    def freeze(self) -> None:
+        """
+        Freezes the class.
+        """
+        self._frozen = True
