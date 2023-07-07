@@ -6,6 +6,7 @@ from uuid import uuid4
 from .decorators import check_frozen
 from .frozen import Frozen, FrozenInterface
 from .value_type import ValueTypeInterface, ValueType
+from .value_type_ref import ValueTypeRef
 
 
 @dataclass(slots=True)
@@ -71,11 +72,19 @@ class ValueTypeGroupInterface(FrozenInterface):
 class ValueTypeGroup(ValueTypeGroupInterface, Frozen):
 
     _name: str
+    _level: int = field(default_factory=int)
     _group: Dict[str, ValueType] = field(default_factory=dict)
-    # _frozen: bool = field(default_factory=bool)
+    _frozen: bool = field(default_factory=bool)
 
-    def __init__(self, name: Optional[str] = None, group: Dict[str, ValueType] = Dict[str, ValueType], freeze: Optional[bool] = False) -> None:
+    def __init__(
+            self,
+            name: Optional[str] = None,
+            group: Dict[str, ValueType] = Dict[str, ValueType],
+            level: Optional[int] = None,
+            freeze: Optional[bool] = False
+    ) -> None:
         self._name = name
+        self._level = level
         self._group = group
         self._frozen = freeze
 
@@ -90,10 +99,35 @@ class ValueTypeGroup(ValueTypeGroupInterface, Frozen):
         """
         Freeze the group.
         """
+        if self._level is None:
+            raise ValueError("The level must be set before freezing.")
+        
         for value in self._group.values():
             if value.frozen is False:
                 value.freeze()
         self._frozen = True
+
+    @property
+    def level(self) -> int:
+        """
+        The level of the group.
+        """
+        return self._level
+    
+    @level.setter
+    @check_frozen
+    def level(self, value: int) -> None:
+        """
+        Set the level of the group.
+        """
+        self._level = value
+
+    @level.getter
+    def level(self) -> int:
+        """
+        Get the level of the group.
+        """
+        return self._level
 
     @property
     def group(self) -> Dict[str, ValueType]:
@@ -254,7 +288,7 @@ class ValueTypeGroup(ValueTypeGroupInterface, Frozen):
             if value_type.check_alias(alias):
                 return key
 
-    def get_aliases(self) -> Tuple[str]:
+    def get_aliases(self) -> Tuple[ValueTypeRef]:
         """
         Returns the aliases.
         """
@@ -275,7 +309,7 @@ class ValueTypeGroup(ValueTypeGroupInterface, Frozen):
                 return value_type
 
     @property
-    def aliases(self) -> Tuple[str]:
+    def aliases(self) -> Tuple[ValueTypeRef]:
         """
         Returns the aliases.
         """

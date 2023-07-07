@@ -5,6 +5,7 @@ from typing import Any, Dict, List, Optional
 from .decorators import check_frozen
 from .frozen import Frozen, FrozenInterface
 from .value import Value
+from .value_type_ref import ValueTypeRef
 from .value_type import ValueType
 
 @dataclass(slots=True)
@@ -12,12 +13,12 @@ class UnitInterface(FrozenInterface):
     """
     The interface for the Unit class.
     """
-    _type: ValueType
+    _type: ValueTypeRef
     _value: Value
 
     @property
     @abstractmethod
-    def type(self) -> ValueType:
+    def type(self) -> ValueTypeRef:
         """
         The type of the value.
         """
@@ -40,7 +41,7 @@ class Unit(UnitInterface, Frozen):
     """
     This class manages a unit.
     """
-    _type: ValueType = field(default_factory=ValueType)
+    _type: ValueTypeRef = field(default_factory=ValueTypeRef)
 
     _value: Value = field(default_factory=Value)
 
@@ -48,7 +49,7 @@ class Unit(UnitInterface, Frozen):
 
     def __init__(
         self,
-        type_: ValueType,
+        type_: ValueTypeRef,
         value_: Optional[Value] = None,
         frozen: Optional[bool] = False
     ) -> None:
@@ -68,14 +69,14 @@ class Unit(UnitInterface, Frozen):
 
     @type.setter
     @check_frozen
-    def type(self, type_: ValueType) -> None:
+    def type(self, type_: ValueTypeRef) -> None:
         """
         Sets the type.
         """
         self._type = type_
 
     @type.getter
-    def type(self) -> ValueType:
+    def type(self) -> ValueTypeRef:
         """
         Gets the type.
         """

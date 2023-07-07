@@ -31,7 +31,7 @@ class TestValueTypeGroup(unittest.TestCase):
 
     def test_freeze_method(self):
         group = {'int': ValueType(aliases=['int'], type_=[int])}
-        value_type_group = ValueTypeGroup(name='test', group=group)
+        value_type_group = ValueTypeGroup(name='test', group=group, level=0)
         value_type_group.freeze()
         self.assertTrue(value_type_group.frozen)
         with self.assertRaises(Exception):
@@ -156,6 +156,7 @@ class TestValueTypeGroup(unittest.TestCase):
     def test_freeze(self):
         self.setUp__()
         self.assertFalse(self.group.frozen)
+        self.group.level = 1
         self.group.freeze()
         self.assertTrue(self.group.frozen)
         self.assertTrue(self.int_type.frozen)
