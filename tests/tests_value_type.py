@@ -103,3 +103,30 @@ class TestValueType(unittest.TestCase):
 
         frozen_value_type = ValueType(aliases=aliases, type_=type_, freeze=True)
         self.assertTrue(frozen_value_type.frozen)
+
+    def test_init(self):
+        aliases = ['integer', 'int']
+        base_types = [int]
+        super_type = int
+        prefix = 'prefix'
+        suffix = 'suffix'
+        separator = 'separator'
+        self.value_type = ValueType(aliases, base_types, False, super_type, prefix, suffix, separator)
+
+        self.assertEqual(self.value_type.aliases, aliases)
+        self.assertEqual(self.value_type.type, base_types)
+        self.assertEqual(self.value_type.super_type, super_type)
+        self.assertEqual(self.value_type.prefix, prefix)
+        self.assertEqual(self.value_type.suffix, suffix)
+        self.assertEqual(self.value_type.separator, separator)
+        self.assertFalse(self.value_type.frozen)
+
+    def test_frozen(self):
+        self.test_init()
+
+        self.value_type.freeze()
+
+        self.assertTrue(self.value_type.frozen)
+
+        with self.assertRaises(Exception):
+            self.value_type.aliases = ['int', 'integer']

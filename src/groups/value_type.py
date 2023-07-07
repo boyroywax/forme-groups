@@ -16,9 +16,9 @@ class ValueTypeInterface(FrozenInterface):
     _type: Tuple[Any, ...] = field(default_factory=tuple)
     _frozen: bool = field(default_factory=bool, init=False)
     _super_type: Optional[ValueTypeRefInterface] = field(default_factory=ValueTypeRefInterface)
-    _prefix: Optional[str] = field(default_factory=str)
-    _suffix: Optional[str] = field(default_factory=str)
-    _separator: Optional[str] = field(default_factory=str)
+    _prefix: Optional[str] = None
+    _suffix: Optional[str] = None
+    _separator: Optional[str] = None
 
     @property
     @abstractmethod
@@ -62,7 +62,7 @@ class ValueTypeInterface(FrozenInterface):
 
     @property
     @abstractmethod
-    def seperator(self) -> Optional[str]:
+    def separator(self) -> Optional[str]:
         """
         The seperator of the value.
         """
@@ -107,7 +107,7 @@ class ValueType(ValueTypeInterface, Frozen):
         super_type: Optional[ValueTypeRef] = None,
         prefix: Optional[str] = None,
         suffix: Optional[str] = None,
-        seperator: Optional[str] = None
+        separator: Optional[str] = None
     ) -> None:
         """
         Initialize the class.
@@ -118,7 +118,7 @@ class ValueType(ValueTypeInterface, Frozen):
         self._super_type = super_type
         self._prefix = prefix
         self._suffix = suffix
-        self._separator = seperator
+        self._separator = separator
 
 
     def __post_init__(self) -> None:
@@ -199,12 +199,12 @@ class ValueType(ValueTypeInterface, Frozen):
         return alias in self.aliases
 
     @check_frozen
-    def add_alias(self, alias: str) -> None:
+    def add_alias(self, alias: str ) -> None:
         """
         Add an alias to the aliases list.
         """
         if not self.check_alias(alias):
-            self.aliases += (alias,)
+            self.aliases += ValueTypeRef(alias)
 
     @check_frozen
     def remove_alias(self, alias: str) -> None:
@@ -307,15 +307,15 @@ class ValueType(ValueTypeInterface, Frozen):
         raise AttributeError("Cannot delete suffix.")
     
     @property
-    def seperator(self) -> Optional[str]:
+    def separator(self) -> Optional[str]:
         """
         The seperator of the value.
         """
         return self._separator
     
-    @seperator.setter
+    @separator.setter
     @check_frozen
-    def seperator(self, value: str) -> None:
+    def separator(self, value: str) -> None:
         """
         Set the seperator of the value.
         """
