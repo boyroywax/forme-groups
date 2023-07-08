@@ -31,7 +31,7 @@ class Frozen(FrozenInterface):
     This class manages the frozen state of a class.
     """
 
-    _frozen: bool = field(default_factory=bool)
+    _frozen: bool = False
 
     def __init__(self, frozen: bool = False) -> None:
         """

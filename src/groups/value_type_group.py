@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, Iterable
 from uuid import uuid4
 
 from .decorators import check_frozen
@@ -12,11 +12,11 @@ from .value_type_ref import ValueTypeRef
 @dataclass(slots=True)
 class ValueTypeGroupInterface(FrozenInterface):
     _name: str
-    _group: Dict[str, ValueTypeInterface]
+    _group: Tuple[ValueTypeInterface]
 
     @property
     @abstractmethod
-    def group(self) -> Dict[str, ValueTypeInterface]:
+    def group(self) -> Tuple[ValueTypeInterface]:
         """
         The group of the value types.
         """
@@ -73,13 +73,13 @@ class ValueTypeGroup(ValueTypeGroupInterface, Frozen):
 
     _name: str
     _level: int = field(default_factory=int)
-    _group: Dict[str, ValueType] = field(default_factory=dict)
+    _group: Tuple[ValueType] = field(default_factory=tuple)
     _frozen: bool = field(default_factory=bool)
 
     def __init__(
             self,
             name: Optional[str] = None,
-            group: Dict[str, ValueType] = Dict[str, ValueType],
+            group: Tuple[ValueType] = Tuple[ValueType],
             level: Optional[int] = None,
             freeze: Optional[bool] = False
     ) -> None:
@@ -102,7 +102,7 @@ class ValueTypeGroup(ValueTypeGroupInterface, Frozen):
         if self._level is None:
             raise ValueError("The level must be set before freezing.")
         
-        for value in self._group.values():
+        for value in self._group:
             if value.frozen is False:
                 value.freeze()
         self._frozen = True
@@ -130,7 +130,7 @@ class ValueTypeGroup(ValueTypeGroupInterface, Frozen):
         return self._level
 
     @property
-    def group(self) -> Dict[str, ValueType]:
+    def group(self) -> Tuple[ValueType]:
         """
         The group of the value types.
         """
@@ -138,14 +138,14 @@ class ValueTypeGroup(ValueTypeGroupInterface, Frozen):
     
     @group.setter
     @check_frozen
-    def group(self, value: Dict[str, ValueType]) -> None:
+    def group(self, value: Tuple[ValueType]) -> None:
         """
         Set the group of the value types.
         """
         self._group = value
 
     @group.getter
-    def group(self) -> Dict[str, ValueType]:
+    def group(self) -> Tuple[ValueType]:
         """
         Get the group of the value types.
         """
@@ -215,7 +215,7 @@ class ValueTypeGroup(ValueTypeGroupInterface, Frozen):
 
     def check_type(self, type_: ValueType) -> bool:
         for value_type in self._group.values():
-            if value_type.type == type_.type:
+            if value_type.type == type_.type_:
                 return True
         else:
             return False
@@ -227,11 +227,11 @@ class ValueTypeGroup(ValueTypeGroupInterface, Frozen):
         """
         _name = name
         if _name is None:
-            if type_.type is None:
+            if type_.type_ is None:
                 raise Exception("The type is None.")
             else:
                 try:
-                    _name = type(type_.type).__name__()
+                    _name = type_.type_.__str__()
                 except Exception:
                     _name = str(uuid4())
 
@@ -336,3 +336,6 @@ class ValueTypeGroup(ValueTypeGroupInterface, Frozen):
         Set the value types.
         """
         raise AttributeError("You can't set the value 'types'. Value 'types' are added and removed with the 'add' and 'remove' methods.")
+
+    def __iter__(self) -> Iterable[ValueType]:
+        return iter(self._group)

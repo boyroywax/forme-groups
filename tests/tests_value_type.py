@@ -8,7 +8,7 @@ class TestValueType(unittest.TestCase):
         aliases = ['int', 'integer']
         type_ = [int]
         value_type = ValueType(aliases=aliases, type_=type_)
-        self.assertEqual(value_type.type, type_)
+        self.assertEqual(value_type.type_, type_)
 
     def test_aliases_property(self):
         aliases = ['int', 'integer']
@@ -24,7 +24,7 @@ class TestValueType(unittest.TestCase):
         with self.assertRaises(Exception):
             value_type.aliases = ['float']
         with self.assertRaises(Exception):
-            value_type.type = [float]
+            value_type.type_ = [float]
 
     def test_str_method(self):
         aliases = ['int', 'integer']
@@ -60,20 +60,20 @@ class TestValueType(unittest.TestCase):
         type_ = ['int']
         value_type = ValueType(aliases=aliases, type_=type_, freeze=True)
         with self.assertRaises(Exception):
-            value_type.type = ['float']
+            value_type.type_ = ['float']
 
     def test_type_setter_unfrozen(self):
         aliases = ['int', 'integer']
         type_ = ['int']
         value_type = ValueType(aliases=aliases, type_=type_)
-        value_type.type = ['float']
-        self.assertEqual(value_type.type, ['float'])
+        value_type.type_ = ['float']
+        self.assertEqual(value_type.type_, ['float'])
 
     def test_type_getter(self):
         aliases = ['int', 'integer']
         type_ = ['int']
         value_type = ValueType(aliases=aliases, type_=type_)
-        self.assertEqual(value_type.type, ['int'])
+        self.assertEqual(value_type.type_, ['int'])
 
     def test_aliases_setter_frozen(self):
         aliases = ['int', 'integer']
@@ -114,7 +114,7 @@ class TestValueType(unittest.TestCase):
         self.value_type = ValueType(aliases, base_types, False, super_type, prefix, suffix, separator)
 
         self.assertEqual(self.value_type.aliases, aliases)
-        self.assertEqual(self.value_type.type, base_types)
+        self.assertEqual(self.value_type.type_, base_types)
         self.assertEqual(self.value_type.super_type, super_type)
         self.assertEqual(self.value_type.prefix, prefix)
         self.assertEqual(self.value_type.suffix, suffix)
@@ -130,3 +130,6 @@ class TestValueType(unittest.TestCase):
 
         with self.assertRaises(Exception):
             self.value_type.aliases = ['int', 'integer']
+
+def __iter__(self):
+    return iter((self._aliases, self._type, self._frozen, self._super_type, self._prefix, self._suffix, self._separator))

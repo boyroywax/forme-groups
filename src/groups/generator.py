@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 from .decorators import check_frozen
 from .frozen import FrozenInterface, Frozen
@@ -16,7 +16,7 @@ class GeneratorInterface(FrozenInterface):
 
     @property
     @abstractmethod
-    def type_groups(self) -> Dict[str, ValueTypeGroupInterface]:
+    def type_groups(self) -> Tuple[ValueTypeGroupInterface]:
         """
         The type groups of the generator.
         """
@@ -24,7 +24,7 @@ class GeneratorInterface(FrozenInterface):
 
     @property
     @abstractmethod
-    def types(self) -> Dict[str, ValueTypeInterface]:
+    def types(self) -> Tuple[ValueTypeInterface]:
         """
         The types of the generator.
         """
@@ -32,7 +32,7 @@ class GeneratorInterface(FrozenInterface):
 
     @property
     @abstractmethod
-    def units(self) -> Dict[str, UnitInterface]:
+    def units(self) -> Tuple[UnitInterface]:
         """
         The units of the generator.
         """
@@ -47,51 +47,58 @@ class Generator(GeneratorInterface, Frozen):
     This class manages the generator.
     """
 
-    _type_groups: Dict[str, ValueTypeGroup] = field(default_factory=dict)
-    _units: Dict[str, UnitInterface] = field(default_factory=dict)
+    _type_groups: Tuple[ValueTypeGroup] = field(default_factory=tuple)
+    _units: Tuple[Unit] = field(default_factory=tuple)
 
-    def __init__(self) -> None:
+    def __init__(self, type_groups: Tuple[ValueTypeGroup]) -> None:
         """
         Initialize the class.
         """
-        self._type_groups = {}
-        self._units = {}
+        self._type_groups = type_groups
+        self._units = ()
 
     @property
-    def type_groups(self) -> Dict[str, ValueTypeGroup]:
+    def type_groups(self) -> Tuple[ValueTypeGroup]:
         """
         The type groups of the generator.
         """
         return self._type_groups
 
     @property
-    def types(self) -> Dict[str, ValueType]:
+    def types(self) -> Tuple[ValueType]:
         """
         The types of the generator.
         """
-        types = {}
+        types = []
 
-        for type_group in self._type_groups.values():
-            types.update(type_group.group)
+        for type_group in self._type_groups:
+            types.append(type_group.group)
 
-        return types
+        return tuple(types)
 
     @property
-    def units(self) -> Dict[str, UnitInterface]:
+    def units(self) -> Tuple[UnitInterface]:
         """
         The units of the generator.
         """
         return self._units
 
     @check_frozen
-    def add_type_group(self, name: str) -> None:
+    def add_type_group(self, type_group: ValueTypeGroup) -> None:
         """
         Add a type group to the generator.
         """
-        if name in self._type_groups:
-            raise ValueError(f"Type group '{name}' already exists.")
+        if type_group in self._type_groups:
+            raise ValueError(f"Type group '{type_group}' already exists.")
 
-        self._type_groups[name] = ValueTypeGroup(name)
+        for existing_type_group in self._type_groups:
+            if existing_type_group.name == type_group.name:
+                raise ValueError(f"Type group with name '{type_group.name}' already exists.")
+
+            if existing_type_group.level == type_group.level:
+                raise ValueError(f"Type group with level '{type_group.level}' already exists.")
+
+        self._type_groups = self._type_groups + (type_group,)
 
     @check_frozen
     def remove_type_group(self, name: str) -> None:
@@ -102,5 +109,6 @@ class Generator(GeneratorInterface, Frozen):
             raise ValueError(f"Type group '{name}' does not exist.")
 
         del self._type_groups[name]
+
 
     

@@ -1,6 +1,6 @@
 from abc import abstractmethod
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Iterable
 
 from .decorators import check_frozen
 from .frozen import Frozen, FrozenInterface
@@ -57,3 +57,8 @@ class ValueTypeRef(ValueTypeRefInterface, Frozen):
         """
         return self._alias
     
+    def __iter__(self) -> Iterable:
+        """
+        Returns the iterator for the ValueTypeRef class.
+        """
+        return iter(self._alias)

@@ -1,6 +1,6 @@
 from abc import abstractmethod
 from dataclasses import dataclass, field
-from typing import Any, List, Optional, Tuple
+from typing import Any, List, Optional, Tuple, Iterable
 
 from .decorators import check_frozen
 from .frozen import Frozen, FrozenInterface
@@ -13,7 +13,7 @@ class ValueTypeInterface(FrozenInterface):
     The interface for the Type class.
     """
     _aliases: Tuple[ValueTypeRefInterface, ...] = field(default_factory=tuple)
-    _type: Tuple[Any, ...] = field(default_factory=tuple)
+    _type: Tuple[Any] = field(default_factory=tuple)
     _frozen: bool = field(default_factory=bool, init=False)
     _super_type: Optional[ValueTypeRefInterface] = field(default_factory=ValueTypeRefInterface)
     _prefix: Optional[str] = None
@@ -22,7 +22,7 @@ class ValueTypeInterface(FrozenInterface):
 
     @property
     @abstractmethod
-    def type(self) -> Any:
+    def type_(self) -> Any:
         """
         The type of the value.
         """
@@ -112,6 +112,10 @@ class ValueType(ValueTypeInterface, Frozen):
         """
         Initialize the class.
         """
+        for attr in ('aliases', 'type_', 'super_type', 'prefix', 'suffix', 'separator'):
+            if isinstance(attr, list):
+                attr = tuple(attr)
+
         self._aliases = aliases
         self._type = type_
         self._frozen = freeze
@@ -129,16 +133,16 @@ class ValueType(ValueTypeInterface, Frozen):
         pass
 
     @property
-    def type(self) -> Tuple[Any, ...]:
+    def type_(self) -> Tuple[Any, ...]:
         """
         The type of the value.
         """
 
         return self._type
 
-    @type.setter
+    @type_.setter
     @check_frozen
-    def type(self, value: Tuple[str, ...]) -> None:
+    def type_(self, value: Tuple[str, ...]) -> None:
         """
         Set the type of the value.
         """
@@ -147,16 +151,16 @@ class ValueType(ValueTypeInterface, Frozen):
                 type_ = tuple(type_)
         self._type = value
 
-    @type.getter
-    def type(self) -> Tuple[str, ...]:
+    @type_.getter
+    def type_(self) -> Tuple[str, ...]:
         """
         Get the type of the value.
         """
         return self._type
 
-    @type.deleter
+    @type_.deleter
     @check_frozen
-    def type(self) -> None:
+    def type_(self) -> None:
         """
         Delete the type of the value.
         """
@@ -326,7 +330,13 @@ class ValueType(ValueTypeInterface, Frozen):
         """
         Hash the class.
         """
-        return hash(tuple(self.type))
+        return hash(tuple(self.type_))
+    
+    def __iter__(self) -> Iterable[Any]:
+        """
+        Iterate over the class.
+        """
+        return iter(tuple(self.type_))
     
     # def __repr__(self) -> str:
     #     return f"{self.__class__.__name__}(aliases={self.aliases}, type={self.type}, frozen={self.frozen}, _aliases={self._aliases}, _type={self._type}, _frozen={self._frozen})"

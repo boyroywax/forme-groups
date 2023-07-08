@@ -18,7 +18,7 @@ class UnitInterface(FrozenInterface):
 
     @property
     @abstractmethod
-    def type(self) -> ValueTypeRef:
+    def type_(self) -> ValueTypeRef:
         """
         The type of the value.
         """
@@ -61,30 +61,30 @@ class Unit(UnitInterface, Frozen):
         self._frozen = frozen
 
     @property
-    def type(self) -> ValueTypeRef:
+    def type_(self) -> ValueTypeRef:
         """
         Returns the type.
         """
         return self._type
 
-    @type.setter
+    @type_.setter
     @check_frozen
-    def type(self, type_: ValueTypeRef) -> None:
+    def type_(self, type_: ValueTypeRef) -> None:
         """
         Sets the type.
         """
         self._type = type_
 
-    @type.getter
-    def type(self) -> ValueTypeRef:
+    @type_.getter
+    def type_(self) -> ValueTypeRef:
         """
         Gets the type.
         """
         return self._type
 
-    @type.deleter
+    @type_.deleter
     @check_frozen
-    def type(self) -> None:
+    def type_(self) -> None:
         """
         Deletes the type.
         """

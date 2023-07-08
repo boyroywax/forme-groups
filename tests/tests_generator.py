@@ -2,86 +2,44 @@ import unittest
 from typing import Dict
 from src.groups.generator import Generator, ValueTypeGroup, ValueType, Unit
 from src.groups.value import Value
+from src.groups.value_type import ValueTypeRef
 
 
 class TestGenerator(unittest.TestCase):
     def setUp(self):
-        self.generator = Generator()
+        name = 'my_group'
+        value_type = ValueTypeRef('int')
+        value_type_group = ValueTypeGroup(name, (value_type))
+        self.generator = Generator((value_type_group))
 
     def test_type_groups(self):
-        self.assertEqual(self.generator.type_groups, {})
-        self.generator.add_type_group('numbers')
-        self.assertEqual(len(self.generator.type_groups), 1)
-        self.assertIn('numbers', self.generator.type_groups)
-        self.assertIsInstance(self.generator.type_groups['numbers'], ValueTypeGroup)
-        self.generator.remove_type_group('numbers')
-        self.assertEqual(self.generator.type_groups, {})
+        self.assertEqual(self.generator.type_groups, ())
+
+
+        # value_type_group = ValueTypeGroup(name)
+        self.generator.add_type_group(value_type_group)
+
+        self.assertEqual(self.generator.type_groups, {name: value_type_group})
 
     def test_types(self):
-        self.assertEqual(self.generator.types, {})
-        self.generator.add_type_group('numbers')
-        self.generator.type_groups['numbers'].add_type('int')
-        self.generator.type_groups['numbers'].add_type('float')
-        self.assertEqual(len(self.generator.types), 2)
-        self.assertIn('int', self.generator.types)
-        self.assertIsInstance(self.generator.types['int'], ValueType)
-        self.assertIn('float', self.generator.types)
-        self.assertIsInstance(self.generator.types['float'], ValueType)
+        self.assertEqual(self.generator.types, ())
+
+        name = 'int'
+        base_types = ['int']
+        value_type = ValueTypeRef(name)
+        value_type_group = ValueTypeGroup('my_group', {name: value_type})
+        self.generator.add_type_group(value_type_group.name)
+
+        self.assertEqual(self.generator.types, {name: value_type})
 
     def test_units(self):
-        self.assertEqual(self.generator.units, {})
-        self.generator.add_unit('answer', 'int', 42)
-        self.assertEqual(len(self.generator.units), 1)
-        self.assertIn('answer', self.generator.units)
-        self.assertIsInstance(self.generator.units['answer'], Unit)
-        self.assertEqual(self.generator.units['answer'].type.name, 'int')
-        self.assertEqual(self.generator.units['answer'].value.value, 42)
+        self.assertEqual(self.generator.units, ())
 
-    def test_add_type_group(self):
-        self.assertEqual(self.generator.type_groups, {})
-        self.generator.add_type_group('numbers')
-        self.assertEqual(len(self.generator.type_groups), 1)
-        self.assertIn('numbers', self.generator.type_groups)
-        self.assertIsInstance(self.generator.type_groups['numbers'], ValueTypeGroup)
+        class MyUnit(Unit):
+            pass
 
-        with self.assertRaises(ValueError):
-            self.generator.add_type_group('numbers')
+        name = 'my_unit'
+        unit = MyUnit(ValueTypeRef('int'), Value(42))
+        self.generator._units = unit
 
-    def test_remove_type_group(self):
-        self.assertEqual(self.generator.type_groups, {})
-        self.generator.add_type_group('numbers')
-        self.assertEqual(len(self.generator.type_groups), 1)
-        self.assertIn('numbers', self.generator.type_groups)
-        self.assertIsInstance(self.generator.type_groups['numbers'], ValueTypeGroup)
-
-        self.generator.remove_type_group('numbers')
-        self.assertEqual(self.generator.type_groups, {})
-
-        with self.assertRaises(ValueError):
-            self.generator.remove_type_group('numbers')
-
-    def test_add_unit(self):
-        self.assertEqual(self.generator.units, {})
-        self.generator.add_type_group('numbers')
-        self.generator.type_groups['numbers'].add_type('int')
-        self.generator.add_unit('answer', 'int', 42)
-        self.assertEqual(len(self.generator.units), 1)
-        self.assertIn('answer', self.generator.units)
-        self.assertIsInstance(self.generator.units['answer'], Unit)
-        self.assertEqual(self.generator.units['answer'].type.name, 'int')
-        self.assertEqual(self.generator.units['answer'].value.value, 42)
-
-    def test_remove_unit(self):
-        self.assertEqual(self.generator.units, {})
-        self.generator.add_type_group('numbers')
-        self.generator.type_groups['numbers'].add_type('int')
-        self.generator.add_unit('answer', 'int', 42)
-        self.assertEqual(len(self.generator.units), 1)
-        self.assertIn('answer', self.generator.units)
-        self.assertIsInstance(self.generator.units['answer'], Unit)
-
-        self.generator.remove_unit('answer')
-        self.assertEqual(self.generator.units, {})
-
-        with self.assertRaises(ValueError):
-            self.generator.remove_unit('answer')
+        self.assertEqual(self.generator.units, (unit))

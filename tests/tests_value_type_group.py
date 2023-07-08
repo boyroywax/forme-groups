@@ -7,30 +7,30 @@ from src.groups.value_type_group import ValueTypeGroup
 class TestValueTypeGroup(unittest.TestCase):
     def test_name_property(self):
         # test name property
-        group = {'int': ValueType(aliases=['int'], type_=[int])}
+        group = tuple(ValueType(aliases=['int'], type_=(int)))
         value_type_group = ValueTypeGroup(name='test', group=group)
         self.assertEqual(value_type_group.name, 'test')
 
     def test_group_property(self):
         # test group property
-        group = {'int': ValueType(aliases=['int'], type_=[int])}
+        group = tuple(ValueType(aliases=['int'], type_=(int)))
         value_type_group = ValueTypeGroup(name='test', group=group)
         self.assertEqual(value_type_group.group, group)
 
     def test_freeze_property(self):
         # test freeze property
-        group = {'int': ValueType(aliases=['int'], type_=[int])}
+        group = tuple(ValueType(aliases=['int'], type_=(int)))
         value_type_group = ValueTypeGroup(name='test', group=group)
         self.assertFalse(value_type_group.frozen)
 
     def test_check_alias_method(self):
-        group = {'int': ValueType(aliases=['int'], type_=[int])}
+        group = tuple(ValueType(aliases=['int'], type_=(int)))
         value_type_group = ValueTypeGroup(name='test', group=group)
         self.assertTrue(value_type_group.check_alias(['int']))
         self.assertFalse(value_type_group.check_alias(['float']))
 
     def test_freeze_method(self):
-        group = {'int': ValueType(aliases=['int'], type_=[int])}
+        group = (ValueType(aliases=['int'], type_=[int]))
         value_type_group = ValueTypeGroup(name='test', group=group, level=0)
         value_type_group.freeze()
         self.assertTrue(value_type_group.frozen)
@@ -38,63 +38,63 @@ class TestValueTypeGroup(unittest.TestCase):
             value_type_group.group['int'].aliases = ['integer']
 
     def test_init_method(self):
-        group = {'int': ValueType(aliases=['int'], type_=[int])}
+        group = tuple(ValueType(aliases=['int'], type_=(int)))
         value_type_group = ValueTypeGroup(name='test', group=group)
         self.assertEqual(value_type_group.name, 'test')
         self.assertEqual(value_type_group.group, group)
         self.assertFalse(value_type_group.frozen)
 
     def test_frozen_setter_frozen(self):
-        group = {'int': ValueType(aliases=['int'], type_=[int])}
+        group = tuple(ValueType(aliases=['int'], type_=(int)))
         value_type_group = ValueTypeGroup(name='test', group=group, freeze=True)
         with self.assertRaises(Exception):
             value_type_group.frozen = False
 
     def test_frozen_setter_unfrozen(self):
-        group = {'int': ValueType(aliases=['int'], type_=[int])}
+        group = tuple(ValueType(aliases=['int'], type_=(int)))
         value_type_group = ValueTypeGroup(name='test', group=group)
         with self.assertRaises(Exception):
             value_type_group.frozen = True
         # self.assertTrue(value_type_group.frozen)
 
     def test_frozen_getter(self):
-        group = {'int': ValueType(aliases=['int'], type_=[int])}
+        group = tuple(ValueType(aliases=['int'], type_=(int)))
         value_type_group = ValueTypeGroup(name='test', group=group)
         self.assertFalse(value_type_group.frozen)
 
     def test_check_name_method(self):
-        group = {'int': ValueType(aliases=['int'], type_=[int])}
+        group = tuple(ValueType(aliases=['int'], type_=(int)))
         value_type_group = ValueTypeGroup(name='test', group=group)
         self.assertTrue(value_type_group.check_name('test'))
         self.assertFalse(value_type_group.check_name('float'))
 
     def test_add_method_alias_in_use(self):
-        group = {'int': ValueType(aliases=['int'], type_=[int])}
+        group = tuple(ValueType(aliases=['int'], type_=(int)))
         value_type_group = ValueTypeGroup(name='test', group=group)
         with self.assertRaises(ValueError):
             value_type_group.add(ValueType(aliases=['int'], type_=[int]))
 
     def test_add_method_name_in_use(self):
-        group = {'int': ValueType(aliases=['int'], type_=[int])}
+        group = tuple(ValueType(aliases=['int'], type_=(int)))
         value_type_group = ValueTypeGroup(name='test', group=group)
         with self.assertRaises(ValueError):
             value_type_group.add(ValueType(aliases=['integer'], type_=[int]), name='int')
 
     def test_add_method(self):
-        group = {'int': ValueType(aliases=['int'], type_=[int])}
+        group = tuple(ValueType(aliases=['int'], type_=(int)))
         value_type_group = ValueTypeGroup(name='test', group=group)
         value_type_group.add(ValueType(aliases=['float'], type_=[float]))
         with self.assertRaises(ValueError):
             value_type_group.add(ValueType(aliases=['integer'], type_=[int]))
 
     def test_remove_method_alias_not_in_use(self):
-        group = {'int': ValueType(aliases=['int'], type_=[int])}
+        group = tuple(ValueType(aliases=['int'], type_=(int)))
         value_type_group = ValueTypeGroup(name='test', group=group)
         with self.assertRaises(ValueError):
             value_type_group.remove(['float'])
 
     def test_remove_method(self):
-        group = {'int': ValueType(aliases=['int'], type_=[int])}
+        group = tuple(ValueType(aliases=['int'], type_=(int)))
         value_type_group = ValueTypeGroup(name='test', group=group)
         value_type_group.remove(aliases=['int'])
         self.assertFalse(value_type_group.check_alias(['int']))
@@ -134,15 +134,15 @@ class TestValueTypeGroup(unittest.TestCase):
     def setUp__(self):
         self.int_type = ValueType(['int'], ['int'])
         self.float_type = ValueType(['float'], ['float'])
-        self.group = ValueTypeGroup('numbers', {'int': self.int_type, 'float': self.float_type})
+        self.group = ValueTypeGroup('numbers', tuple(self.int_type, self.float_type))
 
     def test_group_getter(self):
         self.setUp__()
-        self.assertEqual(self.group.group, {'int': self.int_type, 'float': self.float_type})
+        self.assertEqual(self.group.group, tuple(self.int_type, self.float_type))
 
     def test_group_setter(self):
         self.setUp__()
-        new_group = {'int': self.int_type}
+        new_group = tuple(self.int_type)
         self.group.group = new_group
         self.assertEqual(self.group.group, new_group)
 

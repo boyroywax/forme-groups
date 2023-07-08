@@ -12,12 +12,12 @@ class TestUnit(unittest.TestCase):
         self.unit = Unit(self.value_type, self.value)
 
     def test_type_getter(self):
-        self.assertEqual(self.unit.type, self.value_type)
+        self.assertEqual(self.unit.type_, self.value_type)
 
     def test_type_setter(self):
         new_value_type = ValueType(['float'], ['float'])
-        self.unit.type = new_value_type
-        self.assertEqual(self.unit.type, new_value_type)
+        self.unit.type_ = new_value_type
+        self.assertEqual(self.unit.type_, new_value_type)
 
     def test_value_getter(self):
         self.assertEqual(self.unit.value, self.value)
