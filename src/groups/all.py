@@ -21,30 +21,29 @@ class Frozen(object):
         object.__delattr__(self, name)
 
 
-def frozen(cls, *args, **kwargs):
+def frozen(cls):
     """
     Decorator that makes a class immutable (i.e. frozen).
     """
     def freeze(cls, *args, **kwargs):
         if getattr(cls, "_frozen", False):
             raise AttributeError("Cannot modify frozen class.")
-        # else:
-        #     self._frozen = True
         return cls
-        
+
     cls.__setattr__ = freeze
     cls.__delattr__ = freeze
 
     original_init = cls.__init__
 
+    print(original_init.__str__())
+
     def new_init(self, *args, **kwargs):
-        original_init(self, *args, **kwargs)
+        original_init(cls, *args, **kwargs)
         cls._frozen = True
 
     cls.__init__ = new_init
 
     return cls
-
 
 
 @dataclass(slots=True)

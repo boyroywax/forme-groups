@@ -22,7 +22,6 @@ class TestAll(unittest.TestCase):
         class MyClass:
             def __init__(self, *args, **kwargs):
                 self._test = True
-                # self._frozen = False
 
         class MyClassNotFrozen:
             def __init__(self):
@@ -44,29 +43,100 @@ class TestAll(unittest.TestCase):
 
         self.assertEqual(unit_value.value, value)
 
-    # def test_unit_type_interface(self):
-    #     aliases = (UnitTypeRef(int), UnitTypeRef(float))
-    #     super_type = UnitTypeRef(int)
-    #     prefix = 'prefix'
-    #     suffix = 'suffix'
-    #     separator = ','
-    #     function_call = lambda x: x * 2
+    def test_frozen_class(self):
+        @frozen
+        class MyClass:
+            my_attribute: int = 42
 
-    #     unit_type_interface = UnitTypeInterface(
-    #         aliases=aliases,
-    #         super_type=super_type,
-    #         prefix=prefix,
-    #         suffix=suffix,
-    #         separator=separator,
-    #         function_call=function_call
-    #     )
+        my_class = MyClass()
+        self.assertEqual(my_class.my_attribute, 42)
 
-    #     self.assertEqual(unit_type_interface.aliases, aliases)
-    #     self.assertEqual(unit_type_interface.super_type, super_type)
-    #     self.assertEqual(unit_type_interface.prefix, prefix)
-    #     self.assertEqual(unit_type_interface.suffix, suffix)
-    #     self.assertEqual(unit_type_interface.separator, separator)
-    #     self.assertEqual(unit_type_interface.function_call, function_call)
+        with self.assertRaises(AttributeError):
+            my_class.my_attribute = 43
+
+        with self.assertRaises(AttributeError):
+            del my_class.my_attribute
+
+    def test_frozen_subclass(self):
+        @frozen
+        class MyBaseClass:
+            my_attribute: int = 42
+
+        class MySubClass(MyBaseClass):
+            pass
+
+        my_subclass = MySubClass()
+        self.assertEqual(my_subclass.my_attribute, 42)
+
+        with self.assertRaises(AttributeError):
+            my_subclass.my_attribute = 43
+
+        with self.assertRaises(AttributeError):
+            del my_subclass.my_attribute
+
+    def test_frozen_args(self):
+        @frozen
+        class MyClass:
+            arg1: int
+            arg2: int
+
+            def __init__(self, *args, **kwargs):
+
+                if args:
+                    self.arg1, self.arg2 = args
+                else:
+                    self.arg1 = kwargs.pop('arg1')
+                    self.arg2 = kwargs.pop('arg2')
+
+        # my_class = MyClass(1, 2)
+        my_class = MyClass(arg1=1, arg2=2)
+        self.assertEqual(my_class.arg1, 1)
+        self.assertEqual(my_class.arg2, 2)
+
+        with self.assertRaises(AttributeError):
+            my_class.arg1 = 3
+
+        with self.assertRaises(AttributeError):
+            del my_class.arg2
+
+    def test_frozen_kwargs(self):
+        @frozen
+        class MyClass:
+            def __init__(self, **kwargs):
+                self.arg1 = kwargs.pop('arg1')
+                self.arg2 = kwargs.pop('arg2')
+
+        my_class = MyClass(arg1=1, arg2=2)
+        self.assertEqual(my_class.arg1, 1)
+        self.assertEqual(my_class.arg2, 2)
+
+        with self.assertRaises(AttributeError):
+            my_class.arg1 = 3
+
+        with self.assertRaises(AttributeError):
+            del my_class.arg2
+
+    def test_frozen_args_kwargs(self):
+        @frozen
+        class MyClass:
+            def __init__(self, arg1, arg2, **kwargs):
+                self.arg1 = arg1
+                self.arg2 = arg2
+                self.arg3 = kwargs.pop('arg3')
+
+        my_class = MyClass(1, 2, arg3=3)
+        self.assertEqual(my_class.arg1, 1)
+        self.assertEqual(my_class.arg2, 2)
+        self.assertEqual(my_class.arg3, 3)
+
+        with self.assertRaises(AttributeError):
+            my_class.arg1 = 4
+
+        with self.assertRaises(AttributeError):
+            del my_class.arg2
+
+        with self.assertRaises(AttributeError):
+            del my_class.arg3
 
     def test_unit(self):
         aliases = (UnitTypeRef(int), UnitTypeRef(float))
