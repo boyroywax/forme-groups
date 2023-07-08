@@ -1,6 +1,6 @@
 import unittest
 from dataclasses import dataclass
-from src.groups.all import UnitTypeRef, UnitValue, UnitType, frozen, Frozen
+from src.groups.all import UnitTypeRef, UnitValue, UnitType, UnitTypePool, frozen, Frozen
 
 
 class TestAll(unittest.TestCase):
@@ -19,6 +19,7 @@ class TestAll(unittest.TestCase):
     def test_frozen_decorator(self):
         
         @frozen
+        @dataclass(slots=True)
         class MyClass:
             def __init__(self, *args, **kwargs):
                 self._test = True
@@ -45,6 +46,7 @@ class TestAll(unittest.TestCase):
 
     def test_frozen_class(self):
         @frozen
+        @dataclass(slots=True)
         class MyClass:
             my_attribute: int = 42
 
@@ -161,3 +163,101 @@ class TestAll(unittest.TestCase):
         self.assertEqual(unit.suffix, suffix)
         self.assertEqual(unit.separator, separator)
         self.assertEqual(unit.function_call, function_call)
+
+    def test_add_type(self):
+        pool = UnitTypePool()
+        pool.add_type(name="my_type", unit_type=UnitType(aliases=(UnitTypeRef("int"),)))
+        self.assertIn("my_type", pool.pool)
+        self.assertEqual(pool.pool["my_type"].aliases, (UnitTypeRef("int"),))
+
+    def test_get_type(self):
+        pool = UnitTypePool()
+        pool.add_type(name="my_type", unit_type=UnitType(aliases=(UnitTypeRef("int"),)))
+        my_type = pool.get_type(name="my_type")
+        self.assertEqual(my_type.aliases, (UnitTypeRef("int"),))
+
+    def test_get_type_with_alias(self):
+        pool = UnitTypePool()
+        pool.add_type(name="my_type", unit_type=UnitType(aliases=(UnitTypeRef("int"),)))
+        my_type = pool.get_type(alias=UnitTypeRef("int"))
+        self.assertEqual(my_type.aliases, (UnitTypeRef("int"),))
+
+    def test_get_type_with_missing_type(self):
+        pool = UnitTypePool()
+        with self.assertRaises(ValueError):
+            pool.get_type(name="my_type")
+
+    def test_get_type_with_missing_alias(self):
+        pool = UnitTypePool()
+        pool.add_type(name="my_type", unit_type=UnitType(aliases=(UnitTypeRef("int"),)))
+        with self.assertRaises(ValueError):
+            pool.get_type("float")
+
+    def test_system_reserved(self):
+        pool = UnitTypePool()
+        pool.__SYSTEM_RESERVED__()
+        self.assertIn("integer", pool.pool)
+        self.assertIn("float", pool.pool)
+        self.assertIn("string", pool.pool)
+        self.assertIn("boolean", pool.pool)
+        self.assertEqual(pool.pool["integer"].aliases, (UnitTypeRef("int"),))
+        self.assertEqual(pool.pool["float"].aliases, (UnitTypeRef("float"), UnitTypeRef("double"), UnitTypeRef("FLOAT"), UnitTypeRef("DOUBLE")))
+        self.assertEqual(pool.pool["string"].aliases, (UnitTypeRef("str"), UnitTypeRef("STRING")))
+        self.assertEqual(pool.pool["boolean"].aliases, (UnitTypeRef("bool"), UnitTypeRef("BOOLEAN")))
+
+    def setUpPool(self):
+        self.pool = UnitTypePool()
+
+    def test_add_type_(self):
+        self.setUpPool()
+        self.pool.add_type(unit_type=UnitType(aliases=(UnitTypeRef("int"),)))
+        self.assertIn("int", self.pool.pool)
+
+    def test_add_type_with_name(self):
+        self.setUpPool()
+        self.pool.add_type(UnitType(aliases=(UnitTypeRef("int"),)), name="my_type")
+        self.assertIn("my_type", self.pool.pool)
+
+    def test_get_type_by_name(self):
+        self.setUpPool()
+        self.pool.add_type(UnitType(aliases=(UnitTypeRef("int"),)), name="my_type")
+        my_type = self.pool.get_type(name="my_type")
+        self.assertEqual(my_type.aliases, (UnitTypeRef("int"),))
+
+    def test_get_type_by_alias(self):
+        self.setUpPool()
+        self.pool.add_type(UnitType(aliases=(UnitTypeRef("int"),)), name="my_type")
+        my_type = self.pool.get_type(alias=UnitTypeRef("int"))
+        self.assertEqual(my_type.aliases, (UnitTypeRef("int"),))
+
+    def test_get_type_with_missing_name(self):
+        self.setUpPool()
+        with self.assertRaises(ValueError):
+            self.pool.get_type(name="my_type")
+
+    def test_get_type_with_missing_alias(self):
+        self.setUpPool()
+        with self.assertRaises(ValueError):
+            self.pool.get_type(alias=UnitTypeRef("int"))
+
+    def test_remove_type_by_name(self):
+        self.setUpPool()
+        self.pool.add_type(UnitType(aliases=(UnitTypeRef("int"),)), name="my_type")
+        self.pool.remove_type(name="my_type")
+        self.assertNotIn("my_type", self.pool.pool)
+
+    def test_remove_type_by_alias(self):
+        self.setUpPool()
+        self.pool.add_type(UnitType(aliases=(UnitTypeRef("int"),)), name="my_type")
+        self.pool.remove_type(alias=UnitTypeRef("int"))
+        self.assertNotIn("my_type", self.pool.pool.keys())
+
+    def test_remove_type_with_missing_name(self):
+        self.setUpPool()
+        with self.assertRaises(ValueError):
+            self.pool.remove_type(name="my_type")
+
+    def test_remove_type_with_missing_alias(self):
+        self.setUpPool()
+        with self.assertRaises(ValueError):
+            self.pool.remove_type(alias=UnitTypeRef("int"))
