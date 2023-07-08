@@ -48,17 +48,17 @@ def frozen(cls):
     return cls
 
 
-@dataclass(slots=True)
+@dataclass(slots=True, unsafe_hash=True)
 class UnitTypeRef:
     type_ref: Any = field(default=None, repr=True, hash=True)
 
 
-@dataclass(slots=True)
+@dataclass(slots=True, unsafe_hash=True)
 class UnitValue:
     value: Any = field(default=None, repr=True)
 
 
-@dataclass(slots=True)
+@dataclass(slots=True, unsafe_hash=True)
 class UnitType:
     aliases: Optional[Tuple[UnitTypeRef]] = field(default_factory=tuple)
     super_type: Optional[UnitTypeRef] = field(default_factory=UnitTypeRef)
@@ -70,6 +70,10 @@ class UnitType:
 @dataclass(slots=True)
 class UnitTypePool:
     pool: Dict[str, UnitType] = field(default_factory=dict)
+
+    def __init__(self):
+        self.pool = {}
+        self.__SYSTEM_RESERVED__()
 
     def __SYSTEM_RESERVED__(self):
         self.pool.update(**{
@@ -137,13 +141,72 @@ class UnitTypePool:
                 separator=None,
                 function_call=bytes
             ),
+            "None": UnitType(
+                aliases=(UnitTypeRef("None"), UnitTypeRef("NONE")),
+                super_type="__RESERVED_NONE__",
+                prefix=None,
+                suffix=None,
+                separator=None,
+                function_call=type(None)
+            )
         })
+
+    def has_alias(self, alias: UnitTypeRef) -> str:
+        for key, unit_type in self.pool.items():
+            if alias in list(unit_type.aliases) :
+                return key
+            if alias.type_ref == key:
+                return key
+            
+    def has_prefix(self, prefix: str) -> str:
+        for key, unit_type in self.pool.items():
+            if unit_type.prefix == prefix:
+                return key
+            
+    def has_suffix(self, suffix: str) -> str:
+        for key, unit_type in self.pool.items():
+            if unit_type.suffix == suffix:
+                return key
+            
+    def has_separator(self, separator: str) -> str:
+        for key, unit_type in self.pool.items():
+            if unit_type.separator == separator:
+                return key
+
 
     def add_type(self, unit_type: UnitType, name: Optional[str] = None):
         if name is None:
             name = unit_type.aliases[0].type_ref
+
+        if name in self.pool:
+            raise ValueError(f"Unit type {name} already exists.")
+        
+        if unit_type.super_type.type_ref is None:
+            unit_type.super_type = UnitTypeRef("string")
+            print(Exception("Super type not specified. Defaulting to string."))
+        
+        if unit_type.super_type.type_ref not in self.pool:
+            raise ValueError(f"Super type {unit_type.super_type.type_ref} does not exist.")
+                
+        for alias in unit_type.aliases:
+            if alias.type_ref in self.pool.items():
+                raise ValueError(f"Alias {alias.type_ref} already exists.")
+            if self.has_alias(alias) is not None:
+                raise ValueError(f"Alias {alias.type_ref} already exists.")
+        
+        if unit_type.prefix is not None:
+            if self.has_prefix(unit_type.prefix) is not None:
+                raise ValueError(f"Prefix {unit_type.prefix} already exists.")
+            
+        if unit_type.suffix is not None:
+            if self.has_suffix(unit_type.suffix) is not None:
+                raise ValueError(f"Suffix {unit_type.suffix} already exists.")
+            
+       # TODO: Check for separator uniqueness.
+
         self.pool[name] = unit_type
-    
+
+
     def get_type(self, name: Optional[str] = None, alias: Optional[UnitTypeRef] = None) -> UnitType:
         if name is None and alias is None:
             raise ValueError("Must provide either a name or an alias.")
@@ -159,7 +222,7 @@ class UnitTypePool:
                 if alias in list(unit_type.aliases):
                     return self.pool[key]
             raise ValueError(f"Unit type {alias} not found.")
-            
+
         return self.pool[name]
     
     def remove_type(self, name: Optional[str] = None, alias: Optional[UnitTypeRef] = None) -> UnitType:
@@ -183,7 +246,7 @@ class UnitTypePool:
 @dataclass(slots=True)
 class Unit:
     value: UnitValue = None
-    type_: UnitTypeRef = None
+    type_ref: UnitTypeRef = None
 
 
 # def convert_list_to_tuple(arg):
