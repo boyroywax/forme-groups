@@ -3,28 +3,12 @@ from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Callable, Tuple, Iterable
 
 
-@dataclass(slots=True)
-class Frozen(object):
-    _frozen: bool = False
-
-    def __init__(self, *args, **kwargs):
-        object.__setattr__(self, "_frozen", False)
-
-    def __setattr__(self, name, value):
-        if getattr(self, "_frozen", False):
-            raise AttributeError("Cannot modify frozen class.")
-        object.__setattr__(self, name, value)
-
-    def __delattr__(self, name):
-        if getattr(self, "_frozen", False):
-            raise AttributeError("Cannot modify frozen class.")
-        object.__delattr__(self, name)
-
 
 def frozen(cls):
     """
     Decorator that makes a class immutable (i.e. frozen).
     """
+    
     def freeze(cls, *args, **kwargs):
         if getattr(cls, "_frozen", False):
             raise AttributeError("Cannot modify frozen class.")
@@ -35,7 +19,7 @@ def frozen(cls):
 
     original_init = cls.__init__
 
-    print(original_init.__str__())
+    # print(cls.__init__.__str__())
 
     def new_init(self, *args, **kwargs):
         original_init(cls, *args, **kwargs)
@@ -45,7 +29,11 @@ def frozen(cls):
 
     cls.__init__ = new_init
 
-    return cls
+    # raise Exception(cls.__init__.__str__())   
+
+    # print(cls.__init__.__str__(""))
+
+    return type(cls.__name__, (cls,), {})
 
 
 @dataclass(slots=True, unsafe_hash=True)
@@ -247,6 +235,50 @@ class UnitTypePool:
 class Unit:
     value: UnitValue = None
     type_ref: UnitTypeRef = None
+
+
+
+@dataclass(slots=True, unsafe_hash=True)
+class Frozen(UnitTypeRef or UnitValue or UnitType or UnitTypePool):
+    _frozen: bool = field(default=False, repr=True, hash=True)
+
+    def __init__(self, *args, **kwargs):
+        super(Frozen, self).__init__(*args, **kwargs)
+        self.__setattr__("_frozen", False)
+        
+
+        # for attr in super().__dir__():
+        #     if attr.startswith("_"):
+        #         continue
+        #     if attr in kwargs:
+        #         self.__setattr__(attr, kwargs[attr])
+        #         del kwargs[attr]
+
+        # new = (UnitTypeRef or UnitType or UnitValue).__new__(UnitTypeRef or UnitType or UnitValue, self.super())
+        # print(super(UnitTypeRef, self))
+
+        # new_object.__class__.__name__ = self.__class__.__name__
+
+        # self = new_object
+
+        # super().__init__(object, *args, **kwargs)
+
+    def __setattr__(self, name, value):
+        if getattr(self, "_frozen", False):
+            raise AttributeError("Cannot modify frozen class.")
+        object.__setattr__(self, name, value)
+
+    def __delattr__(self, name):
+        if getattr(self, "_frozen", False):
+            raise AttributeError("Cannot modify frozen class.")
+        object.__delattr__(self, name)
+
+    def freeze(self):
+        object.__setattr__(self, "_frozen", True)
+
+
+
+
 
 
 # def convert_list_to_tuple(arg):

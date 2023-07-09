@@ -11,10 +11,20 @@ class TestAll(unittest.TestCase):
         self.assertEqual(unit_type_ref.type_ref, type_ref)
 
     def test_frozen(self):
-        unit_type_ref = Frozen(UnitTypeRef(int))
+        unit_type_ref = UnitTypeRef(int)
+        unit_type_ref = Frozen(unit_type_ref)
+
+        print(unit_type_ref)
+        unit_type_ref.freeze()
+        print(unit_type_ref)
+
+        self.assertEqual(unit_type_ref.type_ref.type_ref, int)
 
         with self.assertRaises(AttributeError):
             unit_type_ref.type_ref = float
+
+        with self.assertRaises(AttributeError):
+            del unit_type_ref.type_ref
 
     def test_frozen_decorator(self):
         
