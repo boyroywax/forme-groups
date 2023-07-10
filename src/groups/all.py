@@ -29,7 +29,7 @@ class UnitType:
 class UnitTypePool:
     pool: Dict[str, UnitType] = field(default_factory=dict)
 
-    def __init__(self, *args, **kwargs):
+    def __post_init__(self, *args, **kwargs):
         self.pool = {}
         self.__SYSTEM_RESERVED__()
         if kwargs.get("pool") is not None and isinstance(kwargs.get("pool"), dict):
@@ -115,7 +115,7 @@ class UnitTypePool:
 
     def has_alias(self, alias: UnitTypeRef) -> str | None:
         for key, unit_type in self.pool.items():
-            if alias in list(unit_type.aliases) :
+            if alias in list(unit_type.aliases):
                 return key
             if alias.type_ref == key:
                 return key
@@ -267,7 +267,7 @@ class Frozen(UnitTypeRef or UnitValue or UnitType or UnitTypePool or Unit):
 
 
 @dataclass(slots=True)
-class UnitGenerator:
+class Generator:
     unit_type_pool: UnitTypePool = None
 
     def __init__(self, unit_type_pool: UnitTypePool = None):
@@ -278,18 +278,24 @@ class UnitGenerator:
 
     def generate_unit(self, unit_type: UnitTypeRef, value: UnitValue) -> Unit:
         return Unit(value=value, type_ref=unit_type)
-    
+
     def generate_unit_type(self, super_type: UnitTypeRef, aliases: list[UnitTypeRef], prefix: str, suffix: str, separator: str) -> UnitType:
         return UnitType(super_type=super_type, aliases=aliases, prefix=prefix, suffix=suffix, separator=separator)
-    
+
     def generate_unit_type_pool(sself, pool) -> UnitTypePool:
         return UnitTypePool(pool=pool)
-    
+
     def generate_unit_value(self, value: str) -> UnitValue:
         return UnitValue(value=value)
-    
+
     def generate_unit_type_ref(self, type_ref: str) -> UnitTypeRef:
         return UnitTypeRef(type_ref=type_ref)
-    
-    
 
+    def check_pool_for_type(self, unit_type_ref: UnitTypeRef) -> bool:
+        if unit_type_ref.type_ref in self.unit_type_pool.pool.keys():
+            return True
+        else:
+            for key, unit_type in self.unit_type_pool.pool.items():
+                if unit_type_ref in list(unit_type.aliases):
+                    return True
+        return False

@@ -1,6 +1,6 @@
 import unittest
 from dataclasses import dataclass
-from src.groups.all import UnitTypeRef, UnitValue, UnitType, UnitTypePool, frozen, Frozen, Unit, UnitGenerator
+from src.groups.all import UnitTypeRef, UnitValue, UnitType, UnitTypePool, frozen, Frozen, Unit, Generator
 
 
 class TestAll(unittest.TestCase):
@@ -310,7 +310,7 @@ class TestAll(unittest.TestCase):
         self.unit_type_ref = UnitTypeRef(type_ref="test_type")
         self.unit_type = UnitType(super_type=UnitTypeRef("string"), aliases=[UnitTypeRef("test_type")], prefix="", suffix="", separator="")
         self.unit_type_pool.add_type(self.unit_type)
-        self.unit_generator = UnitGenerator(unit_type_pool=self.unit_type_pool)
+        self.unit_generator = Generator(unit_type_pool=self.unit_type_pool)
 
     def test_generate_unit(self):
         self.setUpGenerator()
@@ -340,7 +340,7 @@ class TestAll(unittest.TestCase):
     def test_generate_unit_type_pool(self):
         self.setUpPool()
         self.setUpGenerator()
-        maxDiff = None
+        self.maxDiff = None
         unit_type_pool = self.unit_generator.generate_unit_type_pool(pool=self.pool)
         self.assertIsInstance(unit_type_pool, UnitTypePool)
         self.assertEqual(unit_type_pool.pool, self.pool.pool)
@@ -357,3 +357,9 @@ class TestAll(unittest.TestCase):
         unit_type_ref = self.unit_generator.generate_unit_type_ref("test_type")
         self.assertIsInstance(unit_type_ref, UnitTypeRef)
         self.assertEqual(unit_type_ref.type_ref, "test_type")
+
+    def test_check_pool_for_type(self):
+        self.setUpGenerator()
+        self.setUpPool()
+        self.assertTrue(self.unit_generator.check_pool_for_type(UnitTypeRef("int")))
+        self.assertFalse(self.unit_generator.check_pool_for_type(UnitTypeRef("int1")))
