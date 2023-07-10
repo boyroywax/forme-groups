@@ -169,23 +169,63 @@ class UnitTypePool:
 
         self.pool[name] = unit_type
 
-    def get_type(self, name: Optional[str] = None, alias: Optional[UnitTypeRef] = None) -> UnitType:
-        if name is None and alias is None:
-            raise ValueError("Must provide either a name or an alias.")
-        if name is not None and alias is not None:
-            raise ValueError("Must provide either a name or an alias, not both.")
-        if name is not None:
-            if name not in self.pool:
-                raise ValueError(f"Unit type {name} not found.")
-            else:
-                return self.pool[name]
-        if alias is not None:
-            for key, unit_type in self.pool.items():
-                if alias in list(unit_type.aliases):
-                    return self.pool[key]
-            raise ValueError(f"Unit type {alias} not found.")
+    def get_type(self, *args, name: Optional[str] = None, alias: Optional[UnitTypeRef] = None) -> UnitType:
 
-        return self.pool[name]
+        print(args, name, alias)
+
+        unit_type_ref = alias.type_ref if alias is not None else None
+        type_name = name
+
+        if len(args) > 1 and (name is not None and alias is not None):
+            raise ValueError("Must provide either a single argument or a name, or an alias, not both.")
+
+        if len(args) == 1:
+            if isinstance(args[0], str):
+                unit_type_ref = args[0]
+            elif isinstance(args[0], UnitTypeRef):
+                unit_type_ref = args[0].unit_type_ref
+
+        if unit_type_ref is None and type_name is None:
+            raise ValueError("Must provide either a name or an alias.")
+        
+        if unit_type_ref is not None and type_name is not None:
+            raise ValueError("Must provide either a name or an alias, not both.")
+
+        if unit_type_ref in self.pool.keys():
+            type_name = unit_type_ref
+
+        print(type_name)
+
+        if unit_type_ref is not None and type_name is None:
+            for key, unit_type in self.pool.items():
+                if unit_type_ref in list(alias.type_ref for alias in unit_type.aliases):
+                    type_name = key
+
+        print(type_name)
+
+                    # return True
+        # return False
+
+        # if name is None and alias is None:
+        #     raise ValueError("Must provide either a name or an alias.")
+        # if name is not None and alias is not None:
+        #     raise ValueError("Must provide either a name or an alias, not both.")
+        # if name is not None:
+        #     if name not in self.pool:
+        #         raise ValueError(f"Unit type {name} not found.")
+        #     else:
+        #         return self.pool[name]
+        # if alias is not None:
+        #     for key, unit_type in self.pool.items():
+        #         if alias in list(unit_type.aliases):
+        #             return self.pool[key]
+        #     raise ValueError(f"Unit type {alias} not found.")
+        try:
+            # if type_name is None:
+            #     type_name = "None"
+            return self.pool[type_name]
+        except KeyError:
+            raise ValueError(f"Unit type {type_name} not found.")
 
     def remove_type(self, name: Optional[str] = None, alias: Optional[UnitTypeRef] = None) -> UnitType:
         if name is None and alias is None:
@@ -282,7 +322,7 @@ class Generator:
     def generate_unit_type(self, super_type: UnitTypeRef, aliases: list[UnitTypeRef], prefix: str, suffix: str, separator: str) -> UnitType:
         return UnitType(super_type=super_type, aliases=aliases, prefix=prefix, suffix=suffix, separator=separator)
 
-    def generate_unit_type_pool(sself, pool) -> UnitTypePool:
+    def generate_unit_type_pool(self, pool: UnitTypePool ) -> UnitTypePool:
         return UnitTypePool(pool=pool)
 
     def generate_unit_value(self, value: str) -> UnitValue:

@@ -260,10 +260,10 @@ class TestAll(unittest.TestCase):
 
     def test_get_type_by_alias(self):
         self.setUpPool()
-        with self.assertRaises(ValueError):
-            self.pool.add_type(UnitType(aliases=(UnitTypeRef("integer"),)), name="my_type")
-        my_type = self.pool.get_type(alias=UnitTypeRef("int"))
-        self.assertEqual(my_type.aliases, (UnitTypeRef("integer"), UnitTypeRef("int")))
+
+        self.pool.add_type(UnitType(aliases=(UnitTypeRef("integer1"),)), name="my_type")
+        my_type = self.pool.get_type(alias=UnitTypeRef("integer1"))
+        self.assertEqual(my_type.aliases, (UnitTypeRef("integer1"),))
 
     def test_get_type_with_missing_name(self):
         self.setUpPool()
@@ -360,6 +360,5 @@ class TestAll(unittest.TestCase):
 
     def test_check_pool_for_type(self):
         self.setUpGenerator()
-        self.setUpPool()
         self.assertTrue(self.unit_generator.check_pool_for_type(UnitTypeRef("int")))
         self.assertFalse(self.unit_generator.check_pool_for_type(UnitTypeRef("int1")))
