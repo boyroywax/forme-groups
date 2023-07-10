@@ -1,6 +1,6 @@
 import unittest
 from dataclasses import dataclass
-from src.groups.all import UnitTypeRef, UnitValue, UnitType, UnitTypePool, frozen, Frozen
+from src.groups.all import UnitTypeRef, UnitValue, UnitType, UnitTypePool, frozen, Frozen, Unit
 
 
 class TestAll(unittest.TestCase):
@@ -19,12 +19,28 @@ class TestAll(unittest.TestCase):
         print(unit_type_ref)
 
         self.assertEqual(unit_type_ref.type_ref.type_ref, int)
+        self.assertEqual(unit_type_ref.__class__.__name__, "FrozenUnitTypeRef")
 
         with self.assertRaises(AttributeError):
             unit_type_ref.type_ref = float
 
         with self.assertRaises(AttributeError):
             del unit_type_ref.type_ref
+
+    def test_frozen_subclass_name(self):
+        unit_type_ref = UnitTypeRef(int)
+        unit_type = UnitType((unit_type_ref))
+        unit = Frozen(unit_type)
+        self.assertEqual(unit.__class__.__name__, "FrozenUnitType")
+
+    def test_frozen_subclass_name_again(self):
+        unit_type_ref = UnitTypeRef(int)
+        unit_type = UnitType((unit_type_ref))
+        value = UnitValue(42)
+        unit = Unit(value, unit_type)
+        unit = Frozen(unit)
+        self.assertEqual(unit.__class__.__name__, "FrozenUnit")
+
 
     def test_frozen_decorator(self):
         
@@ -37,6 +53,8 @@ class TestAll(unittest.TestCase):
         class MyClassNotFrozen:
             def __init__(self):
                 self._frozen = False
+
+        self.assertEqual(MyClass.__name__, "FrozenMyClass")
 
         # with self.assertRaises(Exception):
         myClassNF = MyClassNotFrozen()

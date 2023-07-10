@@ -19,8 +19,6 @@ def frozen(cls):
 
     original_init = cls.__init__
 
-    # print(cls.__init__.__str__())
-
     def new_init(self, *args, **kwargs):
         original_init(cls, *args, **kwargs)
         cls._frozen = True
@@ -29,11 +27,7 @@ def frozen(cls):
 
     cls.__init__ = new_init
 
-    # raise Exception(cls.__init__.__str__())   
-
-    # print(cls.__init__.__str__(""))
-
-    return type(cls.__name__, (cls,), {})
+    return type("Frozen" + cls.__name__, (cls,), {})
 
 
 @dataclass(slots=True, unsafe_hash=True)
@@ -54,6 +48,7 @@ class UnitType:
     suffix: Optional[str] = field(default_factory=str)
     separator: Optional[str] = field(default_factory=str)
     function_call: Optional[object] = field(default_factory=object)
+
 
 @dataclass(slots=True)
 class UnitTypePool:
@@ -239,29 +234,14 @@ class Unit:
 
 
 @dataclass(slots=True, unsafe_hash=True)
-class Frozen(UnitTypeRef or UnitValue or UnitType or UnitTypePool):
+class Frozen(UnitTypeRef or UnitValue or UnitType or UnitTypePool or Unit):
     _frozen: bool = field(default=False, repr=True, hash=True)
 
     def __init__(self, *args, **kwargs):
         super(Frozen, self).__init__(*args, **kwargs)
         self.__setattr__("_frozen", False)
-        
+        self.__class__.__name__ = "Frozen" + type(args[0]).__name__
 
-        # for attr in super().__dir__():
-        #     if attr.startswith("_"):
-        #         continue
-        #     if attr in kwargs:
-        #         self.__setattr__(attr, kwargs[attr])
-        #         del kwargs[attr]
-
-        # new = (UnitTypeRef or UnitType or UnitValue).__new__(UnitTypeRef or UnitType or UnitValue, self.super())
-        # print(super(UnitTypeRef, self))
-
-        # new_object.__class__.__name__ = self.__class__.__name__
-
-        # self = new_object
-
-        # super().__init__(object, *args, **kwargs)
 
     def __setattr__(self, name, value):
         if getattr(self, "_frozen", False):
@@ -275,47 +255,3 @@ class Frozen(UnitTypeRef or UnitValue or UnitType or UnitTypePool):
 
     def freeze(self):
         object.__setattr__(self, "_frozen", True)
-
-
-
-
-
-
-# def convert_list_to_tuple(arg):
-#     """
-#     Converts a list to a tuple if the argument is a list.
-#     """
-#     if isinstance(arg, list):
-#         return tuple(arg)
-#     else:
-#         return arg
-    
-# def convert_dict_to_tuple(arg):
-#     """
-#     Converts a dict to a tuple if the argument is a dict.
-#     """
-#     if isinstance(arg, dict):
-#         return tuple(arg.items())
-#     else:
-#         return arg
-    
-# def convert_iterable_to_tuple(arg):
-#     """
-#     Converts an iterable to a tuple if the argument is an iterable.
-#     """
-#     if isinstance(arg, Iterable):
-#         return tuple(arg)
-#     else:
-#         return arg
-
-
-# def convert_lists_to_tuples(func):
-#     """
-#     Wrapper function that converts incoming lists to tuples.
-#     """
-#     def wrapper(*args, **kwargs):
-#         args = tuple(convert_list_to_tuple(arg) for arg in args)
-#         kwargs = {k: convert_list_to_tuple(v) for k, v in kwargs.items()}
-#         return func(*args, **kwargs)
-#     return wrapper
-
