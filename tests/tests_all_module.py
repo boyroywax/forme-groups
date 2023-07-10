@@ -1,6 +1,6 @@
 import unittest
 from dataclasses import dataclass
-from src.groups.all import UnitTypeRef, UnitValue, UnitType, UnitTypePool, frozen, Frozen, Unit
+from src.groups.all import UnitTypeRef, UnitValue, UnitType, UnitTypePool, frozen, Frozen, Unit, UnitGenerator
 
 
 class TestAll(unittest.TestCase):
@@ -41,9 +41,8 @@ class TestAll(unittest.TestCase):
         unit = Frozen(unit)
         self.assertEqual(unit.__class__.__name__, "FrozenUnit")
 
-
     def test_frozen_decorator(self):
-        
+
         @frozen
         @dataclass(slots=True)
         class MyClass:
@@ -229,10 +228,10 @@ class TestAll(unittest.TestCase):
         self.assertIn("float", pool.pool)
         self.assertIn("string", pool.pool)
         self.assertIn("boolean", pool.pool)
-        self.assertEqual(pool.pool["integer"].aliases, (UnitTypeRef("int"),))
+        self.assertEqual(pool.pool["integer"].aliases, (UnitTypeRef("integer"), UnitTypeRef("int"),))
         self.assertEqual(pool.pool["float"].aliases, (UnitTypeRef("float"), UnitTypeRef("double"), UnitTypeRef("FLOAT"), UnitTypeRef("DOUBLE")))
-        self.assertEqual(pool.pool["string"].aliases, (UnitTypeRef("str"), UnitTypeRef("STRING")))
-        self.assertEqual(pool.pool["boolean"].aliases, (UnitTypeRef("bool"), UnitTypeRef("BOOLEAN")))
+        self.assertEqual(pool.pool["string"].aliases, (UnitTypeRef("string"), UnitTypeRef("STRING")))
+        self.assertEqual(pool.pool["boolean"].aliases, (UnitTypeRef("boolean"), UnitTypeRef("BOOLEAN")))
 
     def setUpPool(self):
         self.pool = UnitTypePool()
@@ -241,7 +240,7 @@ class TestAll(unittest.TestCase):
         self.setUpPool()
         with self.assertRaises(ValueError):
             self.pool.add_type(unit_type=UnitType(aliases=(UnitTypeRef("int"),)))
-        self.assertIn(UnitType(aliases=(UnitTypeRef("int"),), super_type='__RESERVED_INT__', prefix=None, suffix=None, separator=None, function_call=int), self.pool.pool.values())
+        self.assertIn(UnitType(aliases=(UnitTypeRef(type_ref='integer'), UnitTypeRef("int")), super_type=UnitTypeRef(type_ref='__RESERVED_INT__'), prefix=None, suffix=None, separator=None, function_call=int), self.pool.pool.values())
 
     def test_add_type_with_name(self):
         self.setUpPool()
@@ -257,14 +256,14 @@ class TestAll(unittest.TestCase):
             my_type = self.pool.get_type(name="my_type")
 
         reserved_type = self.pool.get_type(alias=UnitTypeRef("int"))
-        self.assertEqual(reserved_type.aliases, (UnitTypeRef("int"),))
+        self.assertEqual(reserved_type.aliases, (UnitTypeRef("integer"), UnitTypeRef("int"),))
 
     def test_get_type_by_alias(self):
         self.setUpPool()
         with self.assertRaises(ValueError):
-            self.pool.add_type(UnitType(aliases=(UnitTypeRef("int"),)), name="my_type")
+            self.pool.add_type(UnitType(aliases=(UnitTypeRef("integer"),)), name="my_type")
         my_type = self.pool.get_type(alias=UnitTypeRef("int"))
-        self.assertEqual(my_type.aliases, (UnitTypeRef("int"),))
+        self.assertEqual(my_type.aliases, (UnitTypeRef("integer"), UnitTypeRef("int")))
 
     def test_get_type_with_missing_name(self):
         self.setUpPool()
@@ -305,3 +304,56 @@ class TestAll(unittest.TestCase):
         self.setUpPool()
         with self.assertRaises(ValueError):
             self.pool.add_type(UnitType(aliases=(UnitTypeRef("int"),)), name="int")
+
+    def setUpGenerator(self):
+        self.unit_type_pool = UnitTypePool()
+        self.unit_type_ref = UnitTypeRef(type_ref="test_type")
+        self.unit_type = UnitType(super_type=UnitTypeRef("string"), aliases=[UnitTypeRef("test_type")], prefix="", suffix="", separator="")
+        self.unit_type_pool.add_type(self.unit_type)
+        self.unit_generator = UnitGenerator(unit_type_pool=self.unit_type_pool)
+
+    def test_generate_unit(self):
+        self.setUpGenerator()
+        unit = self.unit_generator.generate_unit(self.unit_type_ref, UnitValue(value="10"))
+        self.assertIsInstance(unit, Unit)
+        self.assertEqual(unit.value.value, "10")
+        self.assertEqual(unit.type_ref.type_ref, "test_type")
+
+    def test_generate_unit_type(self):
+        self.setUpGenerator()
+        super_type = UnitTypeRef(type_ref="parent_type")
+        aliases = [UnitTypeRef(type_ref="alias1"), UnitTypeRef(type_ref="alias2")]
+        unit_type = self.unit_generator.generate_unit_type(
+            super_type=super_type,
+            aliases=aliases,
+            prefix="",
+            suffix="",
+            separator="",
+        )
+        self.assertIsInstance(unit_type, UnitType)
+        self.assertEqual(unit_type.super_type.type_ref, "parent_type")
+        self.assertEqual(unit_type.aliases, aliases)
+        self.assertEqual(unit_type.prefix, "")
+        self.assertEqual(unit_type.suffix, "")
+        self.assertEqual(unit_type.separator, "")
+
+    def test_generate_unit_type_pool(self):
+        self.setUpPool()
+        self.setUpGenerator()
+        maxDiff = None
+        unit_type_pool = self.unit_generator.generate_unit_type_pool(pool=self.pool)
+        self.assertIsInstance(unit_type_pool, UnitTypePool)
+        self.assertEqual(unit_type_pool.pool, self.pool.pool)
+
+    def test_generate_unit_value(self):
+        self.setUpGenerator()
+        unit_value = self.unit_generator.generate_unit_value("10")
+        self.assertIsInstance(unit_value, UnitValue)
+        self.assertEqual(unit_value.value, "10")
+        # self.assertEqual(unit_value.unit_typ, self.unit_type
+
+    def test_generate_unit_type_ref(self):
+        self.setUpGenerator()
+        unit_type_ref = self.unit_generator.generate_unit_type_ref("test_type")
+        self.assertIsInstance(unit_type_ref, UnitTypeRef)
+        self.assertEqual(unit_type_ref.type_ref, "test_type")
