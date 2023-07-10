@@ -187,42 +187,21 @@ class UnitTypePool:
 
         if unit_type_ref is None and type_name is None:
             raise ValueError("Must provide either a name or an alias.")
-        
+
         if unit_type_ref is not None and type_name is not None:
             raise ValueError("Must provide either a name or an alias, not both.")
 
         if unit_type_ref in self.pool.keys():
             type_name = unit_type_ref
 
-        print(type_name)
-
         if unit_type_ref is not None and type_name is None:
             for key, unit_type in self.pool.items():
                 if unit_type_ref in list(alias.type_ref for alias in unit_type.aliases):
                     type_name = key
 
-        print(type_name)
-
-                    # return True
-        # return False
-
-        # if name is None and alias is None:
-        #     raise ValueError("Must provide either a name or an alias.")
-        # if name is not None and alias is not None:
-        #     raise ValueError("Must provide either a name or an alias, not both.")
-        # if name is not None:
-        #     if name not in self.pool:
-        #         raise ValueError(f"Unit type {name} not found.")
-        #     else:
-        #         return self.pool[name]
-        # if alias is not None:
-        #     for key, unit_type in self.pool.items():
-        #         if alias in list(unit_type.aliases):
-        #             return self.pool[key]
-        #     raise ValueError(f"Unit type {alias} not found.")
         try:
-            # if type_name is None:
-            #     type_name = "None"
+            if type_name is None:
+                type_name = unit_type_ref
             return self.pool[type_name]
         except KeyError:
             raise ValueError(f"Unit type {type_name} not found.")
@@ -243,7 +222,7 @@ class UnitTypePool:
                     del self.pool[key]
                     return
             raise ValueError(f"Unit type {alias} not found.")
-        
+
     def __iter__(self):
         return iter(self.pool.items())
 
@@ -275,8 +254,8 @@ def frozen(cls):
     def new_init(self, *args, **kwargs):
         original_init(cls, *args, **kwargs)
         cls._frozen = True
-        for obj in cls.__dict__.values():
-            print(obj)
+        # for obj in cls.__dict__.values():
+        #     print(obj)
 
     cls.__init__ = new_init
 

@@ -305,6 +305,27 @@ class TestAll(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.pool.add_type(UnitType(aliases=(UnitTypeRef("int"),)), name="int")
 
+    def setUpPool2(self):
+        self.unit_type_pool = UnitTypePool()
+        self.unit_type1 = UnitType(super_type=UnitTypeRef("NONE"), aliases=[UnitTypeRef("None1")], prefix="NONE1:{", suffix="}:NONE1", separator="")
+        self.unit_type2 = UnitType(super_type=UnitTypeRef("None1"), aliases=[UnitTypeRef("None2")], prefix="N2:{", suffix="}:N2", separator="")
+        self.unit_type_pool.add_type(self.unit_type1)
+        self.unit_type_pool.add_type(self.unit_type2)
+
+    def test_get_type(self):
+        self.setUpPool2()
+        # Test getting a type that exists in the pool
+        unit_type = self.unit_type_pool.get_type("None1")
+        self.assertEqual(unit_type, self.unit_type1)
+
+        # Test getting a type that inherits from another type in the pool
+        unit_type = self.unit_type_pool.get_type("None2")
+        self.assertEqual(unit_type, self.unit_type2)
+
+        # Test getting a type that does not exist in the pool
+        with self.assertRaises(ValueError):
+            self.unit_type_pool.get_type("nonexistent_type")
+
     def setUpGenerator(self):
         self.unit_type_pool = UnitTypePool()
         self.unit_type_ref = UnitTypeRef(type_ref="test_type")
