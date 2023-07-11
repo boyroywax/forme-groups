@@ -139,9 +139,10 @@ class UnitTypePool:
         if name is None:
             name = unit_type.aliases[0].type_ref
 
-        if unit_type.super_type is None or unit_type.super_type.type_ref is None:
-            unit_type.super_type = UnitTypeRef("string")
-            print(Exception("Super type not specified. Defaulting to string."))
+        if unit_type.super_type is None:
+            if unit_type.super_type.type_ref is None:
+                unit_type.super_type = UnitTypeRef("string")
+                print(Exception("Super type not specified. Defaulting to string."))
 
         if unit_type.super_type not in self.pool.values() and unit_type.super_type.type_ref not in self.pool.keys():
             if unit_type.super_type.type_ref in __RESERVED_TYPES__:
@@ -169,7 +170,7 @@ class UnitTypePool:
 
         self.pool[name] = unit_type
 
-    def get_type(self, *args, name: Optional[str] = None, alias: Optional[UnitTypeRef] = None) -> UnitType:
+    def get_type(self, *args, name: Optional[str] = None, alias: Optional[UnitTypeRef] = None) -> UnitType | None:
 
         print(args, name, alias)
 
@@ -183,7 +184,7 @@ class UnitTypePool:
             if isinstance(args[0], str):
                 unit_type_ref = args[0]
             elif isinstance(args[0], UnitTypeRef):
-                unit_type_ref = args[0].unit_type_ref
+                unit_type_ref = args[0].type_ref
 
         if unit_type_ref is None and type_name is None:
             raise ValueError("Must provide either a name or an alias.")
@@ -206,7 +207,7 @@ class UnitTypePool:
         except KeyError:
             raise ValueError(f"Unit type {type_name} not found.")
 
-    def remove_type(self, name: Optional[str] = None, alias: Optional[UnitTypeRef] = None) -> UnitType:
+    def remove_type(self, name: Optional[str] = None, alias: Optional[UnitTypeRef] = None) -> UnitType | None:
         if name is None and alias is None:
             raise ValueError("Must provide either a name or an alias.")
         if name is not None and alias is not None:
@@ -240,8 +241,7 @@ def frozen(cls):
     """
     Decorator that makes a class immutable (i.e. frozen).
     """
-
-    def freeze(cls, *args, **kwargs):
+    def freeze(cls, *args, **kwargs) -> cls:
         if getattr(cls, "_frozen", False):
             raise AttributeError("Cannot modify frozen class.")
         return cls
@@ -262,14 +262,119 @@ def frozen(cls):
     return type("Frozen" + cls.__name__, (cls,), {})
 
 
-@dataclass(slots=True, unsafe_hash=True)
-class Frozen(UnitTypeRef or UnitValue or UnitType or UnitTypePool or Unit):
-    _frozen: bool = field(default=False, repr=True, hash=True)
+class FrozenMeta(type):
+    def __new__(cls, name, bases, attrs):
+        new_class = super().__new__(cls, name, bases, attrs)
+        if "Frozen" not in name:
+            return type("Frozen" + name, (new_class,), {"_frozen": True})
+        return new_class
+
+
+class Frozen(UnitTypeRef or UnitType or UnitValue or Unit, metaclass=FrozenMeta,):
+    _frozen: bool = False
 
     def __init__(self, *args, **kwargs):
+        my_object = args[0]
+        name = my_object.__class__.__name__
+        print(name, my_object, args, kwargs)
+        for function_name in dir(my_object):
+            if not function_name.startswith("__"):
+                function = getattr(my_object, function_name)
+                if callable(function):
+                    setattr(self, function_name, function)
+
+        popped_kwargs = {}
+        if 'freeze' in kwargs:
+            popped_kwargs["freeze"] = kwargs.pop('freeze')
+        if 'name' in kwargs:
+            popped_kwargs["name"] = kwargs.pop('name')
+
         super(Frozen, self).__init__(*args, **kwargs)
+
         self.__setattr__("_frozen", False)
-        self.__class__.__name__ = "Frozen" + type(args[0]).__name__
+        self.__class__.__name__ = "Frozen" + type(my_object).__name__
+
+        # kwargs['freeze'] = popped_kwargs
+        self.__post_init__(*args, popped_kwargs)
+
+    def __post_init__(self, *args, **kwargs):
+
+        if kwargs.get("freeze", True):
+            self.freeze()
+
+    # def _freeze_function(self, function):
+    #     def frozen_function(*args, **kwargs):
+    #         if getattr(self, "_frozen", False):
+    #             raise AttributeError("Cannot modify frozen class.")
+    #         return function(*args, **kwargs)
+    #     return frozen_function
+
+    # def freeze(self):
+    #     self._frozen = True
+        # for function_name in dir(self):
+        #     if not function_name.startswith("_"):
+        #         function = getattr(self, function_name)
+        #         if callable(function):
+        #             setattr(self, function_name, self._freeze_function(function))
+
+# @dataclass(slots=True, unsafe_hash=True)
+# class Frozen(UnitTypeRef or UnitValue or UnitType or UnitTypePool or Unit):
+#     _frozen: bool = field(default=False, repr=True, hash=True)
+
+#     def __init__(self, my_object):
+#         for function_name in dir(my_object):
+#             if not function_name.startswith("_"):
+#                 function = getattr(my_object, function_name)
+#                 if callable(function):
+#                     setattr(self, function_name, function)
+
+#         popped_kwargs = {}
+#         if 'freeze' in kwargs:
+#             popped_kwargs["freeze"] = kwargs.pop('freeze')
+
+#         super(Frozen, self).__init__(*args, **kwargs)
+
+#         self.__setattr__("_frozen", False)
+#         self.__class__.__name__ = "Frozen" + type(args[0]).__name__
+
+#         # kwargs['freeze'] = popped_kwargs
+#         self.__post_init__(*args, popped_kwargs)
+
+#     def _freeze_function(self, function):
+#         def frozen_function(*args, **kwargs):
+#             if getattr(self, "_frozen", False):
+#                 raise AttributeError("Cannot modify frozen class.")
+#             return function(*args, **kwargs)
+#         return frozen_function
+
+#     def __post_init__(self, *args, **kwargs):
+
+#         # type_: (Unit or UnitType or UnitTypePool or UnitTypeRef or UnitValue) = type(args[0])
+#         # print(type_)
+        
+#         # for function_ in type(args[0]).__dir__(args[0]):
+#         #     print(function_)
+#         #     if not function_.startswith("_"):
+#         #         print(f"adding function to Frozen Class {function_}")
+#         #         if callable(getattr(args[0], str(function_))):
+#         #             print("setting attribute to function call")
+#         #             self.__setattr__(str(function_), getattr(args[0], str(function_)))
+
+#         # for function in super(self.__class__, self).__class__.__dir__(super(self.__class__, self)):
+#         #     print(function)
+#         #     if not function.startswith("_"):
+#         #         # if callable(getattr(self, function)):
+#         #         setattr(self, function, self._freeze_function(function))
+
+#         if kwargs.get("freeze", False):
+#             self.freeze()
+
+#     # def _freeze_function(self, function):
+#     #     def frozen_function(*args, **kwargs):
+#     #         if getattr(self, "_frozen", False):
+#     #             raise AttributeError("Cannot modify frozen class.")
+#     #         return function(*args, **kwargs)
+#     #     return frozen_function
 
     def __setattr__(self, name, value):
         if getattr(self, "_frozen", False):
@@ -296,6 +401,9 @@ class Generator:
             self.unit_type_pool = unit_type_pool
 
     def generate_unit(self, unit_type: UnitTypeRef, value: UnitValue) -> Unit:
+        # assert isinstance(unit_type, UnitTypeRef)
+        # assert isinstance(value, UnitValue)
+
         return Unit(value=value, type_ref=unit_type)
 
     def generate_unit_type(self, super_type: UnitTypeRef, aliases: list[UnitTypeRef], prefix: str, suffix: str, separator: str) -> UnitType:
@@ -304,17 +412,29 @@ class Generator:
     def generate_unit_type_pool(self, pool: UnitTypePool ) -> UnitTypePool:
         return UnitTypePool(pool=pool)
 
-    def generate_unit_value(self, value: str) -> UnitValue:
+    def generate_unit_value(self, value: Any) -> UnitValue:
         return UnitValue(value=value)
 
     def generate_unit_type_ref(self, type_ref: str) -> UnitTypeRef:
+        # assert isinstance(type_ref, str)
+
         return UnitTypeRef(type_ref=type_ref)
 
     def check_pool_for_type(self, unit_type_ref: UnitTypeRef) -> bool:
-        if unit_type_ref.type_ref in self.unit_type_pool.pool.keys():
-            return True
-        else:
-            for key, unit_type in self.unit_type_pool.pool.items():
-                if unit_type_ref in list(unit_type.aliases):
-                    return True
-        return False
+        # assert isinstance(unit_type_ref, UnitTypeRef)
+
+        type_check: bool = False
+        try:
+            if self.unit_type_pool.get_type(unit_type_ref) is not None:
+                type_check = True
+        except ValueError:
+            pass
+
+        return type_check
+        # if unit_type_ref.type_ref in self.unit_type_pool.pool.keys():
+        #     return True
+        # else:
+        #     for key, unit_type in self.unit_type_pool.pool.items():
+        #         if unit_type_ref in list(unit_type.aliases):
+        #             return True
+        # return False

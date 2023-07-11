@@ -312,7 +312,7 @@ class TestAll(unittest.TestCase):
         self.unit_type_pool.add_type(self.unit_type1)
         self.unit_type_pool.add_type(self.unit_type2)
 
-    def test_get_type(self):
+    def test_get_type_with_pool2(self):
         self.setUpPool2()
         # Test getting a type that exists in the pool
         unit_type = self.unit_type_pool.get_type("None1")
@@ -326,8 +326,11 @@ class TestAll(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.unit_type_pool.get_type("nonexistent_type")
 
-    def setUpGenerator(self):
-        self.unit_type_pool = UnitTypePool()
+    def setUpGenerator(self, pool=None):
+        if pool is None:
+            self.unit_type_pool = UnitTypePool()
+        else:
+            self.unit_type_pool = pool
         self.unit_type_ref = UnitTypeRef(type_ref="test_type")
         self.unit_type = UnitType(super_type=UnitTypeRef("string"), aliases=[UnitTypeRef("test_type")], prefix="", suffix="", separator="")
         self.unit_type_pool.add_type(self.unit_type)
@@ -383,3 +386,41 @@ class TestAll(unittest.TestCase):
         self.setUpGenerator()
         self.assertTrue(self.unit_generator.check_pool_for_type(UnitTypeRef("int")))
         self.assertFalse(self.unit_generator.check_pool_for_type(UnitTypeRef("int1")))
+
+    def test_check_pool_for_type_with_pool2(self):
+        self.setUpPool2()
+        self.setUpGenerator(self.unit_type_pool)
+
+        self.assertTrue(self.unit_generator.check_pool_for_type(UnitTypeRef("None1")))
+        self.assertTrue(self.unit_generator.check_pool_for_type(UnitTypeRef("None2")))
+        self.assertFalse(self.unit_generator.check_pool_for_type(UnitTypeRef("None3")))
+
+    def setUpFrozenPool(self):
+        self.setUpPool2()
+        self.frozen_pool = Frozen(self.unit_type_pool)
+        self.test_type1_ = UnitType(super_type=UnitTypeRef("string"), aliases=[UnitTypeRef("test_type1")], prefix="test1:", suffix=":test1", separator="")
+        self.test_type2_ = UnitType(super_type=UnitTypeRef("test_type1"), aliases=[UnitTypeRef("test_type2")], prefix="<", suffix=">", separator="")
+        self.frozen_pool.add_type(self.test_type1_)
+        self.frozen_pool.add_type(self.test_type2_)
+        self.frozen_pool.freeze()
+
+    def test_add_unit_type_frozen(self):
+        self.setUpFrozenPool()
+        # Test adding a unit type to the pool
+        with self.assertRaises(AttributeError):
+            self.frozen_pool.add_type(UnitType(super_type=None, aliases=[UnitTypeRef("test")], prefix="test:", suffix=":test", separator=""))
+
+    def test_get_type_frozen(self):
+        self.setUpFrozenPool()
+        # Test getting a type that exists in the pool
+        # test_type1 = UnitType(super_type=UnitTypeRef("string"), aliases=[UnitTypeRef("test_type1")], prefix="test1:", suffix=":test1", separator="")
+        unit_type = self.frozen_pool.get_type("test_type1")
+        self.assertEqual(unit_type, self.test_type1_)
+
+        # Test getting a type that inherits from another type in the pool
+        unit_type = self.frozen_pool.get_type("test_type2")
+        self.assertEqual(unit_type, self.test_type2_)
+
+        # Test getting a type that does not exist in the pool
+        with self.assertRaises(ValueError):
+            self.frozen_pool.get_type("nonexistent_type")
