@@ -274,6 +274,12 @@ class Frozen(UnitTypeRef or UnitType or UnitValue or Unit, metaclass=FrozenMeta,
     _frozen: bool = False
 
     def __init__(self, *args, **kwargs):
+        popped_kwargs = {}
+        if 'freeze' in kwargs:
+            popped_kwargs["freeze"] = kwargs.pop('freeze')
+        if 'name' in kwargs:
+            popped_kwargs["name"] = kwargs.pop('name')
+        super().__init__(*args, **kwargs)
         my_object = args[0]
         name = my_object.__class__.__name__
         print(name, my_object, args, kwargs)
@@ -283,13 +289,7 @@ class Frozen(UnitTypeRef or UnitType or UnitValue or Unit, metaclass=FrozenMeta,
                 if callable(function):
                     setattr(self, function_name, function)
 
-        popped_kwargs = {}
-        if 'freeze' in kwargs:
-            popped_kwargs["freeze"] = kwargs.pop('freeze')
-        if 'name' in kwargs:
-            popped_kwargs["name"] = kwargs.pop('name')
 
-        super(Frozen, self).__init__(*args, **kwargs)
 
         self.__setattr__("_frozen", False)
         self.__class__.__name__ = "Frozen" + type(my_object).__name__
@@ -301,81 +301,6 @@ class Frozen(UnitTypeRef or UnitType or UnitValue or Unit, metaclass=FrozenMeta,
 
         if kwargs.get("freeze", True):
             self.freeze()
-
-    # def _freeze_function(self, function):
-    #     def frozen_function(*args, **kwargs):
-    #         if getattr(self, "_frozen", False):
-    #             raise AttributeError("Cannot modify frozen class.")
-    #         return function(*args, **kwargs)
-    #     return frozen_function
-
-    # def freeze(self):
-    #     self._frozen = True
-        # for function_name in dir(self):
-        #     if not function_name.startswith("_"):
-        #         function = getattr(self, function_name)
-        #         if callable(function):
-        #             setattr(self, function_name, self._freeze_function(function))
-
-# @dataclass(slots=True, unsafe_hash=True)
-# class Frozen(UnitTypeRef or UnitValue or UnitType or UnitTypePool or Unit):
-#     _frozen: bool = field(default=False, repr=True, hash=True)
-
-#     def __init__(self, my_object):
-#         for function_name in dir(my_object):
-#             if not function_name.startswith("_"):
-#                 function = getattr(my_object, function_name)
-#                 if callable(function):
-#                     setattr(self, function_name, function)
-
-#         popped_kwargs = {}
-#         if 'freeze' in kwargs:
-#             popped_kwargs["freeze"] = kwargs.pop('freeze')
-
-#         super(Frozen, self).__init__(*args, **kwargs)
-
-#         self.__setattr__("_frozen", False)
-#         self.__class__.__name__ = "Frozen" + type(args[0]).__name__
-
-#         # kwargs['freeze'] = popped_kwargs
-#         self.__post_init__(*args, popped_kwargs)
-
-#     def _freeze_function(self, function):
-#         def frozen_function(*args, **kwargs):
-#             if getattr(self, "_frozen", False):
-#                 raise AttributeError("Cannot modify frozen class.")
-#             return function(*args, **kwargs)
-#         return frozen_function
-
-#     def __post_init__(self, *args, **kwargs):
-
-#         # type_: (Unit or UnitType or UnitTypePool or UnitTypeRef or UnitValue) = type(args[0])
-#         # print(type_)
-        
-#         # for function_ in type(args[0]).__dir__(args[0]):
-#         #     print(function_)
-#         #     if not function_.startswith("_"):
-#         #         print(f"adding function to Frozen Class {function_}")
-#         #         if callable(getattr(args[0], str(function_))):
-#         #             print("setting attribute to function call")
-#         #             self.__setattr__(str(function_), getattr(args[0], str(function_)))
-
-#         # for function in super(self.__class__, self).__class__.__dir__(super(self.__class__, self)):
-#         #     print(function)
-#         #     if not function.startswith("_"):
-#         #         # if callable(getattr(self, function)):
-#         #         setattr(self, function, self._freeze_function(function))
-
-#         if kwargs.get("freeze", False):
-#             self.freeze()
-
-#     # def _freeze_function(self, function):
-#     #     def frozen_function(*args, **kwargs):
-#     #         if getattr(self, "_frozen", False):
-#     #             raise AttributeError("Cannot modify frozen class.")
-#     #         return function(*args, **kwargs)
-#     #     return frozen_function
-
     def __setattr__(self, name, value):
         if getattr(self, "_frozen", False):
             raise AttributeError("Cannot modify frozen class.")

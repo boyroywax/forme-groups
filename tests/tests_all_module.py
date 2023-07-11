@@ -18,7 +18,7 @@ class TestAll(unittest.TestCase):
         unit_type_ref.freeze()
         print(unit_type_ref)
 
-        self.assertEqual(unit_type_ref.type_ref.type_ref, int)
+        self.assertEqual(unit_type_ref.type_ref, int)
         self.assertEqual(unit_type_ref.__class__.__name__, "FrozenUnitTypeRef")
 
         with self.assertRaises(AttributeError):
@@ -422,5 +422,15 @@ class TestAll(unittest.TestCase):
         self.assertEqual(unit_type, self.test_type2_)
 
         # Test getting a type that does not exist in the pool
+        with self.assertRaises(ValueError):
+            self.frozen_pool.get_type("nonexistent_type")
+
+    def test_get_type_ref_frozen(self):
+        self.setUpFrozenPool()
+        # Test getting a type ref that exists in the pool
+        unit_type_ref = self.frozen_pool.get_type("test_type1")
+        self.assertEqual(unit_type_ref.aliases[0], UnitTypeRef("test_type1"))
+
+        # Test getting a type ref that does not exist in the pool
         with self.assertRaises(ValueError):
             self.frozen_pool.get_type("nonexistent_type")
