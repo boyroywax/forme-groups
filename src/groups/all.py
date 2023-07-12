@@ -12,7 +12,7 @@ class UnitTypeRef:
 
 @dataclass(slots=True, unsafe_hash=True)
 class UnitValue:
-    value: Any = field(default=None, repr=True)
+    value: Any = field(default=None, repr=True, hash=True)
 
 
 @dataclass(slots=True, unsafe_hash=True)
@@ -262,57 +262,200 @@ def frozen(cls):
     return type("Frozen" + cls.__name__, (cls,), {})
 
 
-class FrozenMeta(type):
-    def __new__(cls, name, bases, attrs):
-        new_class = super().__new__(cls, name, bases, attrs)
-        if "Frozen" not in name:
-            return type("Frozen" + name, (new_class,), {"_frozen": True})
-        return new_class
+# def freeze(cls) -> cls:
+#     if getattr(cls, "_frozen", False):
+#         raise AttributeError("Cannot modify frozen class.")
+#     return type("Frozen" + cls.__name__, (cls,), {"_frozen": True, **cls.__dict__})
 
 
-class Frozen(UnitTypeRef or UnitType or UnitValue or Unit, metaclass=FrozenMeta,):
+class FrozenInterface(ABC):
+    @abstractmethod
+    def freeze(self):
+        pass
+
+
+def check_frozen(func):
+    if getattr(func, "_frozen", False):
+        raise AttributeError("Cannot modify frozen class.")
+    return func
+
+@dataclass(slots=True)
+class Frozen(FrozenInterface, (UnitTypeRef or Unit or UnitType or UnitTypePool or UnitValue)):
     _frozen: bool = False
 
     def __init__(self, *args, **kwargs):
-        popped_kwargs = {}
-        if 'freeze' in kwargs:
-            popped_kwargs["freeze"] = kwargs.pop('freeze')
-        if 'name' in kwargs:
-            popped_kwargs["name"] = kwargs.pop('name')
-        super().__init__(*args, **kwargs)
-        my_object = args[0]
-        name = my_object.__class__.__name__
-        print(name, my_object, args, kwargs)
-        for function_name in dir(my_object):
-            if not function_name.startswith("__"):
-                function = getattr(my_object, function_name)
-                if callable(function):
-                    setattr(self, function_name, function)
+        if args[0] is not None:
+            my_object = args[0]
+            name = my_object.__class__.__name__
+            # print(name, my_object, args, kwargs)
+            for function_name in dir(my_object):
+                if not function_name.startswith("__"):
+                    function = getattr(my_object, function_name)
+                    if callable(function):
+                        setattr(self, function_name, function)
+            if my_object is not None:
+                for attr in dir(my_object):
 
+                    if not attr.startswith("__"):
+                        # print(attr)
+                        setattr(self, attr, getattr(my_object, attr))
+                    # setattr(self, name, item)
 
+            self.__class__.__name__ = "Frozen" + name
+        else:
+            self.__class__.__name__ = "Frozen" + object.__class__.__name__
 
-        self.__setattr__("_frozen", False)
-        self.__class__.__name__ = "Frozen" + type(my_object).__name__
-
-        # kwargs['freeze'] = popped_kwargs
-        self.__post_init__(*args, popped_kwargs)
-
-    def __post_init__(self, *args, **kwargs):
-
-        if kwargs.get("freeze", True):
-            self.freeze()
-    def __setattr__(self, name, value):
-        if getattr(self, "_frozen", False):
+    def __setattr__(self, __name: str, __value: Any) -> None:
+        if getattr(self, "_frozen", False) is True:
             raise AttributeError("Cannot modify frozen class.")
-        object.__setattr__(self, name, value)
-
-    def __delattr__(self, name):
-        if getattr(self, "_frozen", False):
+        return object.__setattr__(self, __name, __value)
+    
+    def __delattr__(self, __name: str) -> None:
+        if getattr(self, "_frozen", False) is True:
             raise AttributeError("Cannot modify frozen class.")
-        object.__delattr__(self, name)
+        return object.__delattr__(self, __name)
 
     def freeze(self):
-        object.__setattr__(self, "_frozen", True)
+        self._frozen = True
+
+    def __str__(self):
+        attrs = []
+        for attr in dir(self):
+            if not attr.startswith("__"):
+                attrs.append(attr)
+        return f"{self.__class__.__name__}({', '.join(attrs)})"
+
+    def __repr__(self):
+        return self.__str__()
+
+
+
+
+# @dataclass(slots=True)
+# class FrozenUnitType(Frozen, UnitType):
+#     pass
+
+
+# @dataclass(slots=True)
+# class FrozenUnitValue(Frozen, UnitValue):
+#     pass
+
+
+# class Frozen(FrozenInterface, (Unit or UnitType or UnitTypePool or UnitTypeRef or UnitValue)):
+
+#     @check_frozen
+#     def __setattr__(self, *args, **kwargs):
+#         return super().__setattr__(*args, **kwargs)
+    
+#     @check_frozen
+#     def __delattr__(self, *args, **kwargs):
+#         return super().__delattr__(*args, **kwargs)
+    
+#     # def __init_subclass__(cls, **kwargs):
+#     #     cls._frozen = True
+#     #     return super().__init_subclass__(**kwargs)
+    
+#     def set_class_name(cls, name):
+#         cls.__name__ = name
+#         return cls
+    
+
+    
+#     def __new__(cls, *args, **kwargs):
+        
+#         cls._frozen = True
+#         print(args[0], kwargs)
+#         return cls
+#         # return type("Frozen" + type(args[0]).__name__, (cls,), {"_frozen": True})
+    
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
+
+#         self.__post_init__()
+
+#     def __post_init__(self):
+#         self.freeze()
+
+#     def freeze(self):
+#         self._frozen = True
+
+
+
+# class FrozenMeta(type):
+#     def __new__(cls, name, bases, attrs):
+#         new_class = super().__new__(cls, name, bases, attrs)
+#         if "Frozen" not in name:
+#             return type("Frozen" + name, (new_class,), {"_frozen": True, "__setattr__": lambda self, *args, **kwargs: None, "__delattr__": lambda self, *args, **kwargs: None})
+#         print(name, bases, attrs)
+#         return new_class
+
+# @dataclass(slots=True, weakref_slot=True)
+# class Frozen(UnitTypeRef or UnitType or UnitValue or Unit, metaclass=FrozenMeta):
+#     _frozen: bool = False
+
+#     def __init__(self, *args, **kwargs):
+#         popped_kwargs = {}
+#         if 'freeze' in kwargs:
+#             popped_kwargs["freeze"] = kwargs.pop('freeze')
+#         if 'name' in kwargs:
+#             popped_kwargs["name"] = kwargs.pop('name')
+#         # super(Unit or UnitType or UnitTypeRef or UnitTypePool or UnitValue).__init__(args[0])
+#         # super(object, self).__init__(*args, **kwargs)
+#         # super().__init__(*args, **kwargs)
+#         my_object = args[0]
+#         name = my_object.__class__.__name__
+#         print(name, my_object, args, kwargs)
+#         for function_name in dir(my_object):
+#             if not function_name.startswith("__"):
+#                 function = getattr(my_object, function_name)
+#                 if callable(function):
+#                     setattr(self, function_name, function)
+#         # for name, item in my_object.__dict__.items():
+#         #     setattr(self, name, item)
+
+#         self.__setattr__("_frozen", False)
+#         self.__class__ = type("Frozen" + name, (self.__class__,), {"_frozen": True, **kwargs})
+#         self.__class__.__name__ = "Frozen" + name
+
+#         # kwargs['freeze'] = popped_kwargs
+#         self.__post_init__(*args, popped_kwargs)
+
+#     def __post_init__(self, *args, **kwargs):
+#         if kwargs.get("freeze", True):
+#             self.freeze()
+
+#     def __setattr__(self, name, value):
+#         if getattr(self, "_frozen", False):
+#             raise AttributeError("Cannot modify frozen class.")
+#         object.__setattr__(self, name, value)
+
+#     def __delattr__(self, name):
+#         if getattr(self, "_frozen", False):
+#             raise AttributeError("Cannot modify frozen class.")
+#         object.__delattr__(self, name)
+
+#     def freeze(self):
+#         object.__setattr__(self, "_frozen", True)
+
+
+# class FrozenUnitTypeRef(Frozen(UnitTypeRef)):
+#     pass
+
+
+# class FrozenUnitType(Frozen(UnitType)):
+#     pass
+
+
+# class FrozenUnitValue(Frozen(UnitValue)):
+#     pass
+
+
+# class FrozenUnit(Frozen(Unit)):
+#     pass
+
+
+# class FrozenUnitTypePool(Frozen(UnitTypePool)):
+#     pass
 
 
 @dataclass(slots=True)
@@ -325,28 +468,34 @@ class Generator:
         else:
             self.unit_type_pool = unit_type_pool
 
-    def generate_unit(self, unit_type: UnitTypeRef, value: UnitValue) -> Unit:
+    def create_unit(self, unit_type: UnitTypeRef, value: UnitValue) -> Unit:
         # assert isinstance(unit_type, UnitTypeRef)
         # assert isinstance(value, UnitValue)
 
         return Unit(value=value, type_ref=unit_type)
 
-    def generate_unit_type(self, super_type: UnitTypeRef, aliases: list[UnitTypeRef], prefix: str, suffix: str, separator: str) -> UnitType:
+    def create_unit_type(self, super_type: UnitTypeRef, aliases: list[UnitTypeRef], prefix: str, suffix: str, separator: str) -> UnitType:
         return UnitType(super_type=super_type, aliases=aliases, prefix=prefix, suffix=suffix, separator=separator)
 
-    def generate_unit_type_pool(self, pool: UnitTypePool ) -> UnitTypePool:
+    def create_unit_type_pool(self, pool: UnitTypePool) -> UnitTypePool:
         return UnitTypePool(pool=pool)
 
-    def generate_unit_value(self, value: Any) -> UnitValue:
+    def create_unit_value(self, value: Any) -> UnitValue:
         return UnitValue(value=value)
 
-    def generate_unit_type_ref(self, type_ref: str) -> UnitTypeRef:
-        # assert isinstance(type_ref, str)
-
+    def create_unit_type_ref(self, type_ref: str) -> UnitTypeRef:
+        assert isinstance(type_ref, str)
         return UnitTypeRef(type_ref=type_ref)
 
-    def check_pool_for_type(self, unit_type_ref: UnitTypeRef) -> bool:
+    def check_pool_for_type(self, unit_type_ref: UnitTypeRef or str) -> bool:
         # assert isinstance(unit_type_ref, UnitTypeRef)
+
+        # if isinstance(unit_type_ref, str):
+        #     unit_type_ref = UnitTypeRef(type_ref=unit_type_ref)
+        # if isinstance(unit_type_ref, UnitTypeRef):
+        #     unit_type_ref = unit_type_ref.type_ref
+        # if isinstance(unit_type_ref, FrozenUnitType):
+        #     unit_type_ref = unit_type_ref.type_ref
 
         type_check: bool = False
         try:

@@ -14,9 +14,9 @@ class TestAll(unittest.TestCase):
         unit_type_ref = UnitTypeRef(int)
         unit_type_ref = Frozen(unit_type_ref)
 
-        print(unit_type_ref)
+        print(unit_type_ref.__dir__())
         unit_type_ref.freeze()
-        print(unit_type_ref)
+        print(unit_type_ref.__dir__())
 
         self.assertEqual(unit_type_ref.type_ref, int)
         self.assertEqual(unit_type_ref.__class__.__name__, "FrozenUnitTypeRef")
@@ -338,7 +338,7 @@ class TestAll(unittest.TestCase):
 
     def test_generate_unit(self):
         self.setUpGenerator()
-        unit = self.unit_generator.generate_unit(self.unit_type_ref, UnitValue(value="10"))
+        unit = self.unit_generator.create_unit(self.unit_type_ref, UnitValue(value="10"))
         self.assertIsInstance(unit, Unit)
         self.assertEqual(unit.value.value, "10")
         self.assertEqual(unit.type_ref.type_ref, "test_type")
@@ -347,7 +347,7 @@ class TestAll(unittest.TestCase):
         self.setUpGenerator()
         super_type = UnitTypeRef(type_ref="parent_type")
         aliases = [UnitTypeRef(type_ref="alias1"), UnitTypeRef(type_ref="alias2")]
-        unit_type = self.unit_generator.generate_unit_type(
+        unit_type = self.unit_generator.create_unit_type(
             super_type=super_type,
             aliases=aliases,
             prefix="",
@@ -365,20 +365,20 @@ class TestAll(unittest.TestCase):
         self.setUpPool()
         self.setUpGenerator()
         self.maxDiff = None
-        unit_type_pool = self.unit_generator.generate_unit_type_pool(pool=self.pool)
+        unit_type_pool = self.unit_generator.create_unit_type_pool(pool=self.pool)
         self.assertIsInstance(unit_type_pool, UnitTypePool)
         self.assertEqual(unit_type_pool.pool, self.pool.pool)
 
     def test_generate_unit_value(self):
         self.setUpGenerator()
-        unit_value = self.unit_generator.generate_unit_value("10")
+        unit_value = self.unit_generator.create_unit_value("10")
         self.assertIsInstance(unit_value, UnitValue)
         self.assertEqual(unit_value.value, "10")
         # self.assertEqual(unit_value.unit_typ, self.unit_type
 
     def test_generate_unit_type_ref(self):
         self.setUpGenerator()
-        unit_type_ref = self.unit_generator.generate_unit_type_ref("test_type")
+        unit_type_ref = self.unit_generator.create_unit_type_ref("test_type")
         self.assertIsInstance(unit_type_ref, UnitTypeRef)
         self.assertEqual(unit_type_ref.type_ref, "test_type")
 
@@ -434,3 +434,40 @@ class TestAll(unittest.TestCase):
         # Test getting a type ref that does not exist in the pool
         with self.assertRaises(ValueError):
             self.frozen_pool.get_type("nonexistent_type")
+
+    def test_get_type_ref_frozen2(self):
+        self.setUpFrozenPool()
+        # Test getting a type ref that exists in the pool
+        unit_type_ref = self.frozen_pool.get_type("test_type2")
+        self.assertEqual(unit_type_ref.aliases[0], UnitTypeRef("test_type2"))
+
+        # Test getting a type ref that does not exist in the pool
+        with self.assertRaises(ValueError):
+            self.frozen_pool.get_type("nonexistent_type")
+
+    # def test_freeze(self):
+    #     class MyClass:
+    #         def my_function(self):
+    #             print("This is a function defined in MyClass.")
+
+    #     FrozenClass = freeze_class(MyClass)
+    #     my_object = FrozenClass()
+    #     my_object.freeze()
+
+    #     with self.assertRaises(AttributeError):
+    #         my_object.my_function = lambda: print("This is a modified function.")
+
+    # def test_create_instance(self):
+    #     class MyClass:
+    #         def my_function(self):
+    #             print("This is a function defined in MyClass.")
+
+    #     FrozenClass = freeze_class(MyClass)
+    #     my_object = FrozenClass()
+    #     my_object.freeze()
+
+    #     with self.assertRaises(AttributeError):
+    #         my_object.my_function = lambda: print("This is a modified function.")
+
+    #     my_object2 = FrozenClass()
+    #     self.assertIsNot(my_object, my_object2)
