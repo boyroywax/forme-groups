@@ -205,7 +205,8 @@ class UnitTypePool:
                 type_name = unit_type_ref
             return self.pool[type_name]
         except KeyError:
-            raise ValueError(f"Unit type {type_name} not found.")
+            print(ValueError(f"Unit type {type_name} not found."))
+            return None
 
     def remove_type(self, name: Optional[str] = None, alias: Optional[UnitTypeRef] = None) -> UnitType | None:
         if name is None and alias is None:
@@ -304,7 +305,7 @@ class Frozen(FrozenInterface, (UnitTypeRef or Unit or UnitType or UnitTypePool o
         if getattr(self, "_frozen", False) is True:
             raise AttributeError("Cannot modify frozen class.")
         return object.__setattr__(self, __name, __value)
-    
+
     def __delattr__(self, __name: str) -> None:
         if getattr(self, "_frozen", False) is True:
             raise AttributeError("Cannot modify frozen class.")
@@ -313,16 +314,36 @@ class Frozen(FrozenInterface, (UnitTypeRef or Unit or UnitType or UnitTypePool o
     def freeze(self):
         self._frozen = True
 
-    def __str__(self):
-        attrs = []
-        for attr in dir(self):
-            if not attr.startswith("__"):
-                attrs.append(attr)
-        return f"{self.__class__.__name__}({', '.join(attrs)})"
+    # def __str__(self):
+    #     attrs = []
+    #     for attr in dir(self):
+    #         if not attr.startswith("__"):
+    #             attrs.append(attr)
+    #     return f"{self.__class__.__name__}({', '.join(attrs)})"
 
-    def __repr__(self):
-        return self.__str__()
-    
+    # def __repr__(self):
+    #     return f"{self.__class__.__name__}(_frozen={self._frozen}, {object.__repr__(self)})"
+
+
+class FrozenUnit:
+    pass
+
+
+class FrozenUnitType:
+    pass
+
+
+class FrozenUnitTypePool:
+    pass
+
+
+class FrozenUnitValue:
+    pass
+
+
+class FrozenUnitTypeRef:
+    pass
+
 
 def freeze(object):
     """
@@ -331,136 +352,7 @@ def freeze(object):
     if getattr(object, "_frozen", False):
         raise AttributeError("Cannot modify frozen class.")
 
-    return Frozen(object)
-
-
-
-
-# @dataclass(slots=True)
-# class FrozenUnitType(Frozen, UnitType):
-#     pass
-
-
-# @dataclass(slots=True)
-# class FrozenUnitValue(Frozen, UnitValue):
-#     pass
-
-
-# class Frozen(FrozenInterface, (Unit or UnitType or UnitTypePool or UnitTypeRef or UnitValue)):
-
-#     @check_frozen
-#     def __setattr__(self, *args, **kwargs):
-#         return super().__setattr__(*args, **kwargs)
-    
-#     @check_frozen
-#     def __delattr__(self, *args, **kwargs):
-#         return super().__delattr__(*args, **kwargs)
-    
-#     # def __init_subclass__(cls, **kwargs):
-#     #     cls._frozen = True
-#     #     return super().__init_subclass__(**kwargs)
-    
-#     def set_class_name(cls, name):
-#         cls.__name__ = name
-#         return cls
-    
-
-    
-#     def __new__(cls, *args, **kwargs):
-        
-#         cls._frozen = True
-#         print(args[0], kwargs)
-#         return cls
-#         # return type("Frozen" + type(args[0]).__name__, (cls,), {"_frozen": True})
-    
-#     def __init__(self, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
-
-#         self.__post_init__()
-
-#     def __post_init__(self):
-#         self.freeze()
-
-#     def freeze(self):
-#         self._frozen = True
-
-
-
-# class FrozenMeta(type):
-#     def __new__(cls, name, bases, attrs):
-#         new_class = super().__new__(cls, name, bases, attrs)
-#         if "Frozen" not in name:
-#             return type("Frozen" + name, (new_class,), {"_frozen": True, "__setattr__": lambda self, *args, **kwargs: None, "__delattr__": lambda self, *args, **kwargs: None})
-#         print(name, bases, attrs)
-#         return new_class
-
-# @dataclass(slots=True, weakref_slot=True)
-# class Frozen(UnitTypeRef or UnitType or UnitValue or Unit, metaclass=FrozenMeta):
-#     _frozen: bool = False
-
-#     def __init__(self, *args, **kwargs):
-#         popped_kwargs = {}
-#         if 'freeze' in kwargs:
-#             popped_kwargs["freeze"] = kwargs.pop('freeze')
-#         if 'name' in kwargs:
-#             popped_kwargs["name"] = kwargs.pop('name')
-#         # super(Unit or UnitType or UnitTypeRef or UnitTypePool or UnitValue).__init__(args[0])
-#         # super(object, self).__init__(*args, **kwargs)
-#         # super().__init__(*args, **kwargs)
-#         my_object = args[0]
-#         name = my_object.__class__.__name__
-#         print(name, my_object, args, kwargs)
-#         for function_name in dir(my_object):
-#             if not function_name.startswith("__"):
-#                 function = getattr(my_object, function_name)
-#                 if callable(function):
-#                     setattr(self, function_name, function)
-#         # for name, item in my_object.__dict__.items():
-#         #     setattr(self, name, item)
-
-#         self.__setattr__("_frozen", False)
-#         self.__class__ = type("Frozen" + name, (self.__class__,), {"_frozen": True, **kwargs})
-#         self.__class__.__name__ = "Frozen" + name
-
-#         # kwargs['freeze'] = popped_kwargs
-#         self.__post_init__(*args, popped_kwargs)
-
-#     def __post_init__(self, *args, **kwargs):
-#         if kwargs.get("freeze", True):
-#             self.freeze()
-
-#     def __setattr__(self, name, value):
-#         if getattr(self, "_frozen", False):
-#             raise AttributeError("Cannot modify frozen class.")
-#         object.__setattr__(self, name, value)
-
-#     def __delattr__(self, name):
-#         if getattr(self, "_frozen", False):
-#             raise AttributeError("Cannot modify frozen class.")
-#         object.__delattr__(self, name)
-
-#     def freeze(self):
-#         object.__setattr__(self, "_frozen", True)
-
-
-# class FrozenUnitTypeRef(Frozen(UnitTypeRef)):
-#     pass
-
-
-# class FrozenUnitType(Frozen(UnitType)):
-#     pass
-
-
-# class FrozenUnitValue(Frozen(UnitValue)):
-#     pass
-
-
-# class FrozenUnit(Frozen(Unit)):
-#     pass
-
-
-# class FrozenUnitTypePool(Frozen(UnitTypePool)):
-#     pass
+    return Frozen(object).freeze()
 
 
 @dataclass(slots=True)
@@ -473,11 +365,11 @@ class Generator:
         else:
             self.unit_type_pool = unit_type_pool
 
-    def create_unit(self, unit_type: UnitTypeRef, value: UnitValue) -> Unit:
-        # assert isinstance(unit_type, UnitTypeRef)
-        # assert isinstance(value, UnitValue)
-
-        return Unit(value=value, type_ref=unit_type)
+    def create_unit(self, unit_type: UnitTypeRef, value: UnitValue) -> Unit | FrozenUnit:
+        if getattr(type(self).__name__, "_frozen", False):
+            return Frozen(Unit(value=value, type_ref=unit_type))
+        else:
+            return Unit(value=value, type_ref=unit_type)
 
     def create_unit_type(self, super_type: UnitTypeRef, aliases: list[UnitTypeRef], prefix: str, suffix: str, separator: str) -> UnitType:
         return UnitType(super_type=super_type, aliases=aliases, prefix=prefix, suffix=suffix, separator=separator)
@@ -495,25 +387,12 @@ class Generator:
     def check_pool_for_type(self, unit_type_ref: UnitTypeRef or str) -> bool:
         # assert isinstance(unit_type_ref, UnitTypeRef)
 
-        # if isinstance(unit_type_ref, str):
-        #     unit_type_ref = UnitTypeRef(type_ref=unit_type_ref)
-        # if isinstance(unit_type_ref, UnitTypeRef):
-        #     unit_type_ref = unit_type_ref.type_ref
-        # if isinstance(unit_type_ref, FrozenUnitType):
-        #     unit_type_ref = unit_type_ref.type_ref
-
         type_check: bool = False
-        try:
+        if isinstance(unit_type_ref, UnitTypeRef):
+            if self.unit_type_pool.get_type(unit_type_ref.type_ref) is not None:
+                type_check = True
+        elif isinstance(unit_type_ref, str):
             if self.unit_type_pool.get_type(unit_type_ref) is not None:
                 type_check = True
-        except ValueError:
-            pass
 
         return type_check
-        # if unit_type_ref.type_ref in self.unit_type_pool.pool.keys():
-        #     return True
-        # else:
-        #     for key, unit_type in self.unit_type_pool.pool.items():
-        #         if unit_type_ref in list(unit_type.aliases):
-        #             return True
-        # return False

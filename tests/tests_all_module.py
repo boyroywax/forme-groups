@@ -1,6 +1,6 @@
 import unittest
 from dataclasses import dataclass
-from src.groups.all import UnitTypeRef, UnitValue, UnitType, UnitTypePool, frozen, Frozen, Unit, Generator
+from src.groups.all import UnitTypeRef, UnitValue, UnitType, UnitTypePool, frozen, freeze, Frozen, Unit, Generator
 
 
 class TestAll(unittest.TestCase):
@@ -197,7 +197,6 @@ class TestAll(unittest.TestCase):
             pool.add_type(name="my_type", unit_type=UnitType(aliases=(UnitTypeRef("int"),)))
         self.assertNotIn("my_type", pool.pool.keys())
 
-
     def test_get_type(self):
         pool = UnitTypePool()
         pool.add_type(name="my_type", unit_type=UnitType(aliases=(UnitTypeRef("my_type"),)))
@@ -212,8 +211,7 @@ class TestAll(unittest.TestCase):
 
     def test_get_type_with_missing_type(self):
         pool = UnitTypePool()
-        with self.assertRaises(ValueError):
-            pool.get_type(name="my_type")
+        self.assertFalse(pool.get_type(name="my_type"))
 
     def test_get_type_with_missing_alias(self):
         pool = UnitTypePool()
@@ -252,8 +250,7 @@ class TestAll(unittest.TestCase):
         self.setUpPool()
         with self.assertRaises(ValueError):
             self.pool.add_type(UnitType(aliases=(UnitTypeRef("int"),)), name="my_type")
-        with self.assertRaises(ValueError):
-            my_type = self.pool.get_type(name="my_type")
+        self.assertFalse(self.pool.get_type(name="my_type"))
 
         reserved_type = self.pool.get_type(alias=UnitTypeRef("int"))
         self.assertEqual(reserved_type.aliases, (UnitTypeRef("integer"), UnitTypeRef("int"),))
@@ -267,13 +264,11 @@ class TestAll(unittest.TestCase):
 
     def test_get_type_with_missing_name(self):
         self.setUpPool()
-        with self.assertRaises(ValueError):
-            self.pool.get_type(name="my_type")
+        self.assertFalse(self.pool.get_type(name="my_type"))
 
     def test_get_type_with_missing_alias_(self):
         self.setUpPool()
-        with self.assertRaises(ValueError):
-            self.pool.get_type(alias=UnitTypeRef("int1"))
+        self.assertFalse(self.pool.get_type(alias=UnitTypeRef("int1")))
 
     def test_remove_type_by_name(self):
         self.setUpPool()
@@ -323,8 +318,7 @@ class TestAll(unittest.TestCase):
         self.assertEqual(unit_type, self.unit_type2)
 
         # Test getting a type that does not exist in the pool
-        with self.assertRaises(ValueError):
-            self.unit_type_pool.get_type("nonexistent_type")
+        self.assertFalse(self.unit_type_pool.get_type("nonexistent_type"))
 
     def setUpGenerator(self, pool=None):
         if pool is None:
@@ -422,8 +416,7 @@ class TestAll(unittest.TestCase):
         self.assertEqual(unit_type, self.test_type2_)
 
         # Test getting a type that does not exist in the pool
-        with self.assertRaises(ValueError):
-            self.frozen_pool.get_type("nonexistent_type")
+        self.assertFalse(self.frozen_pool.get_type("nonexistent_type"))
 
     def test_get_type_ref_frozen(self):
         self.setUpFrozenPool()
@@ -432,8 +425,7 @@ class TestAll(unittest.TestCase):
         self.assertEqual(unit_type_ref.aliases[0], UnitTypeRef("test_type1"))
 
         # Test getting a type ref that does not exist in the pool
-        with self.assertRaises(ValueError):
-            self.frozen_pool.get_type("nonexistent_type")
+        self.assertFalse(self.frozen_pool.get_type("nonexistent_type"))
 
     def test_get_type_ref_frozen2(self):
         self.setUpFrozenPool()
@@ -442,32 +434,24 @@ class TestAll(unittest.TestCase):
         self.assertEqual(unit_type_ref.aliases[0], UnitTypeRef("test_type2"))
 
         # Test getting a type ref that does not exist in the pool
-        with self.assertRaises(ValueError):
-            self.frozen_pool.get_type("nonexistent_type")
+        self.assertFalse(self.frozen_pool.get_type("nonexistent_type"))
 
-    # def test_freeze(self):
-    #     class MyClass:
-    #         def my_function(self):
-    #             print("This is a function defined in MyClass.")
+    def test_freeze(self):
+        class MyClass:
+            def my_function(self):
+                print("This is a function defined in MyClass.")
 
-    #     FrozenClass = freeze_class(MyClass)
-    #     my_object = FrozenClass()
-    #     my_object.freeze()
+        FrozenClass = freeze(MyClass)
 
-    #     with self.assertRaises(AttributeError):
-    #         my_object.my_function = lambda: print("This is a modified function.")
+        with self.assertRaises(AttributeError):
+            FrozenClass.my_function = lambda: print("This is a modified function.")
 
-    # def test_create_instance(self):
-    #     class MyClass:
-    #         def my_function(self):
-    #             print("This is a function defined in MyClass.")
+    def test_create_instance(self):
+        class MyClass:
+            def my_function(self):
+                print("This is a function defined in MyClass.")
 
-    #     FrozenClass = freeze_class(MyClass)
-    #     my_object = FrozenClass()
-    #     my_object.freeze()
+        FrozenClass = freeze(MyClass)
 
-    #     with self.assertRaises(AttributeError):
-    #         my_object.my_function = lambda: print("This is a modified function.")
-
-    #     my_object2 = FrozenClass()
-    #     self.assertIsNot(my_object, my_object2)
+        with self.assertRaises(AttributeError):
+            FrozenClass.my_function = lambda: print("This is a modified function.")
