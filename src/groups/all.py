@@ -208,7 +208,11 @@ class UnitTypePool:
             print(ValueError(f"Unit type {type_name} not found."))
             return None
 
-    def remove_type(self, name: Optional[str] = None, alias: Optional[UnitTypeRef] = None) -> UnitType | None:
+    def remove_type(
+            self,
+            name: Optional[str] = None,
+            alias: Optional[UnitTypeRef] = None
+    ) -> UnitType | None:
         if name is None and alias is None:
             raise ValueError("Must provide either a name or an alias.")
         if name is not None and alias is not None:
@@ -314,34 +318,34 @@ class Frozen(FrozenInterface, (UnitTypeRef or Unit or UnitType or UnitTypePool o
     def freeze(self):
         self._frozen = True
 
-    # def __str__(self):
-    #     attrs = []
-    #     for attr in dir(self):
-    #         if not attr.startswith("__"):
-    #             attrs.append(attr)
-    #     return f"{self.__class__.__name__}({', '.join(attrs)})"
+    def __str__(self):
+        attrs = []
+        for attr in dir(self):
+            if not attr.startswith("__"):
+                attrs.append(attr)
+        return f"{self.__class__.__name__}({', '.join(attrs)})"
 
-    # def __repr__(self):
-    #     return f"{self.__class__.__name__}(_frozen={self._frozen}, {object.__repr__(self)})"
+    def __repr__(self):
+        return f"{self.__class__.__name__}(_frozen={self._frozen}, {object.__repr__(self)})"
 
 
-class FrozenUnit:
+class FrozenUnit(Unit, FrozenInterface):
     pass
 
 
-class FrozenUnitType:
+class FrozenUnitType(UnitType, FrozenInterface):
     pass
 
 
-class FrozenUnitTypePool:
+class FrozenUnitTypePool(UnitTypePool, FrozenInterface):
     pass
 
 
-class FrozenUnitValue:
+class FrozenUnitValue(UnitValue, FrozenInterface):
     pass
 
 
-class FrozenUnitTypeRef:
+class FrozenUnitTypeRef(UnitTypeRef, FrozenInterface):
     pass
 
 
