@@ -262,12 +262,6 @@ def frozen(cls):
     return type("Frozen" + cls.__name__, (cls,), {})
 
 
-# def freeze(cls) -> cls:
-#     if getattr(cls, "_frozen", False):
-#         raise AttributeError("Cannot modify frozen class.")
-#     return type("Frozen" + cls.__name__, (cls,), {"_frozen": True, **cls.__dict__})
-
-
 class FrozenInterface(ABC):
     @abstractmethod
     def freeze(self):
@@ -278,6 +272,7 @@ def check_frozen(func):
     if getattr(func, "_frozen", False):
         raise AttributeError("Cannot modify frozen class.")
     return func
+
 
 @dataclass(slots=True)
 class Frozen(FrozenInterface, (UnitTypeRef or Unit or UnitType or UnitTypePool or UnitValue)):
@@ -327,6 +322,16 @@ class Frozen(FrozenInterface, (UnitTypeRef or Unit or UnitType or UnitTypePool o
 
     def __repr__(self):
         return self.__str__()
+    
+
+def freeze(object):
+    """
+    Decorator that makes a class immutable (i.e. frozen).
+    """
+    if getattr(object, "_frozen", False):
+        raise AttributeError("Cannot modify frozen class.")
+
+    return Frozen(object)
 
 
 
