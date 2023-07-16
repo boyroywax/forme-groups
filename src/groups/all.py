@@ -349,14 +349,17 @@ class FrozenUnitTypeRef(UnitTypeRef, FrozenInterface):
     pass
 
 
-def freeze(object):
+def freeze(object) -> Frozen:
     """
     Decorator that makes a class immutable (i.e. frozen).
     """
     if getattr(object, "_frozen", False):
         raise AttributeError("Cannot modify frozen class.")
 
-    return Frozen(object).freeze()
+    frozen_object = Frozen(object)
+    frozen_object._frozen = True
+
+    return frozen_object
 
 
 @dataclass(slots=True)
