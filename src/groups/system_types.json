@@ -6,7 +6,7 @@
             "prefix": "",
             "suffix": "",
             "separator": "",
-            "function_call": "str"
+            "function_call": "<class 'str'>"
         },
         {
             "aliases": ["int", "integer"],

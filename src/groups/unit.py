@@ -36,20 +36,28 @@ class UnitTypePool:
         self.types.append(type_)
 
     def get(self, type_ref: UnitType.Ref) -> UnitType:
-        return self.types[type_ref]
+        for type_ in self.types:
+            for stored_type_ref in type_.aliases:
+                if type_ref == stored_type_ref:
+                    return type_
+        return None
 
-    def remove(self, type_ref: UnitType.Ref):
-        del self.types[type_ref]
+    def remove(self, type_ref: UnitType.Ref) -> None:
+        for type_ in self.types:
+            if (type_ref in type_.aliases) or (type_.base_type.startswith("__SYSTEM_RESERVED_")):
+                raise Exception("Cannot remove system type")
+            if type_ref in type_.aliases and not type_.base_type.startswith("__SYSTEM_RESERVED_"):
+                self.types.remove(type_)
 
-    def __contains__(self, type_ref: UnitType.Ref):
-        return type_ref in [alias for type_ in self.types for alias in type_.aliases]
+    def __contains__(self, type_ref: UnitType.Ref) -> bool:
+        return self.get(type_ref) is not None
 
     def __iter__(self):
         return iter(self.types)
 
     def __len__(self):
         return len(self.types)
-    
+
     def set_type_from_json(self, type_list: typing.List):
         for type_entry in type_list:
             print(type_entry["aliases"])
@@ -59,7 +67,7 @@ class UnitTypePool:
             print(type_entry["base_type"])
             type_ = UnitType(**type_entry)
             self.add(type_)
-    
+
     def set_system_types(self):
         with open("src/groups/system_types.json", "r") as f:
             system_types: dict = json.load(f)
