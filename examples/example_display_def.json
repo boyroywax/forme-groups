@@ -1,0 +1,30 @@
+{
+    "locale": "en-US",
+    "card": {
+      "title": "{REPLACE-WITH-THE-NAME-OF-YOUR-CREDENTIAL}",
+      "issuedBy": "{REPLACE-WITH-ORGANIZATION-NAME}",
+      "backgroundColor": "#000000",
+      "textColor": "#ffffff",
+      "logo": {
+        "uri": "{REPLACE-WITH-URL-OF-LOGO}",
+        "description": "{REPLACE-WITH-DESCRIPTION-OF-LOGO}"
+      },
+      "description": "{REPLACE-WITH-DESCRIPTION-OF-PURPOSE-OF-THIS-CREDENTIAL}"
+    },
+    "consent": {
+      "title": "{REPLACE-WITH-TITLE-OF-CONSENT}",
+      "instructions": "{REPLACE-WITH-CONSENT-INSTRUCTIONS-FOR-THE-PURPOSE-OF-ISSUANCE}"
+    },
+    "claims": [
+      {
+        "claim": "vc.credentialSubject.firstName",
+        "label": "Name",
+        "type": "String"
+      },
+      {
+        "claim": "vc.credentialSubject.lastName",
+        "label": "Surname",
+        "type": "String"
+      }
+    ]
+  }
