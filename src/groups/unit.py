@@ -34,7 +34,7 @@ class UnitTypePool:
     def add(self, type_: UnitType):
         self.types.append(type_)
 
-    def get(self, type_ref: UnitType.Ref) -> UnitType:
+    def get(self, type_ref: UnitType.Ref) -> UnitType | None:
         for type_ in self.types:
             print(type_.__slots__)
             for stored_type_ref in type_.aliases:
@@ -70,15 +70,12 @@ class UnitTypePool:
         print(function_call)
         if function_call is not None:
             try:
-                if function_call == "<class 'str'>":
-                    return str(value)
+                # if function_call == "<class 'str'>":
+                #     return str(value)
                 class_name = function_call.strip("<class '").strip("'>")
                 print(class_name)
                 class_ = eval(class_name)
                 print(class_)
-                # type_ = type(class_)
-                # print(type_)
-                # print(class_, type(class_))
                 return class_(value)
             except Exception as e:
                 raise Exception("Function call failed") from e
