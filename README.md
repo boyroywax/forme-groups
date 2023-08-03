@@ -1,166 +1,89 @@
 # forme-groups
 
-## Groups for Web3
+## What is this?
+A Python library for creating and manipulating groups of decentralized assets, Id's, and VC's, and IPFS data.
 
-### Installation
+## What is the Point?
+* Zapier for Decentralized Assets
+    * Build decentralized systems and applications
+    * No need to write smart contracts
+    * No need to learn Solidity
 
-```bash
-git clone https://github.com/boyroywax/forme-groups.git
-cd forme-groups
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-python3 setup.py install
-```
+* Manage Decentralized Assets
+    * Store data on the blockchain
+    * Personal Blockchain
 
-### CLI Usage
+* Take Complete Control of your Web3 Data
+    * Id's
+    * VC's
+    * Non-Fungible & Fungible Tokens
+    * IPFS Data
 
-```bash
-python3 groups --help
-```
+* Decentralized Access Control
+* No need to write smart contracts
 
-### Python Usage
+## How does it work?
+1. Create a Group
+2. Add Members to the Group
+3. Add Items to the Group
+4. Anchor the Group to a Blockchain
 
-```python
-from groups import Groups
-```
-
-## Overview
-> Manage groups of decentralized objects/assets
-
-## Features
-- [x] Create groups anchored on the blockchain to a digital asset
-- [x] Verify the group on the blockchain
-- [x] Add members to groups using Verified Credentials
-- [x] Manage groups using Decentralized Identities
-- [x] Add data schemas to groups to define the data structure of the group
-- [x] Add data to groups using the data schemas
-- [x] Verify the data on the blockchain
-- [x] Public schemas allow for groups members to add data to the group (ratings, comments, etc.)
-
-## Architecture
-> The architecture of the project is based on the [DIDComm](
-https://identity.foundation/didcomm-messaging/spec/#introduction) specification.
-
-### IPv4 and IPv6
-> IPv4 and IPv6 are used to identify the group on the blockchain.  The IPv4 and IPv6 addresses are used to create a decentralized identifier for the group.  Currently only IPv4 is supported with no bytesize limit nor maximum number of items in the dotted-decimal notation.
-
-```text
-# Example Group IPv4 Address
-group://0.0.0.0.0
-```
-
-### Decentralized Identifiers & Identites
-> Decentralized Identifiers are used to identify the group on the blockchain.  The decentralized identifiers are used to create a decentralized identifier for the group.  Currently only the `did:ipid` method is supported.
-> Decentralized Identities are used to identify the owner of the group.  The decentralized identities are used to create a decentralized identity for the owner of the group.  Currently only the `did:ipid` method is supported.
-
-```text
-# Example Group Decentralized Identifier or Owner Decentralized Identity
-did:ipid:Q
-```
-
-### Verified Credentials
-> Verified Credentials are used to identify the members of the group.  The verified credentials are used to create a verified credential for the members of the group.  Currently only the `did:ipid` method is supported.
-
-```text
-# Example Group Member Verified Credential
-did:ipid:Q
-```
-
-### IPFS
-> IPFS is used to store the data of the group.  The IPFS hash is used to create a decentralized identifier for the data of the group.  Currently only the `ipfs` method is supported.
-
-### 
+## Functionality
+1. Build using Decentralized Units.
+2. Operate Across Multiple Blockchains
+3. Create Groups of Id's, VC's, and IPFS Data
+4. Anchor Groups to Blockchains
+5. Manage Group Access and Permissions
+6. Allow Group Members to Submit Items to the Group
 
 
+## Example Use Casees
+
+### Create a blog on the blockchain - proof of existence
+* Publish a blog on the blockchain - proof of existence
+* Become a merchant on the blockchain - proof of ownership
+* Organize an event on the blockchain - proof of service
+* Manage of group of members - proof of membership
 
 
-## Classes
-### Groups
-> The Groups class is the main class of the project. It is used to create groups, add members to groups, add data schemas to groups, and add data to groups.
-
-### Universal Object
-> The Universal Object class is used to create a universal object. A universal object is an object that can be used in any group. It is used to create data schemas and data.
-
-The Universal Object holds the following attributes:
-- `nonce`: The nonce of the universal object
-- `name`: The name of the universal object
-- `description`: The description of the universal object
-- `owner`: The owner of the universal object
-- `credentials`: The credentials used to access the the universal object
-- `data`: The data of the universal object, can include a schema
-
-### Default Schema
->The default schema is used to create the data schema for the universal object. Data is made up of key value pairs stored in a Dictionary. 
-
-The default schema is a dictionary with the following keys:
-- `title`: [String] The title of the data schema.
-- `entries`: [Dictionary] The entries of the data schema.
-
-The default entries to describe a group with a schema are:
-- `link`: [List] The link to the decentralized asset.
-- `schema`: [Dictionary] The schema of the data.
+## Universal Group Unit
+A Universal Group Unit is a unit of data that can be used to create a group. A Universal Group Unit contains the following data:
+1. Nonce
+2. Ownership
+3. Credentials
+4. Data
 
 ### Nonce
-> A nonce is used to organize items in a group. It is a unique identifier for each item in a group.  Nonces are strung together to create a chain of nonces. The chain of nonces is used to verify the group on the blockchain.
+A Nonce is a unique identifier for a group unit. Nonce is short for number used once. Generally, a Group Unit nonce will be in sequential order. However, a Group Unit nonce can be any string.
 
-Example of a simple chain of string nonces:
-```text
-nonce1.nonce2
-```
-In the above example, `nonce1` is the parent nonce of `nonce2`.
+### Ownership
+The Decentralized Id/s of the owner/s of the Group Unit.
 
-### Nonce Types
-> Nonce values can be input as a `str` or `int`. The default nonce type is `int`.
+### Credentials
+Who has access to the Group Unit. Credentials are a list of Verified Credentials.
 
-In additiion to the two input types, there are many more nonce types that can be used. The nonce types are:
-- `int`: An integer
-- `str`: A string
-- `hexadecimal`: A string representing a hexadecimal value.  Starts with `0x`.
-- `decimal`: A string representing a decimal value.  Starts with `0d`.
-- `binary`: A string representing a binary value.  Starts with `0b`.
-- `boolean`: A boolean value
-- `float`: A float value
-- `list`: A list of values in string format e.g. `'["value1", "value2", "value3"]'`
-- `tuple`: A tuple of values in string format e.g. `'("value1", "value2", "value3")'`
-- `dictionary`: A dictionary of values in string format e.g. `'{"key1": "value1", "key2": "value2", "key3": "value3"}'`
-- `unknown`: A value of unknown type, rejected by the NonceType class
-
-### Nonce Units
-> The NonceUnit class is used to create a nonce unit. A nonce unit is a single nonce in a chain of nonces.
-
-The NonceUnit class checks that the nonce is of a valid type.  It also checks that nonce_unit_value and nonce_unit_type match.
-
-The default nonce unit type is `int`, with a default nonce unit value of `0`.
-
-### Nonce Chain
-> The Nonce class is used to create a nonce chain. A nonce chain is a chain of nonce units.
-
-Nonce chains can hold multiple nonce units of varying types.  The Nonce class checks that the nonce units are valid and that the nonce units are in the correct order.
-
-An active nonce unit is the last nonce unit in the chain.  The active nonce unit is used to create the next nonce unit in the chain.
+### Data
+The data of the Group Unit. The data can be any type of data. The data can be a string, a list, a dictionary, or a file.
 
 
-# Program Pieces
-## Start Up
-1. Load default UnitTypes
-2. Check for supported UnitTypes
-3. Load custom UnitTypes
+## Groups
+
+### NonceChain
+* A NonceChain is a list of Nonces.
+* Can be any list of Nonces.
+* A NonceChain can be a list of Nonces from different groups.
+* Default Seperator - ```.```
 
 
-## Hierarchy
 
-|- Groups
-|-|- Super
-|-|-|- System Type Support
-|-|-|- Universal object
-|-|-|-|- Schema
-|-|-|-|- Types
-|-|-| Base
-|-|-|- Unit
-|-|-|-|- Unit Types
-|-|-|-|-|- Nonce
-|-|-|-|-|-|- Nonce Unit
-|-|-|-|-|-|-|- Nonce Chain
 
+### Group Hierarchy System Nonces
+| Nonce | Description | Example |
+| --- | --- | --- |
+| 0 | Anchor |  Decentralized Asset ID |
+| --- | --- | --- |
+| 0.0 | Roles |  [Admin, Reader] |
+| 0.1 | Posts |  [Post1, Post2] |
+| --- | --- | --- |
+| 0.1.0 | Comments |  [Comment1, Comment2] |
 
