@@ -1,6 +1,7 @@
 import unittest
 
-# from tests_unit import TestUnit
+from tests_unit import TestBase
+
 
 def main():
     # Create the test suite
@@ -10,7 +11,7 @@ def main():
     test_loader = unittest.TestLoader()
 
     # Add the test cases to the test suite
-    # test_suite.addTests(test_loader.loadTestsFromTestCase(TestUnit))
+    test_suite.addTests(test_loader.loadTestsFromTestCase(TestBase))
 
     # Run the test suite
     runner = unittest.TextTestRunner()
