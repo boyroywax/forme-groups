@@ -1,6 +1,7 @@
 import unittest
 
-from tests_unit import TestBase
+from tests_unit_type_ref import TestUnitTypeRef
+from tests_unit import TestUnit
 
 
 def main():
@@ -11,7 +12,8 @@ def main():
     test_loader = unittest.TestLoader()
 
     # Add the test cases to the test suite
-    test_suite.addTests(test_loader.loadTestsFromTestCase(TestBase))
+    test_suite.addTests(test_loader.loadTestsFromTestCase(TestUnitTypeRef))
+    test_suite.addTests(test_loader.loadTestsFromTestCase(TestUnit))
 
     # Run the test suite
     runner = unittest.TextTestRunner()

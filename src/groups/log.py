@@ -1,8 +1,7 @@
 import logging
-import os
 import sys
 
-# from ..config import Config as c
+__DEFAULT_LOG_LEVEL__ = 'DEBUG'
 
 
 class ColorFormatter(logging.Formatter):
@@ -15,13 +14,15 @@ class ColorFormatter(logging.Formatter):
     yellow = '\x1b[38;5;226m'
     red = '\x1b[38;5;196m'
     bold_red = '\x1b[31;1m'
+    bold_dark_green = '\x1b[38;5;22;1m'
+    bright_pink = '\x1b[38;5;13m'
     reset = '\x1b[0m'
 
     def __init__(self, fmt):
         super().__init__()
         self.fmt = fmt
         self.FORMATS = {
-            logging.DEBUG: self.grey + self.fmt + self.reset,
+            logging.DEBUG: self.bright_pink + self.fmt + self.reset,
             logging.INFO: self.blue + self.fmt + self.reset,
             logging.WARNING: self.yellow + self.fmt + self.reset,
             logging.ERROR: self.red + self.fmt + self.reset,
@@ -35,7 +36,7 @@ class ColorFormatter(logging.Formatter):
 
 
 class Log:
-    level = logging.getLevelName("DEBUG")
+    level = logging.getLevelName(__DEFAULT_LOG_LEVEL__)
     formatter = str('%(asctime)s:%(levelname)s:%(name)s: %(message)s')
     handler = logging.StreamHandler(sys.stdout)
     logger = logging.getLogger()
@@ -50,4 +51,4 @@ class Log:
         self.logger.addHandler(self.handler)
 
         # Test Logging
-        # self.logger.info("Logging initiated...")
+        # self.logger.debug("Logging initiated...")
