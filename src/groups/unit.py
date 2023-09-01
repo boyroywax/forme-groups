@@ -1,4 +1,5 @@
 from attrs import define, field
+from attrs.exceptions import FrozenInstanceError
 from typing import Any
 
 
@@ -24,13 +25,16 @@ class UnitTypeFunction:
         args (list[str]): The arguments that will be passed to the function.
     """
     object: callable = field(factory=callable)
-    args: list[str] = field(factory=list)
+    args: list = field(factory=list)
 
     def call(self, input: Any = None) -> object:
-        """Call the function with the arguments.
+        """Call the function with the given input.
+
+        Args:
+            input (Any): The input to the function.
 
         Returns:
-            object: The result of calling the function.
+            object: The result of the function call.
         """
         if input is not None:
             self.args.append(input)
@@ -60,25 +64,28 @@ class UnitType:
 
 @define(slots=True)
 class UnitTypePool:
-    unit_types: list[UnitType] = field(factory=list)
+    _frozen: bool = field(default=False)
+    unit_types: list[UnitType] | tuple[UnitType] = field(factory=list)
+
+    def freeze_pool(self):
+        self.__setattr__("unit_types", tuple(self.unit_types))
+        self.__setattr__("_frozen", True)
+
+    def get_type_from_alias(self, alias: str) -> UnitType | None:
+        for unit_type in self.unit_types:
+            for aliases in unit_type.aliases:
+                if aliases.alias == alias:
+                    return unit_type
+        return None
 
     def contains_alias(self, alias: str) -> bool:
-        for unit_type in self.unit_types:
-            if alias in unit_type.aliases:
-                return True
-
-    def get_type_from_alias(self, alias: str) -> UnitType:
-        for unit_type in self.unit_types:
-            if alias in unit_type.aliases:
-                return unit_type
-        raise ValueError("UnitTypePool does not contain alias: " + alias)
+        return self.get_type_from_alias(alias) is not None
 
     def add_unit_type(self, unit_type: UnitType):
-        for alias in unit_type.aliases:
-            if self.contains_alias(alias):
-                raise ValueError("UnitTypePool already contains alias: " + alias.__str__())
+        for aliases in unit_type.aliases:
+            if self.contains_alias(aliases.alias):
+                raise ValueError("UnitTypePool already contains alias: " + aliases.alias)
         self.unit_types.append(unit_type)
-        print(self.unit_types)
 
 
 @define(frozen=True, slots=True)
@@ -91,8 +98,19 @@ class Unit:
 class UnitGenerator:
     unit_type_pool: UnitTypePool = field(default=None)
 
+    def check_frozen_pool(self) -> bool:
+        return self.unit_type_pool._frozen
+
     def create_unit(self, alias: str, value: str = None, force: bool = True) -> Unit:
+        if not self.check_frozen_pool():
+            raise Exception("UnitTypePool must be frozen before generating units.")
+
         if not self.unit_type_pool.contains_alias(alias):
             raise ValueError("UnitTypePool does not contain alias: " + alias)
 
+        unit_type: UnitType = self.unit_type_pool.get_type_from_alias(alias)
 
+        if unit_type.sys_function is not None:
+            value = unit_type.sys_function.call(value)
+
+        return Unit(value=value, type_ref=alias)

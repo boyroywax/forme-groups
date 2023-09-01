@@ -54,6 +54,11 @@ class TestUnitTypeFunction(unittest.TestCase):
         unit_type_function = UnitTypeFunction(object=len, args=[[]])
         self.assertEqual(unit_type_function.call(), 0)
 
+    def test_unit_type_function_args_is_frozen(self):
+        unit_type_function = UnitTypeFunction(object=MagicMock(), args=["arg1", "arg2"])
+        with self.assertRaises(FrozenInstanceError):
+            unit_type_function.args = ["new_arg1", "new_arg2"]
+
     def test_unit_type_function_call_with_buildint_string_function(self):
         unit_type_function = UnitTypeFunction(object=str.upper)
         self.assertEqual(unit_type_function.call("test"), "TEST")
@@ -129,6 +134,12 @@ class TestUnitTypePool(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.unit_type_pool.add_unit_type(self.unit_type)
 
+    def test_unit_type_pool_freeze_pool(self):
+        self.unit_type_pool.freeze_pool()
+        self.assertEqual(self.unit_type_pool._frozen, True)
+        with self.assertRaises(Exception):
+            self.unit_type_pool.add_unit_type(self.unit_type)
+
 
 class TestUnit(unittest.TestCase):
     def setUp(self):
@@ -161,10 +172,12 @@ class TestUnitGenerator(unittest.TestCase):
         self.unit_generator = UnitGenerator(unit_type_pool=self.unit_type_pool)
 
     def test_create_unit(self):
+        self.unit_type_pool.freeze_pool()
         unit = self.unit_generator.create_unit("test_alias")
         self.assertIsInstance(unit, Unit)
 
     def test_create_unit_with_invalid_alias(self):
+        self.unit_type_pool.freeze_pool()
         with self.assertRaises(ValueError):
             self.unit_generator.create_unit("invalid_alias")
 
@@ -179,5 +192,4 @@ class TestUnitGenerator(unittest.TestCase):
             sys_function=self.unit_type_function,
         )
         self.unit_type_pool.add_unit_type(unit_type2)
-        with self.assertRaises(ValueError):
-            self.unit_generator.create_unit("test_alias")
+        self.assertEqual(self.unit_type_pool.get_type_from_alias("test_alias2"), unit_type2)
