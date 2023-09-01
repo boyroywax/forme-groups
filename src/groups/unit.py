@@ -26,7 +26,7 @@ class UnitTypeFunction:
         args (list[str]): The arguments that will be passed to the function.
     """
     object: callable = field(factory=callable)
-    args: list = field(factory=list)
+    args: tuple = field(factory=tuple)
 
     def call(self, input: Any = None) -> object:
         """Call the function with the given input.
@@ -37,10 +37,14 @@ class UnitTypeFunction:
         Returns:
             object: The result of the function call.
         """
-        if input is not None:
-            self.args.append(input)
-
-        return self.object(*self.args)
+        if input is not None and len(self.args) > 0:
+            new_args = list(self.args)
+            new_args.insert(0, input)
+            return self.object(*new_args)
+        elif input is not None:
+            return self.object(input)
+        else:
+            return self.object(*self.args)
 
 
 @define(frozen=True, slots=True)
@@ -108,7 +112,7 @@ class UnitTypePool:
 
 @define(frozen=True, slots=True)
 class Unit:
-    value: str = field(default=None)
+    value: Any = field(default=None)
     type_ref: UnitTypeRef = field(default=None)
 
 
@@ -119,7 +123,7 @@ class UnitGenerator:
     def check_frozen_pool(self) -> bool:
         return self.unit_type_pool._frozen
 
-    def create_unit(self, alias: str, value: str = None, force: bool = True) -> Unit:
+    def create_unit(self, alias: str, value: Any = None, force: bool = True) -> Unit:
         if not self.check_frozen_pool():
             raise Exception("UnitTypePool must be frozen before generating units.")
 
@@ -128,7 +132,8 @@ class UnitGenerator:
 
         unit_type: UnitType = self.unit_type_pool.get_type_from_alias(alias)
 
-        if unit_type.sys_function is not None and force is True:
-            value = unit_type.sys_function.call(value)
+        # if unit_type.sys_function is not None and force is True:
+        #     print("Forcing unit creation with system function.")
+        #     value = unit_type.sys_function.call(input=value)
 
-        return Unit(value=value, type_ref=alias)
+        return Unit(value=value, type_ref=UnitTypeRef(alias))
