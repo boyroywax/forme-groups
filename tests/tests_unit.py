@@ -140,6 +140,11 @@ class TestUnitTypePool(unittest.TestCase):
         with self.assertRaises(Exception):
             self.unit_type_pool.add_unit_type(self.unit_type)
 
+    def test_set_system_types(self):
+        unit_type_pool = UnitTypePool()
+        unit_type_pool.set_system_types_from_json()
+        self.assertGreater(len(unit_type_pool.unit_types), 0)
+
 
 class TestUnit(unittest.TestCase):
     def setUp(self):
@@ -193,3 +198,11 @@ class TestUnitGenerator(unittest.TestCase):
         )
         self.unit_type_pool.add_unit_type(unit_type2)
         self.assertEqual(self.unit_type_pool.get_type_from_alias("test_alias2"), unit_type2)
+
+    def test_create_unit_with_value(self):
+        self.unit_type_pool.set_system_types_from_json()
+        self.unit_type_pool.freeze_pool()
+        unit = self.unit_generator.create_unit("str", value="test_value")
+        self.assertEqual(unit.value, "test_value")
+
+    

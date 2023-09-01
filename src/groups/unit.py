@@ -1,5 +1,6 @@
 from attrs import define, field
 from attrs.exceptions import FrozenInstanceError
+import json
 from typing import Any
 
 
@@ -87,6 +88,23 @@ class UnitTypePool:
                 raise ValueError("UnitTypePool already contains alias: " + aliases.alias)
         self.unit_types.append(unit_type)
 
+    def add_unit_type_from_json(self, json: dict):
+        unit_type = UnitType(
+            aliases=[UnitTypeRef(alias=alias) for alias in json["aliases"]],
+            super_type=[UnitTypeRef(alias=alias) for alias in json["base_type"]],
+            prefix=json["prefix"],
+            suffix=json["suffix"],
+            separator=json["separator"],
+            sys_function=UnitTypeFunction(object=eval(json["sys_function"]["object"]), args=json["sys_function"]["args"]),
+        )
+        self.add_unit_type(unit_type)
+
+    def set_system_types_from_json(self):
+        with open("src/groups/system_types.json", "r") as f:
+            sys_types = json.load(f)
+            for type_ in sys_types["system_types"]:
+                self.add_unit_type_from_json(type_)
+
 
 @define(frozen=True, slots=True)
 class Unit:
@@ -110,7 +128,7 @@ class UnitGenerator:
 
         unit_type: UnitType = self.unit_type_pool.get_type_from_alias(alias)
 
-        if unit_type.sys_function is not None:
+        if unit_type.sys_function is not None and force is True:
             value = unit_type.sys_function.call(value)
 
         return Unit(value=value, type_ref=alias)

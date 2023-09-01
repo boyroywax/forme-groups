@@ -1,0 +1,92 @@
+{
+    "system_types": [
+        {
+            "aliases": ["string", "str"],
+            "base_type": ["__SYSTEM_RESERVED_STR__"],
+            "prefix": "",
+            "suffix": "",
+            "separator": "",
+            "sys_function": {
+                "object": "str",
+                "args": []
+            }
+        },
+        {
+            "aliases": ["int", "integer"],
+            "base_type": ["__SYSTEM_RESERVED_INT__"],
+            "prefix": "",
+            "suffix": "",
+            "separator": "",
+            "sys_function": {
+                "object": "int",
+                "args": []
+            }
+        },
+        {
+            "aliases": ["float"],
+            "base_type": ["__SYSTEM_RESERVED_FLOAT__"],
+            "prefix": "",
+            "suffix": "",
+            "separator": "",
+            "sys_function": {
+                "object": "float",
+                "args": []
+            }
+        },
+        {
+            "aliases": ["bool", "boolean"],
+            "base_type": ["__SYSTEM_RESERVED_BOOL__"],
+            "prefix": "",
+            "suffix": "",
+            "separator": "",
+            "sys_function": {
+                "object": "bool",
+                "args": []
+            }
+        },
+        {
+            "aliases": ["list"],
+            "base_type": ["__SYSTEM_RESERVED_LIST__"],
+            "prefix": "[",
+            "suffix": "]",
+            "separator": ", ",
+            "sys_function": {
+                "object": "list",
+                "args": []
+            }
+        },
+        {
+            "aliases": ["dict", "dictionary"],
+            "base_type": ["__SYSTEM_RESERVED_DICT__"],
+            "prefix": "{",
+            "suffix": "}",
+            "separator": ", ",
+            "sys_function": {
+                "object": "dict",
+                "args": []
+            }
+        },
+        {
+            "aliases": ["tuple"],
+            "base_type": ["__SYSTEM_RESERVED_TUPLE__"],
+            "prefix": "(",
+            "suffix": ")",
+            "separator": ", ",
+            "sys_function": {
+                "object": "tuple",
+                "args": []
+            }
+        },
+        {
+            "aliases": ["bytes"],
+            "base_type": ["__SYSTEM_RESERVED_BYTES__"],
+            "prefix": "b'",
+            "suffix": "'",
+            "separator": "",
+            "sys_function": {
+                "object": "bytes",
+                "args": []
+            }
+        }
+    ]
+}
