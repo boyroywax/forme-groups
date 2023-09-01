@@ -18,6 +18,11 @@ class TestUnitTypeRef(unittest.TestCase):
     def test_unit_type_ref_has_alias(self):
         self.assertEqual(self.unit_type_ref.alias, "test_alias")
 
+    def test_unit_type_ref_is_frozen(self):
+        unit_type_ref = UnitTypeRef(alias="test_alias")
+        with self.assertRaises(FrozenInstanceError):
+            unit_type_ref.alias = "new_alias"
+
 
 class TestUnitTypeFunction(unittest.TestCase):
     def setUp(self):
@@ -31,6 +36,27 @@ class TestUnitTypeFunction(unittest.TestCase):
 
     def test_unit_type_function_has_args(self):
         self.assertEqual(self.unit_type_function.args, ["arg1", "arg2"])
+
+    def test_unit_type_function_is_frozen(self):
+        unit_type_function = UnitTypeFunction(object=MagicMock(), args=["arg1", "arg2"])
+        with self.assertRaises(FrozenInstanceError):
+            unit_type_function.object = MagicMock()
+
+    def test_unit_type_function_call(self):
+        unit_type_function = UnitTypeFunction(object=lambda x, y: x + y, args=[1, 2])
+        self.assertEqual(unit_type_function.call(), 3)
+
+    def test_unit_type_function_call_with_no_args(self):
+        unit_type_function = UnitTypeFunction(object=lambda: 1, args=[])
+        self.assertEqual(unit_type_function.call(), 1)
+
+    def test_unit_type_function_call_with_builtin_function(self):
+        unit_type_function = UnitTypeFunction(object=len, args=[[]])
+        self.assertEqual(unit_type_function.call(), 0)
+
+    def test_unit_type_function_call_with_buildint_string_function(self):
+        unit_type_function = UnitTypeFunction(object=str.upper)
+        self.assertEqual(unit_type_function.call("test"), "TEST")
 
 
 class TestUnitType(unittest.TestCase):
