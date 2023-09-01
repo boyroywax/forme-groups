@@ -209,16 +209,15 @@ class TestUnitGenerator(unittest.TestCase):
         print(self.unit_generator.unit_type_pool)
         self.assertEqual(self.unit_generator.unit_type_pool, pre_pool)
 
-    
-
-    # def test_create_unit_with_value_and_no_sys_function(self):
-    #     self.unit_type_pool.freeze_pool()
-    #     self.assertEqual(self.unit_type_pool.get_type_from_alias("test_alias").sys_function, None)
-    #         # self.unit_generator.create_unit("test_alias", value="test_value")
-
     def test_create_units_and_check_if_same_hash(self):
         self.unit_type_pool.set_system_types_from_json()
         self.unit_type_pool.freeze_pool()
         unit1 = self.unit_generator.create_unit("str", value="test_value")
         unit2 = self.unit_generator.create_unit("str", value="test_value")
         self.assertEqual(unit1, unit2)
+
+    def test_create_unit_with_no_value(self):
+        self.unit_type_pool.set_system_types_from_json()
+        self.unit_type_pool.freeze_pool()
+        unit = self.unit_generator.create_unit(alias="str")
+        self.assertEqual(unit.value, "")

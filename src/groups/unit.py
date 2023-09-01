@@ -1,5 +1,4 @@
 from attrs import define, field
-from attrs.exceptions import FrozenInstanceError
 import json
 from typing import Any
 
@@ -23,7 +22,7 @@ class UnitTypeFunction:
 
     Attributes:
         object (callable): The function that will be called to generate a Unit.
-        args (list[str]): The arguments that will be passed to the function.
+        args (tuple): The arguments that will be passed to the function.
     """
     object: callable = field(factory=callable)
     args: tuple = field(factory=tuple)
@@ -120,6 +119,18 @@ class Unit:
 class UnitGenerator:
     unit_type_pool: UnitTypePool = field(default=None)
 
+    def __attrs_init__(self, unit_type_pool: UnitTypePool = None, freeze: bool = False):
+        self.unit_type_pool = UnitTypePool()
+
+        self.unit_type_pool.set_system_types_from_json()
+
+        if unit_type_pool is not None:
+            for unit_type in unit_type_pool.unit_types:
+                self.unit_type_pool.add_unit_type(unit_type)
+
+        if freeze is True:
+            self.unit_type_pool.freeze_pool()
+
     def check_frozen_pool(self) -> bool:
         return self.unit_type_pool._frozen
 
@@ -132,8 +143,11 @@ class UnitGenerator:
 
         unit_type: UnitType = self.unit_type_pool.get_type_from_alias(alias)
 
-        # if unit_type.sys_function is not None and force is True:
-        #     print("Forcing unit creation with system function.")
-        #     value = unit_type.sys_function.call(input=value)
+        if force is True:
+            if unit_type.sys_function is None:
+                raise ValueError("UnitType has no system function.")
+            else:
+                return Unit(value=unit_type.sys_function.call(value), type_ref=UnitTypeRef(alias))
 
         return Unit(value=value, type_ref=UnitTypeRef(alias))
+    
