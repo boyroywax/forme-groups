@@ -131,13 +131,16 @@ class Unit:
 class UnitGenerator:
     unit_type_pool: UnitTypePool = field(default=None)
 
-    def __init__(self, unit_type_pool: UnitTypePool = None):
+    def __init__(self, unit_type_pool: UnitTypePool = None, freeze: bool = False):
         self.unit_type_pool = UnitTypePool()
         self.unit_type_pool.set_system_types_from_json()
 
         if unit_type_pool is not None:
             for unit_type in unit_type_pool.unit_types:
                 self.unit_type_pool.add_unit_type(unit_type)
+
+        if freeze is True:
+            self.__post_init__(freeze=True)
 
     def __post_init__(self, **kwargs):
         if kwargs.get("freeze", False) is True:

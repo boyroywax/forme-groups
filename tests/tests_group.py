@@ -45,4 +45,5 @@ class TestGroupUnitGenerator(unittest.TestCase):
         self.group_unit_generator.unit_generator.unit_type_pool.freeze_pool()
         properties = tuple(self.group_unit_generator.unit_generator.create_unit(alias="str") for _ in range(4))
         group_unit = self.group_unit_generator.create_group_unit(nonce=properties[0], owners=properties[1], credentials=properties[2], data=properties[3])
+        print(group_unit)
         self.assertIsInstance(group_unit, GroupUnit)
