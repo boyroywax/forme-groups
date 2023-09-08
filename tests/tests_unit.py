@@ -231,5 +231,3 @@ class TestUnitGenerator(unittest.TestCase):
             unit = self.unit_generator.create_unit(unit_type.aliases[0].alias)
             print(unit)
             self.assertIsInstance(unit, Unit)
-
-

@@ -40,3 +40,9 @@ class TestGroupUnitGenerator(unittest.TestCase):
     def test_group_unit_generator_has_frozen_unit_type_pool(self):
         self.group_unit_generator.unit_generator.unit_type_pool.freeze_pool()
         self.assertTrue(self.group_unit_generator.unit_generator.check_frozen_pool())
+
+    def test_group_unit_generator_create_group_unit(self):
+        self.group_unit_generator.unit_generator.unit_type_pool.freeze_pool()
+        properties = tuple(self.group_unit_generator.unit_generator.create_unit(alias="str") for _ in range(4))
+        group_unit = self.group_unit_generator.create_group_unit(nonce=properties[0], owners=properties[1], credentials=properties[2], data=properties[3])
+        self.assertIsInstance(group_unit, GroupUnit)

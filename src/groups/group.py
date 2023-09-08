@@ -20,3 +20,11 @@ class GroupUnitGenerator:
             self.unit_generator.unit_type_pool.freeze_pool()
         else:
             self.unit_generator = UnitGenerator()
+
+    def create_group_unit(self, nonce: tuple[Unit], owners: tuple[Unit], credentials: tuple[Unit], data: tuple[Unit]) -> GroupUnit:
+        return GroupUnit(
+            nonce=nonce,
+            owners=owners,
+            credentials=credentials,
+            data=data,
+        )
