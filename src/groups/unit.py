@@ -1,6 +1,6 @@
 from attrs import define, field
 import json
-from typing import Any
+from typing import Any, Optional
 
 
 @define(frozen=True, slots=True)
@@ -11,9 +11,6 @@ class UnitTypeRef:
         alias (str): The alias of the UnitType.
     """
     alias: str = field(default=None)
-
-    def __str__(self) -> str:
-        return self.alias
 
 
 @define(frozen=True, slots=True)
@@ -53,17 +50,17 @@ class UnitType:
     Attributes:
         aliases (list[UnitTypeRef]): The aliases of the UnitType.
         super_type (list[UnitTypeRef]): The super types of the UnitType.
-        prefix (str): The prefix of the UnitType.
-        suffix (str): The suffix of the UnitType.
-        separator (str): The separator of the UnitType.
-        sys_function (UnitTypeFunction): The system function of the UnitType.
+        prefix (str): The prefix of the UnitType. Defaults to None.
+        suffix (str): The suffix of the UnitType. Defaults to None.
+        separator (str): The separator of the UnitType. Defaults to None.
+        sys_function (UnitTypeFunction): The system function of the UnitType. Defaults to None.
     """
-    aliases: list[UnitTypeRef] = field(factory=list)
-    super_type: list[UnitTypeRef] = field(factory=list)
-    prefix: str = field(default=None)
-    suffix: str = field(default=None)
-    separator: str = field(default=None)
-    sys_function: UnitTypeFunction = field(default=None)
+    aliases: tuple[str] = field(factory=tuple)
+    super_type: tuple[UnitTypeRef] = field(factory=tuple)
+    prefix: Optional[str] = field(default=None)
+    suffix: Optional[str] = field(default=None)
+    separator: Optional[str] = field(default=None)
+    sys_function: Optional[UnitTypeFunction] = field(default=None)
 
 
 @define(slots=True)
@@ -71,9 +68,24 @@ class UnitTypePool:
     _frozen: bool = field(default=False)
     unit_types: list[UnitType] | tuple[UnitType] = field(factory=list)
 
+    def __init__(self, sys_types: bool = False):
+        self._frozen = False
+        self.unit_types = []
+        # if kwargs.get("freeze", False) is True:
+        if sys_types is True:
+            self.set_system_types_from_json()
+
     def freeze_pool(self):
         self.__setattr__("unit_types", tuple(self.unit_types))
         self.__setattr__("_frozen", True)
+
+    @property
+    def frozen(self) -> bool:
+        return self._frozen
+
+    @frozen.getter
+    def frozen(self) -> bool:
+        return self._frozen
 
     def get_type_from_alias(self, alias: str) -> UnitType | None:
         for unit_type in self.unit_types:
@@ -115,24 +127,24 @@ class Unit:
     type_ref: UnitTypeRef = field(default=None)
 
 
-@define(frozen=True, slots=True)
+@define(slots=True)
 class UnitGenerator:
     unit_type_pool: UnitTypePool = field(default=None)
 
-    def __attrs_init__(self, unit_type_pool: UnitTypePool = None, freeze: bool = False):
+    def __init__(self, unit_type_pool: UnitTypePool = None):
         self.unit_type_pool = UnitTypePool()
-
         self.unit_type_pool.set_system_types_from_json()
 
         if unit_type_pool is not None:
             for unit_type in unit_type_pool.unit_types:
                 self.unit_type_pool.add_unit_type(unit_type)
 
-        if freeze is True:
+    def __post_init__(self, **kwargs):
+        if kwargs.get("freeze", False) is True:
             self.unit_type_pool.freeze_pool()
 
     def check_frozen_pool(self) -> bool:
-        return self.unit_type_pool._frozen
+        return self.unit_type_pool.frozen
 
     def create_unit(self, alias: str, value: Any = None, force: bool = True) -> Unit:
         if not self.check_frozen_pool():
@@ -150,4 +162,3 @@ class UnitGenerator:
                 return Unit(value=unit_type.sys_function.call(value), type_ref=UnitTypeRef(alias))
 
         return Unit(value=value, type_ref=UnitTypeRef(alias))
-    

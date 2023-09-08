@@ -74,6 +74,7 @@ class TestUnitType(unittest.TestCase):
             separator="separator",
             sys_function=UnitTypeFunction(object=MagicMock(), args=["arg1", "arg2"]),
         )
+        print(self.unit_type)
 
     def test_create_unit_type(self):
         self.assertIsInstance(self.unit_type, UnitType)
@@ -136,7 +137,7 @@ class TestUnitTypePool(unittest.TestCase):
 
     def test_unit_type_pool_freeze_pool(self):
         self.unit_type_pool.freeze_pool()
-        self.assertEqual(self.unit_type_pool._frozen, True)
+        self.assertEqual(self.unit_type_pool.frozen, True)
         with self.assertRaises(Exception):
             self.unit_type_pool.add_unit_type(self.unit_type)
 
@@ -175,6 +176,7 @@ class TestUnitGenerator(unittest.TestCase):
         self.unit_type_pool = UnitTypePool()
         self.unit_type_pool.add_unit_type(self.unit_type)
         self.unit_generator = UnitGenerator(unit_type_pool=self.unit_type_pool)
+        self.unit_generator.unit_type_pool.freeze_pool()
 
     def test_create_unit(self):
         self.unit_type_pool.freeze_pool()
@@ -200,7 +202,7 @@ class TestUnitGenerator(unittest.TestCase):
         self.assertEqual(self.unit_type_pool.get_type_from_alias("test_alias2"), unit_type2)
 
     def test_create_unit_with_value(self):
-        self.unit_generator.unit_type_pool.set_system_types_from_json()
+        # self.unit_generator.unit_type_pool.set_system_types_from_json()
         self.unit_generator.unit_type_pool.freeze_pool()
         pre_pool = self.unit_generator.unit_type_pool
         print(pre_pool)
@@ -221,3 +223,13 @@ class TestUnitGenerator(unittest.TestCase):
         self.unit_type_pool.freeze_pool()
         unit = self.unit_generator.create_unit(alias="str")
         self.assertEqual(unit.value, "")
+
+    def test_create_units_from_all_system_types(self):
+        self.unit_type_pool.set_system_types_from_json()
+        self.unit_type_pool.freeze_pool()
+        for unit_type in self.unit_type_pool.unit_types:
+            unit = self.unit_generator.create_unit(unit_type.aliases[0].alias)
+            print(unit)
+            self.assertIsInstance(unit, Unit)
+
+
