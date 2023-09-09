@@ -28,3 +28,32 @@ class GroupUnitGenerator:
             credentials=credentials,
             data=data,
         )
+    
+
+class Group:
+    generator: GroupUnitGenerator = GroupUnitGenerator()
+    units: dict[tuple[Unit], GroupUnit] = {}
+
+    def __init__(self, generator: GroupUnitGenerator = None):
+        if generator is not None:
+            self.generator = generator
+        else:
+            self.generator = GroupUnitGenerator()
+
+    def get_unit_by_nonce(self, nonce: tuple[Unit]) -> GroupUnit:
+        for unit in self.units:
+            if unit.nonce == nonce:
+                return unit
+        return None
+
+    def find_next_nonce(self, nonce: tuple[Unit]) -> tuple[Unit]:
+        # Find the active nonce type
+        active_nonce = nonce[-1]
+        nonce_type = type(active_nonce)
+
+        match(nonce_type):
+            case "int":
+                return nonce[:-1] + (nonce_type(active_nonce) + 1,)
+
+            case _:
+                raise ValueError("Nonce type not supported.")

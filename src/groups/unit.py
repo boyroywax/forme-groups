@@ -153,10 +153,10 @@ class UnitGenerator:
         if not self.check_frozen_pool():
             raise Exception("UnitTypePool must be frozen before generating units.")
 
-        if not self.unit_type_pool.contains_alias(alias):
-            raise ValueError("UnitTypePool does not contain alias: " + alias)
-
         unit_type: UnitType = self.unit_type_pool.get_type_from_alias(alias)
+
+        if unit_type is None:
+            raise ValueError("UnitTypePool does not contain alias: " + alias)
 
         if force is True:
             if unit_type.sys_function is None:
