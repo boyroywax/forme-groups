@@ -1,6 +1,6 @@
 from attrs import define, field
 import json
-from typing import Any, Optional
+from typing import Any, Optional, Tuple
 
 
 @define(frozen=True, slots=True)
@@ -55,8 +55,8 @@ class UnitType:
         separator (str): The separator of the UnitType. Defaults to None.
         sys_function (UnitTypeFunction): The system function of the UnitType. Defaults to None.
     """
-    aliases: tuple[str] = field(factory=tuple)
-    super_type: tuple[UnitTypeRef] = field(factory=tuple)
+    aliases: Tuple[UnitTypeRef] = field(factory=tuple)
+    super_type: Tuple[UnitTypeRef] = field(factory=tuple)
     prefix: Optional[str] = field(default=None)
     suffix: Optional[str] = field(default=None)
     separator: Optional[str] = field(default=None)

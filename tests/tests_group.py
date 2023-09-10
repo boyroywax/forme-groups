@@ -67,21 +67,21 @@ class TestGroup(unittest.TestCase):
         self.assertIsInstance(group, Group)
 
     def test_get_unit_by_nonce(self):
-        nonce = (Unit(value="test_value", type_ref="test_alias"),)
+        nonce = (Unit(value=0, type_ref="int"),)
         group_unit = GroupUnit(nonce=nonce, owners=(), credentials=(), data=())
-        self.group.units[nonce] = group_unit
+        self.group.units = [group_unit]
         self.assertEqual(self.group.get_unit_by_nonce(nonce), group_unit)
 
     def test_get_unit_by_nonce_returns_none_if_not_found(self):
-        nonce = (Unit(value="test_value", type_ref="test_alias"),)
+        nonce = (Unit(value=1, type_ref="int"),)
         self.assertIsNone(self.group.get_unit_by_nonce(nonce))
 
     def test_find_next_nonce_with_int_nonce(self):
-        nonce = (Unit(value=1, type_ref="test_alias"),)
-        expected_next_nonce = (Unit(value=1),)
+        nonce = (Unit(value=1, type_ref="int"),)
+        expected_next_nonce = (Unit(value=2, type_ref=UnitTypeRef(alias="int")),)
         self.assertEqual(self.group.find_next_nonce(nonce), expected_next_nonce)
 
     def test_find_next_nonce_raises_error_with_unsupported_nonce_type(self):
-        nonce = (Unit(value="test_value", type_ref="test_alias"),)
+        nonce = (Unit(value="string", type_ref=UnitTypeRef(alias="str")),)
         with self.assertRaises(ValueError):
             self.group.find_next_nonce(nonce)

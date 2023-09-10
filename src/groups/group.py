@@ -1,6 +1,6 @@
 from attrs import define, field
 
-from .unit import Unit, UnitGenerator
+from .unit import Unit, UnitGenerator, UnitTypeRef
 
 
 @define(frozen=True, slots=True)
@@ -32,7 +32,7 @@ class GroupUnitGenerator:
 
 class Group:
     generator: GroupUnitGenerator = GroupUnitGenerator()
-    units: dict[tuple[Unit], GroupUnit] = {}
+    units: list[GroupUnit] = []
 
     def __init__(self, generator: GroupUnitGenerator = None):
         if generator is not None:
@@ -41,19 +41,22 @@ class Group:
             self.generator = GroupUnitGenerator()
 
     def get_unit_by_nonce(self, nonce: tuple[Unit]) -> GroupUnit:
-        for unit in self.units:
-            if unit.nonce == nonce:
-                return unit
+        for group_unit in self.units:
+            if group_unit.nonce == nonce:
+                return group_unit
         return None
 
     def find_next_nonce(self, nonce: tuple[Unit]) -> tuple[Unit]:
         # Find the active nonce type
         active_nonce = nonce[-1]
-        nonce_type = type(active_nonce)
+        nonce_type = active_nonce.type_ref
 
         match(nonce_type):
             case "int":
-                return nonce[:-1] + (nonce_type(active_nonce) + 1,)
+                return (Unit(
+                    value=int(active_nonce.value) + 1,
+                    type_ref=UnitTypeRef(alias="int"),
+                ),)
 
             case _:
                 raise ValueError("Nonce type not supported.")
