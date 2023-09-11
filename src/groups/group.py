@@ -49,14 +49,15 @@ class Group:
     def find_next_nonce(self, nonce: tuple[Unit]) -> tuple[Unit]:
         # Find the active nonce type
         active_nonce = nonce[-1]
-        nonce_type = active_nonce.type_ref
+        nonce_type = active_nonce.type_ref.alias
 
         match(nonce_type):
             case "int":
-                return (Unit(
-                    value=int(active_nonce.value) + 1,
-                    type_ref=UnitTypeRef(alias="int"),
-                ),)
+                if len(nonce) == 1:
+                    return (Unit(value=active_nonce.value + 1, type_ref=UnitTypeRef(alias="int")),)
+                else:
+                    print(nonce[:-1])
+                    return nonce[:-1] + (Unit(value=active_nonce.value + 1, type_ref=UnitTypeRef(alias="int")),)
 
             case _:
-                raise ValueError("Nonce type not supported.")
+                raise ValueError("Nonce type not supported. " + nonce_type.__str__())

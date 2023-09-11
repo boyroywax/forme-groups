@@ -67,17 +67,17 @@ class TestGroup(unittest.TestCase):
         self.assertIsInstance(group, Group)
 
     def test_get_unit_by_nonce(self):
-        nonce = (Unit(value=0, type_ref="int"),)
+        nonce = (Unit(value=0, type_ref=UnitTypeRef(alias="int")),)
         group_unit = GroupUnit(nonce=nonce, owners=(), credentials=(), data=())
         self.group.units = [group_unit]
         self.assertEqual(self.group.get_unit_by_nonce(nonce), group_unit)
 
     def test_get_unit_by_nonce_returns_none_if_not_found(self):
-        nonce = (Unit(value=1, type_ref="int"),)
+        nonce = (Unit(value=1, type_ref=UnitTypeRef(alias="int")),)
         self.assertIsNone(self.group.get_unit_by_nonce(nonce))
 
     def test_find_next_nonce_with_int_nonce(self):
-        nonce = (Unit(value=1, type_ref="int"),)
+        nonce = (Unit(value=1, type_ref=UnitTypeRef(alias="int")),)
         expected_next_nonce = (Unit(value=2, type_ref=UnitTypeRef(alias="int")),)
         self.assertEqual(self.group.find_next_nonce(nonce), expected_next_nonce)
 
@@ -85,3 +85,8 @@ class TestGroup(unittest.TestCase):
         nonce = (Unit(value="string", type_ref=UnitTypeRef(alias="str")),)
         with self.assertRaises(ValueError):
             self.group.find_next_nonce(nonce)
+
+    def test_find_next_nonce_with_int_nonces(self):
+        nonce = (Unit(value=0, type_ref=UnitTypeRef(alias="int")), Unit(value=1, type_ref=UnitTypeRef(alias="int")))
+        expected_next_nonce = (Unit(value=0, type_ref=UnitTypeRef(alias="int")), Unit(value=2, type_ref=UnitTypeRef(alias="int")))
+        self.assertEqual(self.group.find_next_nonce(nonce), expected_next_nonce)

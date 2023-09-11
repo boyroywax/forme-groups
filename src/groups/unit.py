@@ -12,6 +12,9 @@ class UnitTypeRef:
     """
     alias: str = field(default=None)
 
+    def __str__(self) -> str:
+        return self.alias
+
 
 @define(frozen=True, slots=True)
 class UnitTypeFunction:
