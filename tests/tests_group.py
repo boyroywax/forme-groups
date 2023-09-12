@@ -85,3 +85,11 @@ class TestGroup(unittest.TestCase):
         self.group.new_group_unit(nonce=nonce2)
         highest_nonce_by_tier = self.group.get_highest_nonce_by_tier(tier=2)
         self.assertEqual(highest_nonce_by_tier, nonce2)
+
+    def test_get_highest_nonce_up_to_tier(self):
+        nonce1 = Nonce(units=[self.unit_generator.create_unit(alias="int", value=0), self.unit_generator.create_unit(alias="int", value=1)])
+        nonce2 = Nonce(units=[self.unit_generator.create_unit(alias="int", value=0), self.unit_generator.create_unit(alias="int", value=0), self.unit_generator.create_unit(alias="int", value=0)])
+        self.group.new_group_unit(nonce=nonce1)
+        self.group.new_group_unit(nonce=nonce2)
+        highest_nonce_by_tier = self.group.get_highest_nonce(tier=2)
+        self.assertEqual(highest_nonce_by_tier, nonce1)

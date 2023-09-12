@@ -164,7 +164,7 @@ class Group:
 
     def get_highest_nonce(self, tier: int = None) -> Dict[int, Nonce]:
         tiers = self.get_nonce_tiers()
-        highest_nonces = Dict[int, Nonce]
+        highest_nonces: Dict[int, Nonce] = {}
 
         for tier in range(tiers):
             highest_nonces[tier] = self.get_highest_nonce_by_tier(tier)
@@ -172,7 +172,6 @@ class Group:
         return highest_nonces
 
     def new_group_unit(self, nonce: Nonce = None, ownership: Ownership = None, credentials: Credentials = None, data: Data = None) -> GroupUnit:
-        # Calculate the Nonce for the new GroupUnit
         new_group_unit = self.group_unit_generator.create_group_unit(
             nonce=nonce,
             ownership=ownership,
