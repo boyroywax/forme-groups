@@ -68,29 +68,46 @@ class UnitType:
 
 @define(slots=True)
 class UnitTypePool:
+    """A pool of UnitTypes.
+
+    Attributes:
+        _frozen (bool): Whether the UnitTypePool is frozen.
+        unit_types (list[UnitType]): The UnitTypes in the UnitTypePool.
+    """
     _frozen: bool = field(default=False)
     unit_types: list[UnitType] | tuple[UnitType] = field(factory=list)
 
     def __init__(self, sys_types: bool = False):
         self._frozen = False
         self.unit_types = []
-        # if kwargs.get("freeze", False) is True:
+
         if sys_types is True:
             self.set_system_types_from_json()
 
     def freeze_pool(self):
+        """Freeze the UnitTypePool."""
         self.__setattr__("unit_types", tuple(self.unit_types))
         self.__setattr__("_frozen", True)
 
     @property
     def frozen(self) -> bool:
+        """Whether the UnitTypePool is frozen."""
         return self._frozen
 
     @frozen.getter
     def frozen(self) -> bool:
+        """Whether the UnitTypePool is frozen."""
         return self._frozen
 
     def get_type_from_alias(self, alias: str) -> UnitType | None:
+        """Get a UnitType from an alias.
+
+        Args:
+            alias (str): The alias of the UnitType.
+
+        Returns:
+            UnitType | None: The UnitType with the given alias, or None if the UnitTypePool does not contain the alias.
+        """
         for unit_type in self.unit_types:
             for aliases in unit_type.aliases:
                 if aliases.alias == alias:
@@ -98,15 +115,39 @@ class UnitTypePool:
         return None
 
     def contains_alias(self, alias: str) -> bool:
+        """Whether the UnitTypePool contains an alias.
+
+        Args:
+            alias (str): The alias to check.
+
+        Returns:
+            bool: Whether the UnitTypePool contains the alias.
+        """
         return self.get_type_from_alias(alias) is not None
 
     def add_unit_type(self, unit_type: UnitType):
+        """Add a UnitType to the UnitTypePool.
+        
+        Args:
+            unit_type (UnitType): The UnitType to add.
+            
+        Raises: 
+            ValueError: If the UnitTypePool already contains an alias of the UnitType.
+        """
         for aliases in unit_type.aliases:
             if self.contains_alias(aliases.alias):
                 raise ValueError("UnitTypePool already contains alias: " + aliases.alias)
         self.unit_types.append(unit_type)
 
     def add_unit_type_from_json(self, json: dict):
+        """Add a UnitType from a JSON object.
+
+        Args:
+            json (dict): The JSON object to add.
+
+        Raises:
+            ValueError: If the UnitTypePool already contains an alias of the UnitType.
+        """
         unit_type = UnitType(
             aliases=[UnitTypeRef(alias=alias) for alias in json["aliases"]],
             super_type=[UnitTypeRef(alias=alias) for alias in json["base_type"]],
@@ -118,6 +159,7 @@ class UnitTypePool:
         self.add_unit_type(unit_type)
 
     def set_system_types_from_json(self):
+        """Set the system types of the UnitTypePool from a JSON file."""
         with open("src/groups/system_types.json", "r") as f:
             sys_types = json.load(f)
             for type_ in sys_types["system_types"]:
