@@ -37,7 +37,7 @@ class Nonce:
         for unit in self.units:
             nonce_string += str(unit.value) + __DEFAULT_NONCE_UNIT_TYPE_DIVIDER__
         return nonce_string[:-1]
-    
+
     def __repr__(self) -> str:
         return self.__str__()
 
@@ -155,10 +155,11 @@ class Group:
         highest_nonce_value = 0
         highest_nonce = None
         for group_unit in self.group_units:
-            if group_unit.nonce.units[tier].value >= highest_nonce_value:
-                highest_nonce_value = group_unit.nonce.units[tier].value
-                highest_nonce = group_unit.nonce
-            
+            if len(group_unit.nonce.units) > tier:
+                if group_unit.nonce.units[tier].value >= highest_nonce_value:
+                    highest_nonce_value = group_unit.nonce.units[tier].value
+                    highest_nonce = group_unit.nonce
+
         return highest_nonce
 
     def get_highest_nonce(self, tier: int = None) -> Dict[int, Nonce]:
