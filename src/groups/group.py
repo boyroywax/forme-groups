@@ -1,118 +1,118 @@
 from attrs import define, field
+from typing import Any
 
 from .unit import Unit, UnitGenerator, UnitTypeRef
+
+__DEFAULT_NONCE_UNIT_TYPE_ALIAS__ = "int"
+__DEFAULT_NONCE_UNIT_TYPE_DIVIDER__ = "."
+__DEFAULT_NONCE_UNIT_ALLOWED_TYPES__ = ("int", "integer")
+
+
+@define(frozen=True, slots=True)
+class Nonce:
+    units: tuple[Unit] = field(factory=tuple)
+
+    def __attrs_init__(self, units: tuple[Unit] = None):
+        if units is None:
+            self.units = (Unit(value=0, type_ref=UnitTypeRef(alias="int")),)
+        else:
+            self.units = units
+
+    def active_unit(self) -> Unit:
+        return self.units[-1]
+
+    def next_active_value(self) -> Unit:
+        type_ = self.active_unit().type_ref.alias
+        print(type_)
+        match(type_):
+            case("int" | "integer"):
+                return Unit(value=self.active_unit().value + 1, type_ref=self.active_unit().type_ref)
+            
+            case("str" | "string"):
+                return ValueError("Nonce active unit type not supported.")
+
+            case _:
+                raise ValueError("Nonce active unit type not supported.")
+
+
+@define(frozen=True, slots=True)
+class Ownership:
+    owners: tuple[Unit] = field(factory=tuple)
+
+    def __init__(self, owners: tuple[Unit] = None):
+        if owners is None:
+            self.owners = tuple()
+        else:
+            self.owners = owners
+
+
+@define(frozen=True, slots=True)
+class Credentials:
+    credentials: tuple[Unit] = field(factory=tuple)
+
+    def __init__(self, credentials: tuple[Unit] = None):
+        if credentials is None:
+            self.credentials = tuple()
+        else:
+            self.credentials = credentials
+
+
+@define(frozen=True, slots=True)
+class Data:
+    entries: tuple[Unit] = field(factory=tuple)
+
+    def __init__(self, data: tuple[Unit] = None):
+        if data is None:
+            self.entries = tuple()
+        else:
+            self.entries = data
 
 
 @define(frozen=True, slots=True)
 class GroupUnit:
-    nonce: 'GroupUnit.Nonce' = field(default=None)
-    owners: 'GroupUnit.Owners' = field(default=None)
-    credentials: 'GroupUnit.Credentials' = field(default=None)
-    data: 'GroupUnit.Data' = field(default=None)
-    unit_generator: UnitGenerator = field(default=None)
-
-    @define(frozen=True, slots=True)
-    class Nonce:
-        nonce: tuple[Unit] = field(default=None)
-
-        def get_active_nonce(self) -> Unit:
-            return self.nonce[-1]
-
-        def get_active_nonce_type(self) -> UnitTypeRef:
-            return self.get_active_nonce().type_ref
-
-        def next_active_nonce(self) -> Unit:
-            active_nonce = self.get_active_nonce()
-            nonce_type = active_nonce.type_ref
-
-            match(nonce_type.alias):
-                case "int":
-                    return self.unit_generator.create_unit(value=active_nonce.value + 1, type_ref=nonce_type)
-
-                case _:
-                    raise ValueError("Nonce type not supported. " + nonce_type.__str__())
-
-        def next_nonce(self) -> 'GroupUnit.Nonce':
-            return GroupUnit.Nonce(nonce=self.nonce[:-1] + (self.next_active_nonce(),))
-
-    @define(frozen=True, slots=True)
-    class Owners:
-        owners: tuple[Unit] = field(default=None)
-
-    @define(frozen=True, slots=True)
-    class Credentials:
-        credentials: tuple[Unit] = field(default=None)
-
-    @define(frozen=True, slots=True)
-    class Data:
-        data: tuple[Unit] = field(default=None)
+    nonce: Nonce = field(default=Nonce)
+    ownership: Ownership = field(default=Ownership)
+    credentials: Credentials = field(default=Credentials)
+    data: Data = field(default=Data)
 
 
 class GroupUnitGenerator:
-    unit_generator: UnitGenerator = UnitGenerator()
+    unit_generator: UnitGenerator = field(default=None)
 
     def __init__(self, unit_generator: UnitGenerator = None):
-        if unit_generator is not None:
-            self.unit_generator = unit_generator
-            self.unit_generator.unit_type_pool.freeze_pool()
-        else:
+        if unit_generator is None:
             self.unit_generator = UnitGenerator()
-
-
-class Group:
-    generator: GroupUnitGenerator = GroupUnitGenerator()
-    units: list[GroupUnit] = []
-    active_nonce: tuple[Unit] = None
-
-    def __init__(self, generator: GroupUnitGenerator = None):
-        if generator is not None:
-            self.generator = generator
         else:
-            self.generator = GroupUnitGenerator()
+            self.unit_generator = unit_generator
 
-    def clear_units(self):
-        self.units = []
+    def create_nonce(self, nonce: tuple[Unit] = None) -> Nonce:
+        if nonce is None:
+            return Nonce(units=(self.unit_generator.create_unit(alias=__DEFAULT_NONCE_UNIT_TYPE_ALIAS__, value=0),))
+        
+        for unit in nonce:
+            if unit.type_ref.alias not in __DEFAULT_NONCE_UNIT_ALLOWED_TYPES__:
+                raise ValueError("Nonce unit type must be int or integer. " + unit.type_ref.alias + " is not supported.")
+        return Nonce(units=nonce)
 
-    def get_unit_by_nonce(self, nonce: tuple[Unit]) -> GroupUnit:
-        print(self.units)
-        for group_unit in self.units:
-            if group_unit.nonce == nonce:
-                return group_unit
-        return None
+    def create_ownership(self, ownership: tuple[Unit] = None) -> Ownership:
+        if ownership is None:
+            return Ownership(units=(self.unit_generator.create_unit(alias="str", value="did:eosio:ab.testaccount"),))
+        return Ownership(units=ownership)
 
-    def set_active_nonce(self, nonce: tuple[Unit]):
-        self.active_nonce = nonce
+    def create_credentials(self, credentials: tuple[Unit] = None) -> Credentials:
+        if credentials is None:
+            return Credentials(units=(self.unit_generator.create_unit(alias="str", value="did:ab.testaccount"),))
+        return Credentials(units=credentials)
 
-    def get_unit_by_active_nonce(self) -> GroupUnit:
-        return self.get_unit_by_nonce(self.active_nonce)
+    def create_data(self, data: tuple[Unit] = None) -> Data:
+        if data is None:
+            return Data(units=(self.unit_generator.create_unit(alias="str", value="test_data"),))
+        return Data(units=data)
 
-    def find_next_nonce(self, nonce: tuple[Unit]) -> tuple[Unit]:
-        active_nonce = nonce[-1]
-        nonce_type = active_nonce.type_ref.alias
-
-        match(nonce_type):
-            case "int":
-                if len(nonce) == 1:
-                    return (Unit(value=active_nonce.value + 1, type_ref=UnitTypeRef(alias="int")),)
-                else:
-                    print(nonce[:-1])
-                    return nonce[:-1] + (Unit(value=active_nonce.value + 1, type_ref=UnitTypeRef(alias="int")),)
-
-            case _:
-                raise ValueError("Nonce type not supported. " + nonce_type.__str__())
-
-    def find_next_active_nonce(self) -> tuple[Unit]:
-        return self.find_next_nonce(self.active_nonce)
-
-    def add_group_unit(self, group_unit: GroupUnit):
-        if self.get_unit_by_nonce(group_unit.nonce) is not None:
-            raise ValueError("GroupUnit with nonce already exists. Nonce: " + group_unit.nonce.__str__())
-        else:
-            if self.find_next_nonce(group_unit.nonce) != self.find_next_active_nonce():
-                raise ValueError("GroupUnit nonce does not match the next active nonce.")
-            self.units.append(group_unit)
-
-    def create_and_add_group_unit(self, owners: tuple[Unit], credentials: tuple[Unit], data: tuple[Unit]):
-        nonce = self.find_next_active_nonce()
-        group_unit = self.generator.create_group_unit(nonce=nonce, owners=owners, credentials=credentials, data=data)
-        self.add_group_unit(group_unit)
+    def create_group_unit(self, nonce: Nonce = None, ownership: Ownership = None, credentials: Credentials = None, data: Data = None) -> GroupUnit:
+        return GroupUnit(
+            nonce=self.create_nonce(nonce.units),
+            ownership=self.create_ownership(ownership.owners),
+            credentials=self.create_credentials(credentials.credentials),
+            data=self.create_data(data.entries)
+        )

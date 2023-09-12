@@ -127,10 +127,10 @@ class UnitTypePool:
 
     def add_unit_type(self, unit_type: UnitType):
         """Add a UnitType to the UnitTypePool.
-        
+
         Args:
             unit_type (UnitType): The UnitType to add.
-            
+
         Raises: 
             ValueError: If the UnitTypePool already contains an alias of the UnitType.
         """
@@ -164,6 +164,18 @@ class UnitTypePool:
             sys_types = json.load(f)
             for type_ in sys_types["system_types"]:
                 self.add_unit_type_from_json(type_)
+
+    def get_type_aliases(self) -> list[str]:
+        """Get the aliases of all UnitTypes in the UnitTypePool.
+
+        Returns:
+            list[str]: The aliases of all UnitTypes in the UnitTypePool.
+        """
+        aliases = []
+        for unit_type in self.unit_types:
+            for alias in unit_type.aliases:
+                aliases.append(alias.alias)
+        return aliases
 
 
 @define(frozen=True, slots=True)
