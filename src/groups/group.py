@@ -48,7 +48,7 @@ class Ownership:
 
     def __attrs_init__(self, owners: tuple[Unit] = None):
         if owners is None:
-            self.owners = (Unit)
+            self.owners = None
         else:
             self.owners = owners
 
@@ -57,9 +57,9 @@ class Ownership:
 class Credentials:
     credentials: tuple[Unit] = field(factory=tuple)
 
-    def __init__(self, credentials: tuple[Unit] = None):
+    def __attrs_init__(self, credentials: tuple[Unit] = None):
         if credentials is None:
-            self.credentials = tuple()
+            self.credentials = None
         else:
             self.credentials = credentials
 
@@ -68,9 +68,9 @@ class Credentials:
 class Data:
     entries: tuple[Unit] = field(factory=tuple)
 
-    def __init__(self, data: tuple[Unit] = None):
+    def __attrs_init__(self, data: tuple[Unit] = None):
         if data is None:
-            self.entries = tuple()
+            self.entries = None
         else:
             self.entries = data
 
@@ -113,7 +113,7 @@ class GroupUnitGenerator:
 
     def create_data(self, data: tuple[Unit] = None) -> Data:
         if data is None:
-            return Data(entries=(self.unit_generator.create_unit(alias="dict", value="{test: test_data}"),))
+            return Data(entries=(self.unit_generator.create_unit(alias="dict", value={"test": "test_data"}),))
         return Data(entries=data)
 
     def create_group_unit(self, nonce: Nonce = None, ownership: Ownership = None, credentials: Credentials = None, data: Data = None) -> GroupUnit:
@@ -147,28 +147,34 @@ class Group:
     def get_nonce_tiers(self) -> int:
         highest_nonce_tier = 0
         for group_unit in self.group_units:
-            if len(group_unit.nonce.units) > highest_nonce_tier:
+            if len(group_unit.nonce.units) >= highest_nonce_tier:
                 highest_nonce_tier = len(group_unit.nonce.units)
         return highest_nonce_tier
 
-    def get_highest_nonce_by_tier(self, tier: int = 0) -> Nonce:
+    def get_highest_nonce_by_tier(self, tier: int = 1) -> Nonce:
+        if tier < 1:
+            raise ValueError("Nonce tier cannot be negative.")
+
         highest_nonce_value = 0
         highest_nonce = None
         for group_unit in self.group_units:
-            if len(group_unit.nonce.units) > tier:
-                if group_unit.nonce.units[tier].value >= highest_nonce_value:
-                    highest_nonce_value = group_unit.nonce.units[tier].value
+            if len(group_unit.nonce.units) >= tier:
+                if group_unit.nonce.units[tier -1].value >= highest_nonce_value:
+                    highest_nonce_value = group_unit.nonce.units[tier -1].value
                     highest_nonce = group_unit.nonce
+            elif len(group_unit.nonce.units) < tier:
+               raise ValueError("Nonce tier does not exist.")
 
         return highest_nonce
 
-    def get_highest_nonce(self, tier: int = None) -> Dict[int, Nonce]:
+    def get_highest_nonce(self) -> Dict[int, Nonce]:
         tiers = self.get_nonce_tiers()
         highest_nonces: Dict[int, Nonce] = {}
 
-        for tier in range(tiers):
-            highest_nonces[tier] = self.get_highest_nonce_by_tier(tier)
+        print(tiers)
 
+        for tier in range(tiers):
+            highest_nonces[tier-1] = self.get_highest_nonce_by_tier(tier)
         return highest_nonces
 
     def new_group_unit(self, nonce: Nonce = None, ownership: Ownership = None, credentials: Credentials = None, data: Data = None) -> GroupUnit:
