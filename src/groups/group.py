@@ -33,7 +33,7 @@ class Nonce:
                 raise ValueError("Nonce active unit type not supported.")
             
     def next_active_nonce(self) -> 'Nonce':
-        return Nonce(units=self.units + (self.next_active_unit(),))
+        return Nonce(units=self.units[:-1] + (self.next_active_unit(),))
 
     def __str__(self) -> str:
         nonce_string = ""
@@ -141,6 +141,9 @@ class Group:
 
     def get_all_group_units(self) -> list[GroupUnit]:
         return self.group_units
+    
+    def freeze_unit_types(self):
+        self._group_unit_generator.unit_generator.unit_type_pool.freeze_pool()
 
     def get_group_unit_by_nonce(self, nonce: Nonce) -> GroupUnit:
         for group_unit in self.group_units:
@@ -163,6 +166,7 @@ class Group:
         
         if tier > self.get_nonce_tiers():
             raise ValueError("Nonce tier does not exist. " + str(tier) + " is out of range.")
+        
         highest_nonce_value = 0
         highest_nonce = None
         for group_unit in self.group_units:
@@ -171,9 +175,6 @@ class Group:
                 if group_unit.nonce.units[tier-1].value >= highest_nonce_value:
                     highest_nonce_value = group_unit.nonce.units[tier-1].value
                     highest_nonce = group_unit.nonce
-            # elif group_unit_tiers < tier:
-            #     print(len(group_unit.nonce.units))
-            #     raise ValueError("Nonce tier does not exist. " + str(tier) + " is out of range.")
 
         return highest_nonce
 
@@ -199,6 +200,7 @@ class Group:
         return new_group_unit
 
     def create_group_unit(self, active_unit: GroupUnit = None, ownership: Ownership = None, credentials: Credentials = None, data: Data = None) -> GroupUnit:
+        nonce = None
         if active_unit is None and self.active_unit is None:
             if len(self.group_units) == 0:
                 print("Creating new group unit with default nonce.")
@@ -212,12 +214,10 @@ class Group:
             print("Creating new group unit from active nonce.")
             nonce = active_unit.nonce.next_active_nonce()
 
-        new_group_unit = self.new_group_unit(
+        return self.new_group_unit(
             nonce=nonce,
             ownership=ownership,
             credentials=credentials,
             data=data
         )
 
-        self.group_units.append(new_group_unit)
-        return new_group_unit
