@@ -252,11 +252,3 @@ class UnitGenerator:
             formatted_unit += unit_type.suffix
 
         return formatted_unit
-
-    def verify_unit(self, unit: Unit) -> bool:
-        unit_type: UnitType = self.unit_type_pool.get_type_from_alias(unit.type_ref.alias)
-
-        if unit_type.sys_function is None:
-            return True
-        else:
-            return unit.value == unit_type.sys_function.call(unit.value)

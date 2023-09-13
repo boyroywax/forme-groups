@@ -48,6 +48,7 @@ class TestGroup(unittest.TestCase):
         self.unit_generator = UnitGenerator(freeze=True)
         self.group_unit_generator = GroupUnitGenerator(unit_generator=self.unit_generator)
         self.group = Group(group_unit_generator=self.group_unit_generator)
+        print(self.group.group_units)
 
     def test_create_group(self):
         self.assertIsInstance(self.group, Group)
@@ -79,6 +80,7 @@ class TestGroup(unittest.TestCase):
         self.assertEqual(highest_nonce_by_tier, nonce2)
 
     def test_get_highest_nonce_by_tier_with_tier(self):
+        self.group.clear_group_units()
         nonce1 = self.group._group_unit_generator.create_nonce(nonce=[self.unit_generator.create_unit(alias="int", value=0), self.unit_generator.create_unit(alias="int", value=1)])
         nonce2 = self.group._group_unit_generator.create_nonce(nonce=[self.unit_generator.create_unit(alias="int", value=0), self.unit_generator.create_unit(alias="int", value=0), self.unit_generator.create_unit(alias="int", value=0)])
         self.group.new_group_unit(nonce=nonce1)
@@ -87,6 +89,7 @@ class TestGroup(unittest.TestCase):
         self.assertEqual(highest_nonce_by_tier, nonce1)
 
     def test_get_highest_nonce_by_tier_with_tier_out_of_range(self):
+        self.group.clear_group_units()
         nonce1 = Nonce(units=[self.unit_generator.create_unit(alias="int", value=0), self.unit_generator.create_unit(alias="int", value=1)])
         nonce2 = Nonce(units=[self.unit_generator.create_unit(alias="int", value=0), self.unit_generator.create_unit(alias="int", value=0), self.unit_generator.create_unit(alias="int", value=0)])
         self.group.new_group_unit(nonce=nonce1)
@@ -95,6 +98,7 @@ class TestGroup(unittest.TestCase):
             self.group.get_highest_nonce_by_tier(tier=4)
 
     def test_get_highest_nonce_by_tier_with_tier_negative(self):
+        self.group.clear_group_units()
         nonce1 = self.group._group_unit_generator.create_nonce(nonce=(self.unit_generator.create_unit(alias="int", value=0), self.unit_generator.create_unit(alias="int", value=1)))
         nonce2 = self.group._group_unit_generator.create_nonce(nonce=(self.unit_generator.create_unit(alias="int", value=0), self.unit_generator.create_unit(alias="int", value=0), self.unit_generator.create_unit(alias="int", value=0)))
         owners = self.group._group_unit_generator.create_ownership()
@@ -106,6 +110,7 @@ class TestGroup(unittest.TestCase):
             self.group.get_highest_nonce_by_tier(tier=-1)
 
     def test_get_highest_nonce_by_tier_with_tier_zero(self):
+        self.group.clear_group_units()
         nonce1 = self.group._group_unit_generator.create_nonce(nonce=(self.unit_generator.create_unit(alias="int", value=0), self.unit_generator.create_unit(alias="int", value=1)))
         nonce2 = self.group._group_unit_generator.create_nonce(nonce=(self.unit_generator.create_unit(alias="int", value=0), self.unit_generator.create_unit(alias="int", value=0), self.unit_generator.create_unit(alias="int", value=0)))
         owners = self.group._group_unit_generator.create_ownership()
@@ -117,7 +122,9 @@ class TestGroup(unittest.TestCase):
             self.group.get_highest_nonce_by_tier(tier=0)
 
     def test_create_defualt_group_unit(self):
+        self.group.clear_group_units()
         self.group.create_group_unit()
+        print(self.group.group_units)
         self.assertIsInstance(self.group.get_all_group_units()[0], GroupUnit)
 
     def test_group_unit_is_schema(self):
