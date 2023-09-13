@@ -227,7 +227,7 @@ class UnitGenerator:
 
         if force is True:
             if unit_type.sys_function is None:
-                raise ValueError("UnitType has no system function.")
+                return Unit(value=value, type_ref=UnitTypeRef(alias))
             else:
                 return Unit(value=unit_type.sys_function.call(value), type_ref=UnitTypeRef(alias))
 

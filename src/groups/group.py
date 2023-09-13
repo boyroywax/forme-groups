@@ -197,6 +197,7 @@ class Group:
         )
 
         self.group_units.append(new_group_unit)
+        self.active_unit = new_group_unit
         return new_group_unit
 
     def create_group_unit(self, active_unit: GroupUnit = None, ownership: Ownership = None, credentials: Credentials = None, data: Data = None) -> GroupUnit:
