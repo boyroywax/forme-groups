@@ -84,7 +84,7 @@ class Data:
             for entry in self.entries:
                 if entry.type_ref.alias == "dict":
                     if schema is False:
-                        if entry.value == "Schema":
+                        if entry.value["Schema"]:
                             schema = True
                     else:
                         raise ValueError("Multiple schemas found in Data.entries.")
@@ -154,7 +154,7 @@ class Group:
 
     def get_all_group_units(self) -> list[GroupUnit]:
         return self.group_units
-    
+
     def freeze_unit_types(self):
         self._group_unit_generator.unit_generator.unit_type_pool.freeze_pool()
 
@@ -176,10 +176,10 @@ class Group:
             raise ValueError("Nonce tier cannot be negative.")
         print("Getting highest nonce by tier: " + str(tier)
                 + "\nNonce tiers: " + str(self.get_nonce_tiers()))
-        
+
         if tier > self.get_nonce_tiers():
             raise ValueError("Nonce tier does not exist. " + str(tier) + " is out of range.")
-        
+
         highest_nonce_value = 0
         highest_nonce = None
         for group_unit in self.group_units:
@@ -257,7 +257,7 @@ class Group:
             for entry in group_unit.data.entries:
                 formatted_group_unit += self._group_unit_generator.unit_generator.format_unit(entry) + ", "
 
-        return formatted_group_unit
+        return formatted_group_unit[:-2]
 
 
 
