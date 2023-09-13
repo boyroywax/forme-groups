@@ -216,9 +216,9 @@ class Group:
     def create_group_unit(self, active_unit: GroupUnit = None, ownership: Ownership = None, credentials: Credentials = None, data: Data = None) -> GroupUnit:
         nonce = None
         if active_unit is None and self.active_unit is None:
-            if len(self.group_units) == 0:
-                print("Creating new group unit with default nonce.")
-                nonce = self._group_unit_generator.create_nonce()
+            # if len(self.group_units) == 0:
+            print("Creating new group unit with default nonce.")
+            nonce = self._group_unit_generator.create_nonce()
 
         elif active_unit is None and self.active_unit is not None:
             print("Creating new group unit from previous nonce.")
@@ -258,5 +258,6 @@ class Group:
                 formatted_group_unit += self._group_unit_generator.unit_generator.format_unit(entry) + ", "
 
         return formatted_group_unit[:-2]
-    
-    
+
+    def clear_group_units(self):
+        self.group_units = []

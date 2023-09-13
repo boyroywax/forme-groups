@@ -119,3 +119,13 @@ class TestGroup(unittest.TestCase):
     def test_create_defualt_group_unit(self):
         self.group.create_group_unit()
         self.assertIsInstance(self.group.get_all_group_units()[0], GroupUnit)
+
+    def test_group_unit_is_schema(self):
+        self.group.clear_group_units()
+        print(self.group.group_units)
+        schema_unit: Unit = self.group._group_unit_generator.unit_generator.create_unit(alias="dict", value={"Schema": {"test": "test"}})
+        print(schema_unit)
+        schema_data: Data = self.group._group_unit_generator.create_data(data=(schema_unit,))
+        print(schema_data)
+        new_unit = self.group.create_group_unit(data=schema_data)
+        print(self.group.group_units)
