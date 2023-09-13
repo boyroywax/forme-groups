@@ -77,6 +77,21 @@ class Data:
         else:
             self.entries = data
 
+    def is_schema(self) -> bool:
+        schema: bool = False
+
+        if self.entries is not None and len(self.entries) > 0:
+            for entry in self.entries:
+                if entry.type_ref.alias == "dict":
+                    if schema is False:
+                        if entry.value == "Schema":
+                            schema = True
+                    else:
+                        raise ValueError("Multiple schemas found in Data.entries.")
+        return schema
+
+
+
 
 @define(frozen=True, slots=True)
 class GroupUnit:
