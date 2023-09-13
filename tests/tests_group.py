@@ -79,8 +79,8 @@ class TestGroup(unittest.TestCase):
         self.assertEqual(highest_nonce_by_tier, nonce2)
 
     def test_get_highest_nonce_by_tier_with_tier(self):
-        nonce1 = Nonce(units=[self.unit_generator.create_unit(alias="int", value=0), self.unit_generator.create_unit(alias="int", value=1)])
-        nonce2 = Nonce(units=[self.unit_generator.create_unit(alias="int", value=0), self.unit_generator.create_unit(alias="int", value=0), self.unit_generator.create_unit(alias="int", value=0)])
+        nonce1 = self.group._group_unit_generator.create_nonce(nonce=[self.unit_generator.create_unit(alias="int", value=0), self.unit_generator.create_unit(alias="int", value=1)])
+        nonce2 = self.group._group_unit_generator.create_nonce(nonce=[self.unit_generator.create_unit(alias="int", value=0), self.unit_generator.create_unit(alias="int", value=0), self.unit_generator.create_unit(alias="int", value=0)])
         self.group.new_group_unit(nonce=nonce1)
         self.group.new_group_unit(nonce=nonce2)
         highest_nonce_by_tier = self.group.get_highest_nonce_by_tier(tier=2)
@@ -95,23 +95,27 @@ class TestGroup(unittest.TestCase):
             self.group.get_highest_nonce_by_tier(tier=4)
 
     def test_get_highest_nonce_by_tier_with_tier_negative(self):
-        nonce1 = self.group.group_unit_generator.create_nonce(nonce=(self.unit_generator.create_unit(alias="int", value=0), self.unit_generator.create_unit(alias="int", value=1)))
-        nonce2 = self.group.group_unit_generator.create_nonce(nonce=(self.unit_generator.create_unit(alias="int", value=0), self.unit_generator.create_unit(alias="int", value=0), self.unit_generator.create_unit(alias="int", value=0)))
-        owners = self.group.group_unit_generator.create_ownership()
-        creds = self.group.group_unit_generator.create_credentials()
-        data = self.group.group_unit_generator.create_data()
+        nonce1 = self.group._group_unit_generator.create_nonce(nonce=(self.unit_generator.create_unit(alias="int", value=0), self.unit_generator.create_unit(alias="int", value=1)))
+        nonce2 = self.group._group_unit_generator.create_nonce(nonce=(self.unit_generator.create_unit(alias="int", value=0), self.unit_generator.create_unit(alias="int", value=0), self.unit_generator.create_unit(alias="int", value=0)))
+        owners = self.group._group_unit_generator.create_ownership()
+        creds = self.group._group_unit_generator.create_credentials()
+        data = self.group._group_unit_generator.create_data()
         self.group.new_group_unit(nonce=nonce1, ownership=owners, credentials=creds, data=data)
         self.group.new_group_unit(nonce=nonce2, ownership=owners, credentials=creds, data=data)
         with self.assertRaises(ValueError):
             self.group.get_highest_nonce_by_tier(tier=-1)
 
     def test_get_highest_nonce_by_tier_with_tier_zero(self):
-        nonce1 = self.group.group_unit_generator.create_nonce(nonce=(self.unit_generator.create_unit(alias="int", value=0), self.unit_generator.create_unit(alias="int", value=1)))
-        nonce2 = self.group.group_unit_generator.create_nonce(nonce=(self.unit_generator.create_unit(alias="int", value=0), self.unit_generator.create_unit(alias="int", value=0), self.unit_generator.create_unit(alias="int", value=0)))
-        owners = self.group.group_unit_generator.create_ownership()
-        creds = self.group.group_unit_generator.create_credentials()
-        data = self.group.group_unit_generator.create_data()
+        nonce1 = self.group._group_unit_generator.create_nonce(nonce=(self.unit_generator.create_unit(alias="int", value=0), self.unit_generator.create_unit(alias="int", value=1)))
+        nonce2 = self.group._group_unit_generator.create_nonce(nonce=(self.unit_generator.create_unit(alias="int", value=0), self.unit_generator.create_unit(alias="int", value=0), self.unit_generator.create_unit(alias="int", value=0)))
+        owners = self.group._group_unit_generator.create_ownership()
+        creds = self.group._group_unit_generator.create_credentials()
+        data = self.group._group_unit_generator.create_data()
         self.group.new_group_unit(nonce=nonce1, ownership=owners, credentials=creds, data=data)
         self.group.new_group_unit(nonce=nonce2, ownership=owners, credentials=creds, data=data)
         with self.assertRaises(ValueError):
             self.group.get_highest_nonce_by_tier(tier=0)
+
+    def test_create_defualt_group_unit(self):
+        self.group.create_group_unit()
+        self.assertIsInstance(self.group.get_all_group_units()[0], GroupUnit)

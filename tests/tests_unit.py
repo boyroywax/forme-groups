@@ -143,7 +143,7 @@ class TestUnitTypePool(unittest.TestCase):
 
     def test_set_system_types(self):
         unit_type_pool = UnitTypePool()
-        unit_type_pool.set_system_types_from_json()
+        unit_type_pool.set_types_from_json()
         self.assertGreater(len(unit_type_pool.unit_types), 0)
 
 
@@ -212,20 +212,20 @@ class TestUnitGenerator(unittest.TestCase):
         self.assertEqual(self.unit_generator.unit_type_pool, pre_pool)
 
     def test_create_units_and_check_if_same_hash(self):
-        self.unit_type_pool.set_system_types_from_json()
+        self.unit_type_pool.set_types_from_json()
         self.unit_type_pool.freeze_pool()
         unit1 = self.unit_generator.create_unit("str", value="test_value")
         unit2 = self.unit_generator.create_unit("str", value="test_value")
         self.assertEqual(unit1, unit2)
 
     def test_create_unit_with_no_value(self):
-        self.unit_type_pool.set_system_types_from_json()
+        self.unit_type_pool.set_types_from_json()
         self.unit_type_pool.freeze_pool()
         unit = self.unit_generator.create_unit(alias="str")
         self.assertEqual(unit.value, "")
 
     def test_create_units_from_all_system_types(self):
-        self.unit_type_pool.set_system_types_from_json()
+        self.unit_type_pool.set_types_from_json()
         self.unit_type_pool.freeze_pool()
         for unit_type in self.unit_type_pool.unit_types:
             unit = self.unit_generator.create_unit(unit_type.aliases[0].alias)

@@ -21,7 +21,7 @@ class Nonce:
     def active_unit(self) -> Unit:
         return self.units[-1]
 
-    def next_active_value(self) -> Unit:
+    def next_active_unit(self) -> Unit:
         match(self.active_unit().type_ref.alias):
             case("int" | "integer"):
                 return Unit(value=self.active_unit().value + 1, type_ref=self.active_unit().type_ref)
@@ -31,6 +31,9 @@ class Nonce:
 
             case _:
                 raise ValueError("Nonce active unit type not supported.")
+            
+    def next_active_nonce(self) -> 'Nonce':
+        return Nonce(units=self.units + (self.next_active_unit(),))
 
     def __str__(self) -> str:
         nonce_string = ""
@@ -86,9 +89,9 @@ class GroupUnit:
 class GroupUnitGenerator:
     unit_generator: UnitGenerator = field(default=None)
 
-    def __init__(self, unit_generator: UnitGenerator = None):
+    def __init__(self, unit_generator: UnitGenerator = None, system_types_path: str = None, custom_types_path: str = None):
         if unit_generator is None:
-            self.unit_generator = UnitGenerator()
+            self.unit_generator = UnitGenerator(system_types_path=system_types_path, custom_types_path=custom_types_path)
         else:
             self.unit_generator = unit_generator
 
@@ -126,14 +129,15 @@ class GroupUnitGenerator:
 
 
 class Group:
-    group_unit_generator: GroupUnitGenerator = None
+    _group_unit_generator: GroupUnitGenerator = None
     group_units: List[GroupUnit] = []
+    active_unit: GroupUnit = None
 
-    def __init__(self, group_unit_generator: GroupUnitGenerator = None):
+    def __init__(self, group_unit_generator: GroupUnitGenerator = None, system_types_path: str = None, custom_types_path: str = None):
         if group_unit_generator is None:
-            self.group_unit_generator = GroupUnitGenerator()
+            self._group_unit_generator = GroupUnitGenerator(system_types_path=system_types_path, custom_types_path=custom_types_path)
         else:
-            self.group_unit_generator = group_unit_generator
+            self._group_unit_generator = group_unit_generator
 
     def get_all_group_units(self) -> list[GroupUnit]:
         return self.group_units
@@ -154,16 +158,22 @@ class Group:
     def get_highest_nonce_by_tier(self, tier: int = 1) -> Nonce:
         if tier < 1:
             raise ValueError("Nonce tier cannot be negative.")
-
+        print("Getting highest nonce by tier: " + str(tier)
+                + "\nNonce tiers: " + str(self.get_nonce_tiers()))
+        
+        if tier > self.get_nonce_tiers():
+            raise ValueError("Nonce tier does not exist. " + str(tier) + " is out of range.")
         highest_nonce_value = 0
         highest_nonce = None
         for group_unit in self.group_units:
-            if len(group_unit.nonce.units) >= tier:
-                if group_unit.nonce.units[tier -1].value >= highest_nonce_value:
-                    highest_nonce_value = group_unit.nonce.units[tier -1].value
+            group_unit_tiers = len(group_unit.nonce.units)
+            if group_unit_tiers >= tier:
+                if group_unit.nonce.units[tier-1].value >= highest_nonce_value:
+                    highest_nonce_value = group_unit.nonce.units[tier-1].value
                     highest_nonce = group_unit.nonce
-            elif len(group_unit.nonce.units) < tier:
-               raise ValueError("Nonce tier does not exist.")
+            # elif group_unit_tiers < tier:
+            #     print(len(group_unit.nonce.units))
+            #     raise ValueError("Nonce tier does not exist. " + str(tier) + " is out of range.")
 
         return highest_nonce
 
@@ -178,7 +188,31 @@ class Group:
         return highest_nonces
 
     def new_group_unit(self, nonce: Nonce = None, ownership: Ownership = None, credentials: Credentials = None, data: Data = None) -> GroupUnit:
-        new_group_unit = self.group_unit_generator.create_group_unit(
+        new_group_unit = self._group_unit_generator.create_group_unit(
+            nonce=nonce,
+            ownership=ownership,
+            credentials=credentials,
+            data=data
+        )
+
+        self.group_units.append(new_group_unit)
+        return new_group_unit
+
+    def create_group_unit(self, active_unit: GroupUnit = None, ownership: Ownership = None, credentials: Credentials = None, data: Data = None) -> GroupUnit:
+        if active_unit is None and self.active_unit is None:
+            if len(self.group_units) == 0:
+                print("Creating new group unit with default nonce.")
+                nonce = self._group_unit_generator.create_nonce()
+
+        elif active_unit is None and self.active_unit is not None:
+            print("Creating new group unit from previous nonce.")
+            nonce = self.active_unit.nonce.next_active_nonce()
+
+        elif active_unit is not None and self.active_unit is None:
+            print("Creating new group unit from active nonce.")
+            nonce = active_unit.nonce.next_active_nonce()
+
+        new_group_unit = self.new_group_unit(
             nonce=nonce,
             ownership=ownership,
             credentials=credentials,

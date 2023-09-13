@@ -2,6 +2,8 @@ from attrs import define, field
 import json
 from typing import Any, Optional, Tuple
 
+__DEFAULT_SYSTEM_TYPES_PATH__ = "src/groups"
+
 
 @define(frozen=True, slots=True)
 class UnitTypeRef:
@@ -77,12 +79,12 @@ class UnitTypePool:
     _frozen: bool = field(default=False)
     unit_types: list[UnitType] | tuple[UnitType] = field(factory=list)
 
-    def __init__(self, sys_types: bool = False):
+    def __init__(self, sys_types: bool = False, path: str = None):
         self._frozen = False
         self.unit_types = []
 
         if sys_types is True:
-            self.set_system_types_from_json()
+            self.set_types_from_json(path=path)
 
     def freeze_pool(self):
         """Freeze the UnitTypePool."""
@@ -158,9 +160,14 @@ class UnitTypePool:
         )
         self.add_unit_type(unit_type)
 
-    def set_system_types_from_json(self):
+    def set_types_from_json(self, path: str = None):
         """Set the system types of the UnitTypePool from a JSON file."""
-        with open("src/groups/system_types.json", "r") as f:
+        types_path = __DEFAULT_SYSTEM_TYPES_PATH__ + "/system_types.json"
+
+        if path is not None:
+            types_path = path
+
+        with open(types_path, "r") as f:
             sys_types = json.load(f)
             for type_ in sys_types["system_types"]:
                 self.add_unit_type_from_json(type_)
@@ -188,9 +195,12 @@ class Unit:
 class UnitGenerator:
     unit_type_pool: UnitTypePool = field(default=None)
 
-    def __init__(self, unit_type_pool: UnitTypePool = None, freeze: bool = False):
+    def __init__(self, unit_type_pool: UnitTypePool = None, freeze: bool = False, system_types_path: str = None, custom_types_path: str = None):
         self.unit_type_pool = UnitTypePool()
-        self.unit_type_pool.set_system_types_from_json()
+        self.unit_type_pool.set_types_from_json(path=system_types_path)
+
+        if custom_types_path is not None:
+            self.unit_type_pool.set_types_from_json(path=custom_types_path)
 
         if unit_type_pool is not None:
             for unit_type in unit_type_pool.unit_types:
