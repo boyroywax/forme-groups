@@ -241,7 +241,7 @@ class Group:
 
         formatted_group_unit = ""
         formatted_group_unit += "Nonce: " + str(group_unit.nonce) + "\n"
-        
+
         formatted_group_unit += "Ownership: "
         if group_unit.ownership is not None:
             for owner in group_unit.ownership.owners:
@@ -258,6 +258,5 @@ class Group:
                 formatted_group_unit += self._group_unit_generator.unit_generator.format_unit(entry) + ", "
 
         return formatted_group_unit[:-2]
-
-
-
+    
+    

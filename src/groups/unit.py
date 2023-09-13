@@ -232,7 +232,7 @@ class UnitGenerator:
                 return Unit(value=unit_type.sys_function.call(value), type_ref=UnitTypeRef(alias))
 
         return Unit(value=value, type_ref=UnitTypeRef(alias))
-    
+
     def format_unit(self, unit: Unit) -> str:
         unit_type: UnitType = self.unit_type_pool.get_type_from_alias(unit.type_ref.alias)
         formatted_unit = ""
@@ -247,8 +247,16 @@ class UnitGenerator:
                 formatted_unit = formatted_unit[:-1]
             else:
                 formatted_unit += str(unit.value)
-                
+
         if unit_type.suffix is not None:
             formatted_unit += unit_type.suffix
 
         return formatted_unit
+
+    def verify_unit(self, unit: Unit) -> bool:
+        unit_type: UnitType = self.unit_type_pool.get_type_from_alias(unit.type_ref.alias)
+
+        if unit_type.sys_function is None:
+            return True
+        else:
+            return unit.value == unit_type.sys_function.call(unit.value)
