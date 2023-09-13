@@ -1,10 +1,10 @@
-<mxfile host="app.diagrams.net" modified="2023-09-13T18:36:19.013Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 Edg/116.0.1938.69" etag="8Whag0RNj1UBZjJZn6K5" version="21.6.8" type="device">
+<mxfile host="app.diagrams.net" modified="2023-09-13T18:39:42.520Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 Edg/116.0.1938.69" etag="RZ0fhOX5hexj_C5LOJuS" version="21.6.8" type="device">
   <diagram name="Page-1" id="cc29HmkyMRKGsr2kk8NS">
     <mxGraphModel dx="1332" dy="1082" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="YlA6S550wJMDQvsFW9L1-131" value="Basic Blog" style="swimlane;whiteSpace=wrap;html=1;fillColor=#bac8d3;strokeColor=#23445d;" vertex="1" parent="1">
+        <mxCell id="YlA6S550wJMDQvsFW9L1-131" value="Basic Blog" style="swimlane;whiteSpace=wrap;html=1;fillColor=#bac8d3;strokeColor=#23445d;swimlaneFillColor=default;gradientColor=none;glass=0;rounded=0;" vertex="1" parent="1">
           <mxGeometry x="215" y="1290" width="790" height="780" as="geometry">
             <mxRectangle x="50" y="1320" width="140" height="30" as="alternateBounds" />
           </mxGeometry>
