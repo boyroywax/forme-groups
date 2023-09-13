@@ -31,7 +31,7 @@ class Nonce:
 
             case _:
                 raise ValueError("Nonce active unit type not supported.")
-            
+
     def next_active_nonce(self) -> 'Nonce':
         return Nonce(units=self.units[:-1] + (self.next_active_unit(),))
 
@@ -71,7 +71,7 @@ class Credentials:
 class Data:
     entries: tuple[Unit] = field(factory=tuple)
 
-    def __attrs_init__(self, data: tuple[Unit] = None):
+    def __attrs_init__(self, data: tuple[Unit] = None, ):
         if data is None:
             self.entries = None
         else:
@@ -234,4 +234,30 @@ class Group:
             credentials=credentials,
             data=data
         )
+
+    def format_group_unit(self, group_unit: GroupUnit = None) -> str:
+        if group_unit is None:
+            group_unit = self.active_unit
+
+        formatted_group_unit = ""
+        formatted_group_unit += "Nonce: " + str(group_unit.nonce) + "\n"
+        
+        formatted_group_unit += "Ownership: "
+        if group_unit.ownership is not None:
+            for owner in group_unit.ownership.owners:
+                formatted_group_unit += self._group_unit_generator.unit_generator.format_unit(owner) + ", "
+
+        formatted_group_unit += "\nCredentials: "
+        if group_unit.credentials is not None:
+            for credential in group_unit.credentials.credentials:
+                formatted_group_unit += self._group_unit_generator.unit_generator.format_unit(credential) + ", "
+
+        formatted_group_unit += "\nData: "
+        if group_unit.data is not None:
+            for entry in group_unit.data.entries:
+                formatted_group_unit += self._group_unit_generator.unit_generator.format_unit(entry) + ", "
+
+        return formatted_group_unit
+
+
 

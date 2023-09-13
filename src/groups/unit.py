@@ -232,3 +232,23 @@ class UnitGenerator:
                 return Unit(value=unit_type.sys_function.call(value), type_ref=UnitTypeRef(alias))
 
         return Unit(value=value, type_ref=UnitTypeRef(alias))
+    
+    def format_unit(self, unit: Unit) -> str:
+        unit_type: UnitType = self.unit_type_pool.get_type_from_alias(unit.type_ref.alias)
+        formatted_unit = ""
+
+        if unit_type.prefix is not None:
+            formatted_unit += unit_type.prefix
+
+        if unit_type.separator is not None:
+            if isinstance(unit.value, tuple | list):
+                for value in unit.value:
+                    formatted_unit += str(value) + unit_type.separator
+                formatted_unit = formatted_unit[:-1]
+            else:
+                formatted_unit += str(unit.value)
+                
+        if unit_type.suffix is not None:
+            formatted_unit += unit_type.suffix
+
+        return formatted_unit
