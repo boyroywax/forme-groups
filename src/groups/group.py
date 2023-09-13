@@ -91,8 +91,6 @@ class Data:
         return schema
 
 
-
-
 @define(frozen=True, slots=True)
 class GroupUnit:
     nonce: Nonce = field(default=Nonce)
