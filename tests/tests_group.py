@@ -5,7 +5,7 @@ from unittest.mock import MagicMock
 sys.path.append("/Users/j/Documents/Forme/code/forme-groups")
 
 from src.groups.unit import UnitTypeRef, UnitTypeFunction, UnitType, UnitTypePool, Unit, UnitGenerator
-from src.groups.group import GroupUnit, GroupUnitGenerator, Nonce, Ownership, Credentials, Data, Group
+from src.groups.group import GroupUnit, GroupUnitGenerator, Nonce, Ownership, Credentials, Data, Group, Schema
 
 
 class TestGroupUnit(unittest.TestCase):
@@ -139,3 +139,30 @@ class TestGroup(unittest.TestCase):
         print(schema_data)
         new_unit = self.group.create_group_unit(data=schema_data)
         print(self.group.group_units)
+
+
+
+class TestSchema(unittest.TestCase):
+    def setUp(self):
+        self.group = Group()
+        self.profile: dict = {
+            "Schema": {
+                "test": "str"
+            }
+        }
+        self.type_pool = self.group._group_unit_generator.unit_generator.unit_type_pool
+        self.schema = Schema(self.profile, self.type_pool)
+
+    def test_init_with_none(self):
+        with self.assertRaises(ValueError):
+            schema = Schema(profile=None, type_pool=self.type_pool)
+
+    def test_init_with_schema(self):
+        schema_dict = {
+            "Schema": {
+                "test": "str"
+            }
+        }
+        schema = Schema(profile=schema_dict, type_pool=self.type_pool)
+        self.assertEqual(schema.profile, schema_dict)
+

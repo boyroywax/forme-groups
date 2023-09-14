@@ -1,7 +1,7 @@
 import unittest
 
 from tests_unit import TestUnitTypeRef, TestUnitTypeFunction, TestUnitType, TestUnitTypePool, TestUnit, TestUnitGenerator
-from tests_group import TestGroupUnit, TestGroup
+from tests_group import TestGroupUnit, TestGroup, TestSchema
 # TestGroupUnitGenerator, TestGroup
 
 
@@ -22,6 +22,7 @@ def main():
     test_suite.addTests(test_loader.loadTestsFromTestCase(TestGroupUnit))
     # test_suite.addTests(test_loader.loadTestsFromTestCase(TestGroupUnitGenerator))
     test_suite.addTests(test_loader.loadTestsFromTestCase(TestGroup))
+    test_suite.addTests(test_loader.loadTestsFromTestCase(TestSchema))
 
     # Run the test suite
     runner = unittest.TextTestRunner()
