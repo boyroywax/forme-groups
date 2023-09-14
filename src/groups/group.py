@@ -27,7 +27,7 @@ class Nonce:
                 return Unit(value=self.active_unit().value + 1, type_ref=self.active_unit().type_ref)
 
             case("str" | "string"):
-                return ValueError("Nonce active unit type not supported.")
+                raise ValueError("Nonce active unit type not supported.")
 
             case _:
                 raise ValueError("Nonce active unit type not supported.")
@@ -202,6 +202,12 @@ class Group:
         return highest_nonces
 
     def new_group_unit(self, nonce: Nonce = None, ownership: Ownership = None, credentials: Credentials = None, data: Data = None) -> GroupUnit:
+        # Check that the Nonce is available
+        if nonce is not None:
+            for group_unit in self.group_units:
+                if group_unit.nonce == nonce:
+                    raise ValueError("Nonce already exists in GroupUnit.")
+
         new_group_unit = self._group_unit_generator.create_group_unit(
             nonce=nonce,
             ownership=ownership,
