@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2023-09-14T19:14:09.199Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 Edg/116.0.1938.69" etag="sGEby1cjCv5vDzLDdOCa" version="21.6.8" type="device">
+<mxfile host="app.diagrams.net" modified="2023-09-14T19:19:40.279Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 Edg/116.0.1938.69" etag="wYsPLM02fTg87sqEg6ei" version="21.6.8" type="device">
   <diagram name="Page-1" id="cc29HmkyMRKGsr2kk8NS">
-    <mxGraphModel dx="9053" dy="3607" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="#ffffff" math="0" shadow="0">
+    <mxGraphModel dx="3194" dy="1030" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="#ffffff" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -985,9 +985,6 @@
         <mxCell id="YlA6S550wJMDQvsFW9L1-489" value="Add Posts" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#00FF00;strokeColor=#FF3333;gradientColor=#FFFF33;gradientDirection=south;" vertex="1" parent="YlA6S550wJMDQvsFW9L1-465">
           <mxGeometry x="290" y="350" width="80" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="YlA6S550wJMDQvsFW9L1-518" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="YlA6S550wJMDQvsFW9L1-465" source="YlA6S550wJMDQvsFW9L1-491" target="YlA6S550wJMDQvsFW9L1-517">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
         <mxCell id="YlA6S550wJMDQvsFW9L1-491" value="Share" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#79E896;strokeColor=#C96C24;gradientColor=#688F52;gradientDirection=north;" vertex="1" parent="YlA6S550wJMDQvsFW9L1-465">
           <mxGeometry x="570" y="240" width="80" height="80" as="geometry" />
         </mxCell>
@@ -1042,14 +1039,8 @@
         <mxCell id="YlA6S550wJMDQvsFW9L1-512" value="Metrics" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#79E896;strokeColor=#C96C24;gradientColor=#688F52;gradientDirection=north;" vertex="1" parent="YlA6S550wJMDQvsFW9L1-465">
           <mxGeometry x="265" y="470" width="80" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="YlA6S550wJMDQvsFW9L1-521" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="YlA6S550wJMDQvsFW9L1-465" source="YlA6S550wJMDQvsFW9L1-517" target="YlA6S550wJMDQvsFW9L1-520">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="YlA6S550wJMDQvsFW9L1-517" value="Membership&lt;br&gt;Services" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#00FF00;strokeColor=#FF3333;gradientColor=#FFFF33;gradientDirection=south;" vertex="1" parent="YlA6S550wJMDQvsFW9L1-465">
-          <mxGeometry x="700" y="240" width="80" height="80" as="geometry" />
-        </mxCell>
         <mxCell id="YlA6S550wJMDQvsFW9L1-520" value="Subscription Management" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#00FF00;strokeColor=#FF3333;gradientColor=#FFFF33;gradientDirection=south;" vertex="1" parent="YlA6S550wJMDQvsFW9L1-465">
-          <mxGeometry x="830" y="240" width="80" height="80" as="geometry" />
+          <mxGeometry x="410" y="670" width="80" height="80" as="geometry" />
         </mxCell>
         <mxCell id="YlA6S550wJMDQvsFW9L1-525" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="YlA6S550wJMDQvsFW9L1-465" source="YlA6S550wJMDQvsFW9L1-522" target="YlA6S550wJMDQvsFW9L1-524">
           <mxGeometry relative="1" as="geometry" />
@@ -1057,7 +1048,10 @@
         <mxCell id="YlA6S550wJMDQvsFW9L1-527" value="" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="YlA6S550wJMDQvsFW9L1-465" source="YlA6S550wJMDQvsFW9L1-522" target="YlA6S550wJMDQvsFW9L1-526">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="YlA6S550wJMDQvsFW9L1-529" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="YlA6S550wJMDQvsFW9L1-465" source="YlA6S550wJMDQvsFW9L1-522" target="YlA6S550wJMDQvsFW9L1-528">
+        <mxCell id="YlA6S550wJMDQvsFW9L1-686" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="YlA6S550wJMDQvsFW9L1-465" source="YlA6S550wJMDQvsFW9L1-522" target="YlA6S550wJMDQvsFW9L1-520">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="YlA6S550wJMDQvsFW9L1-687" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="YlA6S550wJMDQvsFW9L1-465" source="YlA6S550wJMDQvsFW9L1-522" target="YlA6S550wJMDQvsFW9L1-683">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="YlA6S550wJMDQvsFW9L1-522" value="Monetization" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#79E896;strokeColor=#C96C24;gradientColor=#688F52;gradientDirection=north;" vertex="1" parent="YlA6S550wJMDQvsFW9L1-465">
@@ -1068,9 +1062,6 @@
         </mxCell>
         <mxCell id="YlA6S550wJMDQvsFW9L1-526" value="Ad Revenue" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#00FF00;strokeColor=#FF3333;gradientColor=#FFFF33;gradientDirection=south;" vertex="1" parent="YlA6S550wJMDQvsFW9L1-465">
           <mxGeometry x="190" y="670" width="80" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="YlA6S550wJMDQvsFW9L1-528" value="Group Staking Pools" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#00FF00;strokeColor=#FF3333;gradientColor=#FFFF33;gradientDirection=south;" vertex="1" parent="YlA6S550wJMDQvsFW9L1-465">
-          <mxGeometry x="290" y="740" width="80" height="80" as="geometry" />
         </mxCell>
         <mxCell id="YlA6S550wJMDQvsFW9L1-530" value="Explorer" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#00FF00;strokeColor=#FF3333;gradientColor=#FFFF33;gradientDirection=south;" vertex="1" parent="YlA6S550wJMDQvsFW9L1-465">
           <mxGeometry x="600" y="450" width="80" height="80" as="geometry" />
@@ -1086,6 +1077,9 @@
         </mxCell>
         <mxCell id="YlA6S550wJMDQvsFW9L1-543" value="Public Profile Management" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#00FF00;strokeColor=#FF3333;gradientColor=#FFFF33;gradientDirection=south;" vertex="1" parent="YlA6S550wJMDQvsFW9L1-465">
           <mxGeometry x="130" y="30" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="YlA6S550wJMDQvsFW9L1-683" value="Membership&lt;br&gt;Services" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#00FF00;strokeColor=#FF3333;gradientColor=#FFFF33;gradientDirection=south;" vertex="1" parent="YlA6S550wJMDQvsFW9L1-465">
+          <mxGeometry x="300" y="710" width="80" height="80" as="geometry" />
         </mxCell>
         <mxCell id="YlA6S550wJMDQvsFW9L1-547" value="Version A" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#B8C6FC;gradientColor=#7ea6e0;strokeColor=#6c8ebf;" vertex="1" parent="1">
           <mxGeometry x="980" y="1270" width="3870" height="820" as="geometry" />
