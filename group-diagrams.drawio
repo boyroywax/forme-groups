@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2023-09-14T18:07:49.401Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 Edg/116.0.1938.69" etag="htQJzoSGfhoRUM6kP-jE" version="21.6.8" type="device">
+<mxfile host="app.diagrams.net" modified="2023-09-14T19:05:44.925Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 Edg/116.0.1938.69" etag="1LiZUTVVMq3m6jLr2-cA" version="21.6.8" type="device">
   <diagram name="Page-1" id="cc29HmkyMRKGsr2kk8NS">
-    <mxGraphModel dx="4366" dy="1546" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="#ffffff" math="0" shadow="0">
+    <mxGraphModel dx="3441" dy="1139" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="#ffffff" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -1094,6 +1094,115 @@
           <mxGeometry x="980" y="2120" width="3870" height="820" as="geometry">
             <mxRectangle x="980" y="2120" width="40" height="90" as="alternateBounds" />
           </mxGeometry>
+        </mxCell>
+        <mxCell id="YlA6S550wJMDQvsFW9L1-551" value="User Space" style="swimlane;whiteSpace=wrap;html=1;fillColor=#fad7ac;strokeColor=#b46504;swimlaneFillColor=default;glass=0;rounded=0;swimlaneLine=1;gradientColor=#997C50;" vertex="1" parent="1">
+          <mxGeometry x="3330" y="90" width="940" height="830" as="geometry">
+            <mxRectangle x="50" y="1320" width="140" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="YlA6S550wJMDQvsFW9L1-605" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="YlA6S550wJMDQvsFW9L1-551" source="YlA6S550wJMDQvsFW9L1-603">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="120" y="225" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="YlA6S550wJMDQvsFW9L1-608" value="" style="group" vertex="1" connectable="0" parent="YlA6S550wJMDQvsFW9L1-551">
+          <mxGeometry x="110" y="50" width="250" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="YlA6S550wJMDQvsFW9L1-606" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fad9d5;strokeColor=#ae4132;" vertex="1" parent="YlA6S550wJMDQvsFW9L1-608">
+          <mxGeometry width="250" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="YlA6S550wJMDQvsFW9L1-607" value="&lt;h1&gt;Sign Up&lt;/h1&gt;&lt;div&gt;Create a new account on the Forme System&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="YlA6S550wJMDQvsFW9L1-608">
+          <mxGeometry x="7.8125" y="7" width="234.375" height="126" as="geometry" />
+        </mxCell>
+        <mxCell id="YlA6S550wJMDQvsFW9L1-620" value="" style="group" vertex="1" connectable="0" parent="YlA6S550wJMDQvsFW9L1-608">
+          <mxGeometry x="-100" width="90" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="YlA6S550wJMDQvsFW9L1-621" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fad7ac;strokeColor=#b46504;" vertex="1" parent="YlA6S550wJMDQvsFW9L1-620">
+          <mxGeometry width="90" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="YlA6S550wJMDQvsFW9L1-622" value="&lt;h1&gt;Step 1&lt;/h1&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;align=center;" vertex="1" parent="YlA6S550wJMDQvsFW9L1-620">
+          <mxGeometry x="2.8145454545454545" y="4" width="79.00363636363637" height="67.1111111111111" as="geometry" />
+        </mxCell>
+        <mxCell id="YlA6S550wJMDQvsFW9L1-617" value="" style="group" vertex="1" connectable="0" parent="YlA6S550wJMDQvsFW9L1-551">
+          <mxGeometry x="110" y="220" width="250" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="YlA6S550wJMDQvsFW9L1-618" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fad9d5;strokeColor=#ae4132;" vertex="1" parent="YlA6S550wJMDQvsFW9L1-617">
+          <mxGeometry width="250" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="YlA6S550wJMDQvsFW9L1-619" value="&lt;h1&gt;Anchor DID&lt;/h1&gt;&lt;div&gt;Tie your identity to the blockchain&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Applies a schema that reserves a tier 1 nonce&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="YlA6S550wJMDQvsFW9L1-617">
+          <mxGeometry x="7.8125" y="7" width="234.375" height="126" as="geometry" />
+        </mxCell>
+        <mxCell id="YlA6S550wJMDQvsFW9L1-624" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fad7ac;strokeColor=#b46504;" vertex="1" parent="YlA6S550wJMDQvsFW9L1-551">
+          <mxGeometry x="10" y="220" width="90" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="YlA6S550wJMDQvsFW9L1-623" value="" style="group" vertex="1" connectable="0" parent="YlA6S550wJMDQvsFW9L1-551">
+          <mxGeometry x="10" y="220" width="90" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="YlA6S550wJMDQvsFW9L1-625" value="&lt;h1&gt;Step 2&lt;/h1&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;align=center;" vertex="1" parent="YlA6S550wJMDQvsFW9L1-623">
+          <mxGeometry x="2.8145454545454545" y="4" width="79.00363636363637" height="67.1111111111111" as="geometry" />
+        </mxCell>
+        <mxCell id="YlA6S550wJMDQvsFW9L1-609" value="" style="group" vertex="1" connectable="0" parent="YlA6S550wJMDQvsFW9L1-551">
+          <mxGeometry x="380" y="220" width="260" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="YlA6S550wJMDQvsFW9L1-610" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fad7ac;strokeColor=#b46504;" vertex="1" parent="YlA6S550wJMDQvsFW9L1-609">
+          <mxGeometry width="260" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="YlA6S550wJMDQvsFW9L1-611" value="&lt;h1&gt;Custom Account Name&lt;/h1&gt;&lt;div&gt;Create a new Antelope blockchain account with .sbs suffix.&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="YlA6S550wJMDQvsFW9L1-609">
+          <mxGeometry x="8.125" y="7" width="243.75" height="126" as="geometry" />
+        </mxCell>
+        <mxCell id="YlA6S550wJMDQvsFW9L1-613" value="" style="group" vertex="1" connectable="0" parent="YlA6S550wJMDQvsFW9L1-551">
+          <mxGeometry x="660" y="220" width="260" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="YlA6S550wJMDQvsFW9L1-614" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fad9d5;strokeColor=#ae4132;" vertex="1" parent="YlA6S550wJMDQvsFW9L1-613">
+          <mxGeometry width="260" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="YlA6S550wJMDQvsFW9L1-615" value="&lt;h1&gt;Bring Your Own Account&lt;/h1&gt;&lt;div&gt;Anchor any account you are holding the Owner keys to&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="YlA6S550wJMDQvsFW9L1-613">
+          <mxGeometry x="8.125" y="7" width="243.75" height="126" as="geometry" />
+        </mxCell>
+        <mxCell id="YlA6S550wJMDQvsFW9L1-626" value="" style="group" vertex="1" connectable="0" parent="YlA6S550wJMDQvsFW9L1-551">
+          <mxGeometry x="380" y="50" width="260" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="YlA6S550wJMDQvsFW9L1-627" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fad7ac;strokeColor=#b46504;" vertex="1" parent="YlA6S550wJMDQvsFW9L1-626">
+          <mxGeometry width="260" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="YlA6S550wJMDQvsFW9L1-628" value="&lt;h1&gt;Microsoft Authenticator&lt;/h1&gt;&lt;div&gt;Used to sign up, login, and interact with Verified Credentials&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="YlA6S550wJMDQvsFW9L1-626">
+          <mxGeometry x="8.125" y="7" width="243.75" height="126" as="geometry" />
+        </mxCell>
+        <mxCell id="YlA6S550wJMDQvsFW9L1-643" value="" style="group" vertex="1" connectable="0" parent="YlA6S550wJMDQvsFW9L1-551">
+          <mxGeometry x="110" y="390" width="250" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="YlA6S550wJMDQvsFW9L1-644" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fad9d5;strokeColor=#ae4132;" vertex="1" parent="YlA6S550wJMDQvsFW9L1-643">
+          <mxGeometry width="250" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="YlA6S550wJMDQvsFW9L1-645" value="&lt;h1&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;Explore&lt;/span&gt;&lt;br&gt;&lt;/h1&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Public Groups are open to all&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="YlA6S550wJMDQvsFW9L1-643">
+          <mxGeometry x="7.8125" y="7" width="234.375" height="126" as="geometry" />
+        </mxCell>
+        <mxCell id="YlA6S550wJMDQvsFW9L1-646" value="" style="group" vertex="1" connectable="0" parent="YlA6S550wJMDQvsFW9L1-551">
+          <mxGeometry x="10" y="390" width="90" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="YlA6S550wJMDQvsFW9L1-661" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fad7ac;strokeColor=#b46504;" vertex="1" parent="YlA6S550wJMDQvsFW9L1-646">
+          <mxGeometry width="90" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="YlA6S550wJMDQvsFW9L1-647" value="&lt;h1&gt;Step 3&lt;/h1&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;align=center;" vertex="1" parent="YlA6S550wJMDQvsFW9L1-646">
+          <mxGeometry x="2.8145454545454545" y="4" width="79.00363636363637" height="67.1111111111111" as="geometry" />
+        </mxCell>
+        <mxCell id="YlA6S550wJMDQvsFW9L1-648" value="" style="group" vertex="1" connectable="0" parent="YlA6S550wJMDQvsFW9L1-551">
+          <mxGeometry x="380" y="390" width="260" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="YlA6S550wJMDQvsFW9L1-649" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fad7ac;strokeColor=#b46504;" vertex="1" parent="YlA6S550wJMDQvsFW9L1-648">
+          <mxGeometry width="260" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="YlA6S550wJMDQvsFW9L1-650" value="&lt;h1&gt;Private&lt;/h1&gt;&lt;div&gt;Your personal group for private information&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="YlA6S550wJMDQvsFW9L1-648">
+          <mxGeometry x="8.125" y="7" width="243.75" height="126" as="geometry" />
+        </mxCell>
+        <mxCell id="YlA6S550wJMDQvsFW9L1-651" value="" style="group" vertex="1" connectable="0" parent="YlA6S550wJMDQvsFW9L1-551">
+          <mxGeometry x="660" y="390" width="260" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="YlA6S550wJMDQvsFW9L1-652" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fad9d5;strokeColor=#ae4132;" vertex="1" parent="YlA6S550wJMDQvsFW9L1-651">
+          <mxGeometry width="260" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="YlA6S550wJMDQvsFW9L1-653" value="&lt;h1&gt;Subscriptions&lt;/h1&gt;&lt;div&gt;Access groups by paying a recurring fee or entrance fee&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="YlA6S550wJMDQvsFW9L1-651">
+          <mxGeometry x="8.125" y="7" width="243.75" height="126" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
