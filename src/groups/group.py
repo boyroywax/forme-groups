@@ -9,9 +9,8 @@ __DEFAULT_NONCE_UNIT_ALLOWED_TYPES__ = ("int", "integer")
 
 
 class Schema:
-    profile: dict = field(factory=dict)
     """A Schema that defines the structure of the data in a GroupUnit.Data
-    
+
     Example:
         Schema(
             profile={
@@ -20,19 +19,19 @@ class Schema:
                 }
             }
         )
-
     """
+    profile: dict = field(factory=dict)
 
     def __init__(self, profile: dict = None, type_pool: UnitTypePool = None):
         if profile is None:
             raise ValueError("Schema not provided.")
-        
+
         if type_pool is None:
             raise ValueError("UnitTypePool not provided.")
-        
+
         if self.verify_schema_types(profile=profile, type_pool=type_pool) is False:
             raise ValueError("Schema contains invalid types.")
-        
+
         self.profile = profile
 
     def get_schema_types(self, profile: dict) -> list[str]:
