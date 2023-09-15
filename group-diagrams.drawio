@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-09-15T00:04:46.452Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 Edg/116.0.1938.69" etag="kkAsoOlbYR7w7bRMnJOp" version="21.6.8" type="device">
+<mxfile host="app.diagrams.net" modified="2023-09-15T00:11:02.948Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 Edg/116.0.1938.69" etag="h-wIaLqDiFlWQ-ar9Lpd" version="21.6.8" type="device">
   <diagram name="Page-1" id="cc29HmkyMRKGsr2kk8NS">
     <mxGraphModel dx="3194" dy="1030" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="#ffffff" math="0" shadow="0">
       <root>
@@ -920,7 +920,7 @@
         <mxCell id="YlA6S550wJMDQvsFW9L1-460" value="" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;fillColor=#C9AD8B;strokeColor=#b46504;gradientColor=#CC6600;verticalAlign=top;gradientDirection=north;" vertex="1" parent="YlA6S550wJMDQvsFW9L1-421">
           <mxGeometry x="10" y="420" width="640" height="110" as="geometry" />
         </mxCell>
-        <mxCell id="YlA6S550wJMDQvsFW9L1-461" value="&lt;h1&gt;A Tiered Group&lt;/h1&gt;&lt;div&gt;Groups can contain an indefinite number of tiers. - expressed by a data object that includes a Schema at each each tier.&lt;/div&gt;&lt;div&gt;Groups can contain a single tier - expressed by a Schema&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="YlA6S550wJMDQvsFW9L1-421">
+        <mxCell id="YlA6S550wJMDQvsFW9L1-461" value="&lt;h1&gt;A Tiered Group&lt;/h1&gt;&lt;div&gt;Groups can contain an indefinite number of tiers. - expressed by a data object that includes a Schema at each tier.&lt;/div&gt;&lt;div&gt;Groups can contain a single tier - expressed by a Schema&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="YlA6S550wJMDQvsFW9L1-421">
           <mxGeometry x="70" y="420" width="520" height="110" as="geometry" />
         </mxCell>
         <mxCell id="YlA6S550wJMDQvsFW9L1-462" value="" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;fillColor=#fad7ac;strokeColor=#b46504;align=center;verticalAlign=top;gradientColor=#FF8000;gradientDirection=north;" vertex="1" parent="YlA6S550wJMDQvsFW9L1-421">
@@ -1255,7 +1255,7 @@
         <mxCell id="YlA6S550wJMDQvsFW9L1-682" value="Not sure about this" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
           <mxGeometry x="4300" y="45" width="60" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="YlA6S550wJMDQvsFW9L1-701" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;Group Types&lt;/font&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#D4FF00;swimlaneFillColor=default;glass=0;rounded=0;swimlaneLine=1;fontSize=23;strokeColor=#0e8088;gradientColor=#D5E8D4;gradientDirection=south;" vertex="1" parent="1">
+        <mxCell id="YlA6S550wJMDQvsFW9L1-701" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;Group Types&lt;/font&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#D4FF00;swimlaneFillColor=default;glass=1;rounded=0;swimlaneLine=1;fontSize=23;strokeColor=#0e8088;gradientColor=#D5E8D4;gradientDirection=south;" vertex="1" parent="1">
           <mxGeometry x="4480" y="80" width="940" height="830" as="geometry">
             <mxRectangle x="50" y="1320" width="140" height="30" as="alternateBounds" />
           </mxGeometry>
