@@ -166,3 +166,32 @@ class TestSchema(unittest.TestCase):
         schema = Schema(profile=schema_dict, type_pool=self.type_pool)
         self.assertEqual(schema.profile, schema_dict)
 
+    def test_contains_sub_schema_with_no_sub_schema(self):
+        schema_dict = {
+            "test": "str"
+        }
+        schema = Schema(profile=schema_dict, type_pool=self.type_pool)
+        self.assertFalse(schema.contains_sub_schema())
+
+    def test_contains_sub_schema_with_single_sub_schema(self):
+        schema_dict = {
+            "Schema": {
+                "test": "str"
+            }
+        }
+        schema = Schema(profile=schema_dict, type_pool=self.type_pool)
+        self.assertTrue(schema.contains_sub_schema())
+
+    def test_contains_sub_schema_with_multiple_sub_schemas(self):
+        schema_dict = {
+            "Schema": {
+                "test1": "str"
+            },
+            "Schema2": {
+                "test2": "int"
+            }
+        }
+        schema = Schema(profile=schema_dict, type_pool=self.type_pool)
+        with self.assertRaises(ValueError):
+            schema.contains_sub_schema()
+

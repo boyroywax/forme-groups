@@ -3,13 +3,13 @@ from typing import Any, List, Dict
 
 from .unit import Unit, UnitGenerator, UnitTypeRef, UnitTypePool
 
-__DEFAULT_NONCE_UNIT_TYPE_ALIAS__ = "int"
-__DEFAULT_NONCE_UNIT_TYPE_DIVIDER__ = "."
-__DEFAULT_NONCE_UNIT_ALLOWED_TYPES__ = ("int", "integer")
+__DEFAULT_NONCE_UNIT_TYPE_ALIAS__: str = "int"
+__DEFAULT_NONCE_UNIT_TYPE_DIVIDER__: str = "."
+__DEFAULT_NONCE_UNIT_ALLOWED_TYPES__: tuple = ("int", "integer")
 
 
 class Schema:
-    """A Schema that defines the structure of the data in a GroupUnit.Data
+    """A Schema that defines the structure of the data in Data
 
     Example:
         Schema(
@@ -21,17 +21,12 @@ class Schema:
         )
     """
     profile: dict = field(factory=dict)
+    verified: bool = field(default=False)
 
-    def __init__(self, profile: dict = None, type_pool: UnitTypePool = None):
+    def __init__(self, profile: dict = None):
         if profile is None:
-            raise ValueError("Schema not provided.")
-
-        if type_pool is None:
-            raise ValueError("UnitTypePool not provided.")
-
-        if self.verify_schema_types(profile=profile, type_pool=type_pool) is False:
-            raise ValueError("Schema contains invalid types.")
-
+            raise ValueError("Schema profile not provided.")
+        
         self.profile = profile
 
     def get_schema_types(self, profile: dict) -> list[str]:
@@ -56,6 +51,16 @@ class Schema:
             if type_pool.get_type_from_alias(type_) is None:
                 return False
         return True
+
+    def contains_sub_schema(self) -> bool:
+        contains_subschema: bool = False
+        for key, value in self.profile.items():
+            if isinstance(value, dict) and "Schema" in key:
+                if contains_subschema is False:
+                    contains_subschema = True
+                else:
+                    raise ValueError("Multiple schemas found in Data.entries.")
+        return False
 
 
 @define(frozen=True, slots=True)
@@ -127,18 +132,21 @@ class Data:
         else:
             self.entries = data
 
-    def is_schema(self) -> bool:
-        schema: bool = False
-
-        if self.entries is not None and len(self.entries) > 0:
-            for entry in self.entries:
-                if entry.type_ref.alias == "dict":
-                    if schema is False:
-                        if entry.value["Schema"]:
-                            schema = True
+    def get_schema(self) -> Schema | None:
+        found_schema: Schema = None
+        for entry in self.entries:
+            if entry.type_ref.alias == "dict":
+                if str(entry.value).lower() == "schema":
+                    if found_schema is None:
+                        found_schema: Schema = entry
                     else:
                         raise ValueError("Multiple schemas found in Data.entries.")
-        return schema
+                elif "schema" in str(entry.value).lower():
+                    if found_schema is None:
+                        found_schema: Schema = entry
+                    else:
+                        raise ValueError("Multiple schemas found in Data.entries.")
+        return found_schema
 
 
 @define(frozen=True, slots=True)
