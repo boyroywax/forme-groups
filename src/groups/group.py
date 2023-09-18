@@ -23,9 +23,13 @@ class Schema:
     profile: dict = field(factory=dict)
     verified: bool = field(default=False)
 
-    def __init__(self, profile: dict = None):
+    def __init__(self, profile: dict = None, type_pool: UnitTypePool = None):
         if profile is None:
             raise ValueError("Schema profile not provided.")
+
+        if type_pool is not None:
+            if self.verify_schema_types(profile=profile, type_pool=type_pool) is False:
+                raise ValueError("Schema profile contains invalid types.")
         
         self.profile = profile
 
@@ -55,12 +59,14 @@ class Schema:
     def contains_sub_schema(self) -> bool:
         contains_subschema: bool = False
         for key, value in self.profile.items():
-            if isinstance(value, dict) and "Schema" in key:
-                if contains_subschema is False:
-                    contains_subschema = True
-                else:
-                    raise ValueError("Multiple schemas found in Data.entries.")
-        return False
+            if isinstance(value, dict):
+                for key, value_ in value.items():
+                    if "schema" in str(value_).lower():
+                        if contains_subschema is False:
+                            contains_subschema = True
+                        else:
+                            raise ValueError("Multiple schemas found in Data.entries.")
+        return contains_subschema
 
 
 @define(frozen=True, slots=True)

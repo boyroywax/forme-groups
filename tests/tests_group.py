@@ -176,7 +176,8 @@ class TestSchema(unittest.TestCase):
     def test_contains_sub_schema_with_single_sub_schema(self):
         schema_dict = {
             "Schema": {
-                "test": "str"
+                "test": "str",
+                "test_schema": "schema"
             }
         }
         schema = Schema(profile=schema_dict, type_pool=self.type_pool)
@@ -185,10 +186,10 @@ class TestSchema(unittest.TestCase):
     def test_contains_sub_schema_with_multiple_sub_schemas(self):
         schema_dict = {
             "Schema": {
-                "test1": "str"
-            },
-            "Schema2": {
-                "test2": "int"
+                "test1": "str",
+                "test2": "str",
+                "test_schema": "schema",
+                "test_schema2": "schema"
             }
         }
         schema = Schema(profile=schema_dict, type_pool=self.type_pool)
