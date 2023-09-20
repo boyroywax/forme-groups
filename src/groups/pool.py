@@ -1,4 +1,5 @@
 import json
+import hashlib
 from abc import ABC, abstractmethod
 from attrs import define, field, validators
 from typing import Any, Optional, Tuple
@@ -33,8 +34,8 @@ class PoolInterface(ABC):
 
 @define(slots=True)
 class Pool(PoolInterface):
-    _frozen: bool = field(default=False)
-    items: list[Any] | tuple[Any] = []
+    _frozen: bool = field(default=False, validator=validators.instance_of(bool))
+    items: list[Any] | tuple[Any] = field(factory=list)
 
     def __init__(self, items: list[Any] | tuple[Any] = None, freeze: bool = False):
         self._frozen = False
@@ -74,10 +75,44 @@ class Pool(PoolInterface):
 
     def __str__(self):
         return f"Pool(items={self.items})"
+    
+
+class MerkleTree:
+    def __init__(self, data):
+        self.data = data
+        self.leaves = [hashlib.sha256(d.encode()).hexdigest() for d in data]
+        self.levels = [self.leaves]
+
+    def build(self):
+        while len(self.levels[-1]) > 1:
+            level = []
+            for i in range(0, len(self.levels[-1]), 2):
+                if i + 1 < len(self.levels[-1]):
+                    level.append(hashlib.sha256((self.levels[-1][i] + self.levels[-1][i + 1]).encode()).hexdigest())
+                else:
+                    level.append(self.levels[-1][i])
+            self.levels.append(level)
+
+    def root(self):
+        return self.levels[-1][0]
+
+    def verify(self, data, root_hash):
+        if hashlib.sha256(data.encode()).hexdigest() not in self.leaves:
+            return False
+        index = self.leaves.index(hashlib.sha256(data.encode()).hexdigest())
+        current_hash = self.leaves[index]
+        for i in range(len(self.levels) - 1):
+            if index % 2 == 0:
+                current_hash = hashlib.sha256((current_hash + self.levels[-i - 2][index + 1]).encode()).hexdigest()
+            else:
+                current_hash = hashlib.sha256((self.levels[-i - 2][index - 1] + current_hash).encode()).hexdigest()
+            index //= 2
+        return current_hash == root_hash
 
 
 @define(slots=True)
-class UnitTypePool(Pool):
+class UnitTypePool(PoolInterface):
+    _frozen: bool = field(default=False, validator=validators.instance_of(bool))
     items: list[UnitType] | tuple[UnitType] = field(factory=list)
 
     def __init__(self, items: list[UnitType] | tuple[UnitType] = None, freeze: bool = False):
@@ -90,6 +125,23 @@ class UnitTypePool(Pool):
 
         if freeze is True:
             self.freeze()
+
+    def freeze(self):
+        if self.frozen is True:
+            raise ValueError("Cannot freeze a frozen Pool.")
+
+        if self.items is not None and self.items is not tuple:
+            self.__setattr__("items", tuple(self.items))
+
+        self.__setattr__("_frozen", True)
+
+    @property
+    def frozen(self) -> bool:
+        return self._frozen
+
+    @frozen.getter
+    def frozen(self) -> bool:
+        return self._frozen
 
     def add(self, item: UnitType):
         if self.frozen is True:
@@ -134,7 +186,7 @@ class UnitTypePool(Pool):
         """
         return self.get_type_from_alias(alias) is not None
 
-    def get_all_aliases(self) -> list[str]:
+    def get_type_aliases(self) -> list[str]:
         """Get all aliases in the UnitTypePool.
 
         Returns:
@@ -174,6 +226,18 @@ class UnitTypePool(Pool):
 
         with open(types_path, "r") as file:
             json_input: dict = json.load(file)
-            print(json_input["system_types"])
+            # print(json_input["system_types"])
             for dict in json_input["system_types"]:
                 self.add_unit_type_from_dict(dict)
+
+    def __str__(self):
+        return f"UnitTypePool(items={self.items})"
+    
+    def __iter__(self):
+        return iter(self.items)
+    
+    def __hash__(self):
+
+        mtree = MerkleTree([str(item) for item in self.items])
+        mtree.build()
+        return int(mtree.root(), 16)
