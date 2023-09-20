@@ -243,15 +243,26 @@ class Group:
 
         if tier > self.get_nonce_tiers():
             raise ValueError("Nonce tier does not exist. " + str(tier) + " is out of range.")
-
-        highest_nonce_value = 0
-        highest_nonce = None
+        
+        highest_nonce: int = None
         for group_unit in self.group_units:
-            group_unit_tiers = len(group_unit.nonce.units)
-            if group_unit_tiers >= tier:
-                if group_unit.nonce.units[tier-1].value >= highest_nonce_value:
-                    highest_nonce_value = group_unit.nonce.units[tier-1].value
+            print(group_unit)
+            if len(group_unit.nonce.units) >= tier:
+                if highest_nonce is None:
                     highest_nonce = group_unit.nonce
+                elif group_unit.nonce.units[tier-1].value is not None:
+                    if group_unit.nonce.units[tier-1].value >= highest_nonce.units[tier-1].value:
+                        highest_nonce = group_unit.nonce
+
+        # highest_nonce_value = 0
+        # highest_nonce = None
+        # for group_unit in self.group_units:
+        #     group_unit_tiers = len(group_unit.nonce.units)
+        #     if group_unit_tiers >= tier:
+        #         if group_unit.nonce.units[tier-1].value is not None:
+        #             if group_unit.nonce.units[tier-1] >= highest_nonce_value:
+        #                 highest_nonce_value = group_unit.nonce.units[tier-1].value
+        #                 highest_nonce = group_unit.nonce
 
         return highest_nonce
 

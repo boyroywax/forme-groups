@@ -1,4 +1,4 @@
-from attrs import define, field
+from attrs import define, field, validators
 import json
 from typing import Any, Optional, Tuple
 
@@ -12,7 +12,7 @@ class UnitTypeRef:
     Attributes:
         alias (str): The alias of the UnitType.
     """
-    alias: str = field(default=None)
+    alias: str = field(default=None, validator=validators.instance_of(str))
 
     def __str__(self) -> str:
         return self.alias
@@ -26,8 +26,8 @@ class UnitTypeFunction:
         object (callable): The function that will be called to generate a Unit.
         args (tuple): The arguments that will be passed to the function.
     """
-    object: callable = field(factory=callable)
-    args: tuple = field(factory=tuple)
+    object: callable = field(default=None)
+    args: tuple = field(default=None)
 
     def call(self, input: Any = None) -> object:
         """Call the function with the given input.
@@ -38,10 +38,11 @@ class UnitTypeFunction:
         Returns:
             object: The result of the function call.
         """
-        if input is not None and len(self.args) > 0:
-            new_args = list(self.args)
-            new_args.insert(0, input)
-            return self.object(*new_args)
+        if input is not None and self.args is not None:
+            if len(self.args) > 0:
+                new_args = list(self.args)
+                new_args.insert(0, input)
+                return self.object(*new_args)
         elif input is not None:
             return self.object(input)
         else:
@@ -62,9 +63,9 @@ class UnitType:
     """
     aliases: Tuple[UnitTypeRef] = field(factory=tuple)
     super_type: Tuple[UnitTypeRef] = field(factory=tuple)
-    prefix: Optional[str] = field(default=None)
-    suffix: Optional[str] = field(default=None)
-    separator: Optional[str] = field(default=None)
+    prefix: Optional[str] = field(default=None, validator=validators.optional(validators.instance_of(str)))
+    suffix: Optional[str] = field(default=None, validator=validators.optional(validators.instance_of(str)))
+    separator: Optional[str] = field(default=None, validator=validators.optional(validators.instance_of(str)))
     sys_function: Optional[UnitTypeFunction] = field(default=None)
 
 

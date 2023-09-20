@@ -27,6 +27,7 @@ class TestGroupUnit(unittest.TestCase):
     def test_create_nonce_with_nonce(self):
         nonce = self.group_unit_generator.create_nonce(nonce=(self.unit_generator.create_unit(alias="int", value=2),))
         self.assertIsInstance(nonce, Nonce)
+        print(nonce)
         self.assertEqual(nonce.units[0].value, 2)
 
     def test_create_nonce_with_invalid_nonce(self):
