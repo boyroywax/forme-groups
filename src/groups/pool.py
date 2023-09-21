@@ -237,7 +237,16 @@ class UnitTypePool(PoolInterface):
         return iter(self.items)
     
     def __hash__(self):
-
         mtree = MerkleTree([str(item) for item in self.items])
         mtree.build()
         return int(mtree.root(), 16)
+    
+    def verify(self, data):
+        mtree = MerkleTree([str(item) for item in self.items])
+        mtree.build()
+        return mtree.verify(data, hash(self))
+        
+    def encode(self):
+        return {
+            "items": [item.encode() for item in self.items]
+        }

@@ -16,6 +16,9 @@ class UnitTypeRef:
 
     def __str__(self) -> str:
         return self.alias
+    
+    def __iter__(self):
+        return iter(self.alias)
 
 
 @define(frozen=True, slots=True)
@@ -68,6 +71,26 @@ class UnitType:
     separator: Optional[str] = field(default=None, validator=validators.optional(validators.instance_of(str)))
     sys_function: Optional[UnitTypeFunction] = field(default=None)
 
+    def __str__(self) -> str:
+        return f"UnitType(aliases={self.aliases}, super_type={self.super_type}, prefix={self.prefix}, suffix={self.suffix}, separator={self.separator}, sys_function={self.sys_function})"
+
+    def encode(self) -> dict:
+        """Encode the UnitType to a JSON object.
+
+        Returns:
+            dict: The JSON object representing the UnitType.
+        """
+        return {
+            "aliases": [alias.alias for alias in self.aliases],
+            "base_type": [base.alias for base in self.super_type],
+            "prefix": self.prefix,
+            "suffix": self.suffix,
+            "separator": self.separator,
+            "sys_function": {
+                "object": self.sys_function.object.__name__,
+                "args": self.sys_function.args,
+            },
+        }
 
 @define(slots=True)
 class UnitTypePool:
