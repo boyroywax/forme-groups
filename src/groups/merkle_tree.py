@@ -6,6 +6,7 @@ class MerkleTree:
     def __init__(self, hashed_data: list[str]):
         self.leaves: List[str] = hashed_data
         self.levels: List[List[str]] = [self.leaves]
+        self.build()
 
     def build(self):
         level = self.leaves
@@ -27,7 +28,8 @@ class MerkleTree:
                 hashed_level.append(self.hash_func(level[i] + level[i + 1]))
         return hashed_level
     
-    def hash_func(self, data):
+    @staticmethod
+    def hash_func(data):
         return hashlib.sha256(data.encode()).hexdigest()
     
     def root(self):
