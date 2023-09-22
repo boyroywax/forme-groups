@@ -11,6 +11,22 @@ __DEFAULT_SYSTEM_TYPES_PATH__ = "src/groups"
 
 
 class PoolInterface(ABC):
+    """An abstract interface for a Pool Object.
+
+    Attributes:
+        - _frozen (bool): Whether or not the Pool is frozen.
+        - items (list[Any] | tuple[Any]): The items in the Pool.]
+
+    Methods:
+        - __init__(items: list[Any] | tuple[Any] = None, freeze: bool = False)
+        - freeze() -> None
+        - contains(item: Any) -> bool
+        - add(item: Any) -> None
+        - __str__() -> str
+        - __repr__() -> str
+        - __iter__() -> Any
+        - hash_tree(override: bool = False) -> MerkleTree
+    """
     _frozen: bool
     items: list[Any] | tuple[Any]
 
@@ -19,7 +35,7 @@ class PoolInterface(ABC):
         pass
 
     @abstractmethod
-    def freeze(self):
+    def freeze(self) -> None:
         pass
 
     @property
@@ -28,7 +44,7 @@ class PoolInterface(ABC):
         pass
 
     @abstractmethod
-    def add(self, item: Any):
+    def add(self, item: Any) -> None:
         pass
 
     @abstractmethod
@@ -36,19 +52,19 @@ class PoolInterface(ABC):
         pass
 
     @abstractmethod
-    def __str__(self):
+    def __str__(self) -> str:
         pass
 
     @abstractmethod
-    def __repr__(self):
+    def __repr__(self) -> str:
         pass
 
     @abstractmethod
-    def __iter__(self):
+    def __iter__(self) -> Any:
         pass
 
     @abstractmethod
-    def hash_tree(self) -> MerkleTree:
+    def hash_tree(self, override: bool = False) -> MerkleTree:
         pass
 
 

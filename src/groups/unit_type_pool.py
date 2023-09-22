@@ -141,5 +141,10 @@ class UnitTypePool(PoolInterface):
     def __iter__(self):
         return iter(self.items)
 
-    def hash_tree(self):
+    def hash_tree(self, override: bool = False):
+        if self.frozen is False and override is False:
+            raise ValueError("Cannot hash an unfrozen UnitTypePool.")
+        if self.frozen is False and override is True:
+            print("Warning: Hashing an unfrozen UnitTypePool.")
+
         return MerkleTree([item.hash_256() for item in self.items])

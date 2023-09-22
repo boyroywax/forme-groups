@@ -98,6 +98,6 @@ class UnitType:
     
     def __repr__(self) -> str:
         return f"UnitType(aliases=[{self.__aliases_repr__()}], super_type=[{self.__super_type_repr__()}], prefix={self.prefix}, suffix={self.suffix}, separator={self.separator}, sys_function={self.sys_function.__repr__()})"
-    
+
     def hash_256(self):
         return hashlib.sha256(self.__repr__().encode()).hexdigest()
