@@ -1,6 +1,9 @@
+import hashlib
 from attrs import define, field, validators
 import json
 from typing import Any, Optional, Tuple
+
+# from merkle_tree import MerkleTree
 
 __DEFAULT_SYSTEM_TYPES_PATH__ = "src/groups"
 
@@ -14,11 +17,17 @@ class UnitTypeRef:
     """
     alias: str = field(default=None, validator=validators.instance_of(str))
 
+    def __iter__(self):
+        yield self.alias
+
     def __str__(self) -> str:
         return self.alias
     
-    def __iter__(self):
-        return iter(self.alias)
+    def __repr__(self) -> str:
+        return f'UnitTypeRef(alias="{self.alias}")'
+    
+    def hash_256(self):
+        return hashlib.sha256(self.__repr__().encode()).hexdigest()
 
 
 @define(frozen=True, slots=True)
@@ -50,6 +59,15 @@ class UnitTypeFunction:
             return self.object(input)
         else:
             return self.object(*self.args)
+        
+    def __str__(self) -> str:
+        return f"{self.object.__name__}({self.args})"
+        
+    def __repr__(self) -> str:
+        return f"UnitTypeFunction(object={self.object.__name__()}, args={self.args})"
+    
+    def hash_256(self):
+        return hashlib.sha256(self.__repr__().encode()).hexdigest()
 
 
 @define(frozen=True, slots=True)
@@ -71,26 +89,23 @@ class UnitType:
     separator: Optional[str] = field(default=None, validator=validators.optional(validators.instance_of(str)))
     sys_function: Optional[UnitTypeFunction] = field(default=None)
 
-    def __str__(self) -> str:
-        return f"UnitType(aliases={self.aliases}, super_type={self.super_type}, prefix={self.prefix}, suffix={self.suffix}, separator={self.separator}, sys_function={self.sys_function})"
-
-    def encode(self) -> dict:
-        """Encode the UnitType to a JSON object.
-
-        Returns:
-            dict: The JSON object representing the UnitType.
-        """
-        return {
-            "aliases": [alias.alias for alias in self.aliases],
-            "base_type": [base.alias for base in self.super_type],
-            "prefix": self.prefix,
-            "suffix": self.suffix,
-            "separator": self.separator,
-            "sys_function": {
-                "object": self.sys_function.object.__name__,
-                "args": self.sys_function.args,
-            },
-        }
+    def __aliases__(self) -> str:
+        aliases = ""
+        for alias in self.aliases:
+            aliases += alias.alias + ", "
+        return aliases[:-2]
+    
+    def __super_type__(self) -> str:
+        super_type = ""
+        for type in self.super_type:
+            super_type += type.alias + ", "
+        return super_type[:-2]
+    
+    def __repr__(self) -> str:
+        return f"UnitType(aliases=[{self.__aliases__()}], super_type=[{self.__super_type__()}], prefix={self.prefix}, suffix={self.suffix}, separator={self.separator}, sys_function={self.sys_function.__repr__()})"
+    
+    def hash_256(self):
+        return hashlib.sha256(self.__repr__().encode()).hexdigest()
 
 @define(slots=True)
 class UnitTypePool:
