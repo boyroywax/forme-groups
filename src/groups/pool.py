@@ -198,10 +198,10 @@ class UnitTypePool(PoolInterface):
                 self.add_unit_type_from_dict(dict)
 
     def __str__(self):
-        return f"[{item.__repr__()}]"
+        return f"[{[item.__repr__() for item in self.items]}]"
 
     def __repr__(self):
-        return f"UnitTypePool(items=[{self.items}])"
+        return f"UnitTypePool(items=[{[item.__repr__() for item in self.items]}])"
     
     def __iter__(self):
         return iter(self.items)
@@ -209,17 +209,3 @@ class UnitTypePool(PoolInterface):
     def hash_tree(self):
         return MerkleTree([item.hash_256() for item in self.items])
     
-    # def __hash__(self):
-    #     mtree = MerkleTree([str(item) for item in self.items])
-    #     mtree.build()
-    #     return int(mtree.root(), 16)
-    
-    # def verify(self, data):
-    #     mtree = MerkleTree([str(item) for item in self.items])
-    #     mtree.build()
-    #     return mtree.verify(data, hash(self))
-        
-    # def encode(self):
-    #     return {
-    #         "items": [item.encode() for item in self.items]
-    #     }
