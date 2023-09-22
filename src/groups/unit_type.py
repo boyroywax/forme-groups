@@ -1,11 +1,6 @@
 import hashlib
 from attrs import define, field, validators
-import json
 from typing import Any, Optional, Tuple
-
-# from merkle_tree import MerkleTree
-
-__DEFAULT_SYSTEM_TYPES_PATH__ = "src/groups"
 
 
 @define(frozen=True, slots=True)
@@ -59,13 +54,13 @@ class UnitTypeFunction:
             return self.object(input)
         else:
             return self.object(*self.args)
-        
+
     def __str__(self) -> str:
         return f"{self.object.__str__}({self.args})"
-        
+
     def __repr__(self) -> str:
         return f"UnitTypeFunction(object={str(self.object)}, args={self.args})"
-    
+
     def hash_256(self):
         return hashlib.sha256(self.__repr__().encode()).hexdigest()
 
