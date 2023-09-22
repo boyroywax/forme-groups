@@ -209,3 +209,21 @@ class UnitTypePool(PoolInterface):
     def hash_tree(self):
         return MerkleTree([item.hash_256() for item in self.items])
     
+
+
+@define(slots=True)
+class UnitCreator:
+    unit_type_pool: UnitTypePool
+
+    def __init__(self, unit_type_pool: UnitTypePool):
+        self.unit_type_pool = unit_type_pool
+
+    def create_unit(self, alias: str, value: Any = None) -> Unit:
+        unit_type = self.unit_type_pool.get_type_from_alias(alias)
+        if unit_type is None:
+            raise ValueError(f"UnitTypePool does not contain alias {alias}.")
+        if value is not None:
+            return Unit(value=value, type_ref=alias)
+        else:
+            return Unit(value=unit_type.sys_function.call(), type_ref=alias)
+    

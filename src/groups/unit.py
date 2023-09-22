@@ -61,10 +61,10 @@ class UnitTypeFunction:
             return self.object(*self.args)
         
     def __str__(self) -> str:
-        return f"{self.object.__class__}({self.args})"
+        return f"{self.object.__str__}({self.args})"
         
     def __repr__(self) -> str:
-        return f"UnitTypeFunction(object={self.object.__class__}, args={self.args})"
+        return f"UnitTypeFunction(object={self.object}, args={self.args})"
     
     def hash_256(self):
         return hashlib.sha256(self.__repr__().encode()).hexdigest()

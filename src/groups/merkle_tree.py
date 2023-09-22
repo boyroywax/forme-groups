@@ -2,11 +2,6 @@ import hashlib
 
 
 class MerkleTree:
-    # def __init__(self, data):
-    #     self.data = data
-    #     self.leaves = [hashlib.sha256(d.encode()).hexdigest() for d in data]
-    #     self.levels = [self.leaves]
-
     def __init__(self, hashed_data: list[str]):
         self.leaves = hashed_data
         self.levels = [self.leaves]
