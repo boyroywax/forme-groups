@@ -89,20 +89,20 @@ class UnitType:
     separator: Optional[str] = field(default=None, validator=validators.optional(validators.instance_of(str)))
     sys_function: Optional[UnitTypeFunction] = field(default=None)
 
-    def __aliases__(self) -> str:
+    def __aliases_repr__(self) -> str:
         aliases = ""
         for alias in self.aliases:
             aliases += alias.__repr__() + ", "
         return aliases[:-2]
-    
-    def __super_type__(self) -> str:
+
+    def __super_type_repr__(self) -> str:
         super_type = ""
         for type in self.super_type:
             super_type += type.__repr__() + ", "
         return super_type[:-2]
     
     def __repr__(self) -> str:
-        return f"UnitType(aliases=[{self.__aliases__()}], super_type=[{self.__super_type__()}], prefix={self.prefix}, suffix={self.suffix}, separator={self.separator}, sys_function={self.sys_function.__repr__()})"
+        return f"UnitType(aliases=[{self.__aliases_repr__()}], super_type=[{self.__super_type_repr__()}], prefix={self.prefix}, suffix={self.suffix}, separator={self.separator}, sys_function={self.sys_function.__repr__()})"
     
     def hash_256(self):
         return hashlib.sha256(self.__repr__().encode()).hexdigest()

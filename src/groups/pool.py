@@ -2,9 +2,9 @@ import json
 import hashlib
 from abc import ABC, abstractmethod
 from attrs import define, field, validators
-from typing import Any, Optional, Tuple
+from typing import Any, Optional, Tuple, Dict
 
-
+from .merkle_tree import MerkleTree
 from .unit import Unit, UnitType, UnitTypeRef, UnitTypeFunction
 
 __DEFAULT_SYSTEM_TYPES_PATH__ = "src/groups"
@@ -33,7 +33,7 @@ class PoolInterface(ABC):
 
 
 @define(slots=True)
-class Pool(PoolInterface):
+class GenericPool(PoolInterface):
     _frozen: bool = field(default=False, validator=validators.instance_of(bool))
     items: list[Any] | tuple[Any] = field(factory=list)
 
@@ -192,19 +192,22 @@ class UnitTypePool(PoolInterface):
             types_path = path
 
         with open(types_path, "r") as file:
-            json_input: dict = json.load(file)
+            json_input: Dict = json.load(file)
             # print(json_input["system_types"])
             for dict in json_input["system_types"]:
                 self.add_unit_type_from_dict(dict)
 
     def __str__(self):
-        return f"[{self.items}]"
+        return f"[{item.__repr__()}]"
 
     def __repr__(self):
         return f"UnitTypePool(items=[{self.items}])"
     
     def __iter__(self):
         return iter(self.items)
+    
+    def hash_tree(self):
+        return MerkleTree([item.hash_256() for item in self.items])
     
     # def __hash__(self):
     #     mtree = MerkleTree([str(item) for item in self.items])

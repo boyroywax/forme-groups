@@ -2,9 +2,13 @@ import hashlib
 
 
 class MerkleTree:
-    def __init__(self, data):
-        self.data = data
-        self.leaves = [hashlib.sha256(d.encode()).hexdigest() for d in data]
+    # def __init__(self, data):
+    #     self.data = data
+    #     self.leaves = [hashlib.sha256(d.encode()).hexdigest() for d in data]
+    #     self.levels = [self.leaves]
+
+    def __init__(self, hashed_data: list[str]):
+        self.leaves = hashed_data
         self.levels = [self.leaves]
 
     def build(self):
@@ -20,15 +24,15 @@ class MerkleTree:
     def root(self):
         return self.levels[-1][0]
 
-    def verify(self, data, root_hash):
-        if hashlib.sha256(data.encode()).hexdigest() not in self.leaves:
+    def verify(self, leaf_hash, root_hash):
+        if leaf_hash not in self.leaves:
             return False
-        index = self.leaves.index(hashlib.sha256(data.encode()).hexdigest())
+        index = self.leaves.index(leaf_hash)
         current_hash = self.leaves[index]
-        for i in range(len(self.levels) - 1):
+        for i in range(1, len(self.levels)):
             if index % 2 == 0:
-                current_hash = hashlib.sha256((current_hash + self.levels[-i - 2][index + 1]).encode()).hexdigest()
+                current_hash = hashlib.sha256((current_hash + self.levels[i - 1][index + 1]).encode()).hexdigest()
             else:
-                current_hash = hashlib.sha256((self.levels[-i - 2][index - 1] + current_hash).encode()).hexdigest()
+                current_hash = hashlib.sha256((self.levels[i - 1][index - 1] + current_hash).encode()).hexdigest()
             index //= 2
         return current_hash == root_hash
