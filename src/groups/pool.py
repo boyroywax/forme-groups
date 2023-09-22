@@ -106,6 +106,12 @@ class GenericPool(PoolInterface):
     def __repr__(self):
         return f"{self.__class__.__name__}(items={[item for item in self.items]})"
     
-    def hash_tree(self) -> MerkleTree:
+    def hash_tree(self, override: bool = False) -> MerkleTree:
+        if self.frozen is False and override is False:
+            raise ValueError("Cannot hash a non-frozen Pool.")
+
+        if self.frozen is False and override is True:
+            print(Exception("Hashing a non-frozen Pool. This is not recommended."))
+        
         return MerkleTree([hashlib.sha256(item.__repr__().encode()).hexdigest() for item in self.items])
 
