@@ -61,10 +61,10 @@ class UnitTypeFunction:
             return self.object(*self.args)
         
     def __str__(self) -> str:
-        return f"{self.object.__name__}({self.args})"
+        return f"{self.object.__class__}({self.args})"
         
     def __repr__(self) -> str:
-        return f"UnitTypeFunction(object={self.object.__name__()}, args={self.args})"
+        return f"UnitTypeFunction(object={self.object.__class__}, args={self.args})"
     
     def hash_256(self):
         return hashlib.sha256(self.__repr__().encode()).hexdigest()
@@ -92,13 +92,13 @@ class UnitType:
     def __aliases__(self) -> str:
         aliases = ""
         for alias in self.aliases:
-            aliases += alias.alias + ", "
+            aliases += alias.__repr__() + ", "
         return aliases[:-2]
     
     def __super_type__(self) -> str:
         super_type = ""
         for type in self.super_type:
-            super_type += type.alias + ", "
+            super_type += type.__repr__() + ", "
         return super_type[:-2]
     
     def __repr__(self) -> str:
