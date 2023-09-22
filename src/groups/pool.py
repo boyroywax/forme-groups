@@ -31,6 +31,26 @@ class PoolInterface(ABC):
     def add(self, item: Any):
         pass
 
+    @abstractmethod
+    def contains(self, item: Any) -> bool:
+        pass
+
+    @abstractmethod
+    def __str__(self):
+        pass
+
+    @abstractmethod
+    def __repr__(self):
+        pass
+
+    @abstractmethod
+    def __iter__(self):
+        pass
+
+    @abstractmethod
+    def hash_tree(self) -> MerkleTree:
+        pass
+
 
 @define(slots=True)
 class GenericPool(PoolInterface):
@@ -64,15 +84,28 @@ class GenericPool(PoolInterface):
     def frozen(self) -> bool:
         return self._frozen
 
+    def contains(self, item: Any) -> bool:
+        return item in self.items
+
     def add(self, item: Any):
         if self.frozen is True:
             raise ValueError("Cannot add to a frozen Pool.")
 
-        if item in self.items:
+        if self.contains(item) is True:
             raise ValueError(f"Pool already contains item {item}.")
 
         self.items.append(item)
 
+    def __iter__(self):
+        for item in self.items:
+            yield item
+
     def __str__(self):
-        return f"Pool(items={self.items})"
+        return f"{[item for item in self.items]}"
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}(items={[item for item in self.items]})"
+    
+    def hash_tree(self) -> MerkleTree:
+        return MerkleTree([hashlib.sha256(item.__repr__().encode()).hexdigest() for item in self.items])
 

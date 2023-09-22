@@ -3,6 +3,7 @@ import unittest
 from tests_unit_type import TestUnitTypeRef, TestUnitTypeFunction, TestUnitType
 # from tests_group import TestGroupUnit, TestGroup, TestSchema
 from tests_pool import TestPool
+from tests_unit_type_pool import TestUnitTypePool
 # TestGroupUnitGenerator, TestGroup
 
 
@@ -21,6 +22,7 @@ def main():
     # test_suite.addTests(test_loader.loadTestsFromTestCase(TestUnit))
     # test_suite.addTests(test_loader.loadTestsFromTestCase(TestUnitGenerator))
     test_suite.addTests(test_loader.loadTestsFromTestCase(TestPool))
+    test_suite.addTests(test_loader.loadTestsFromTestCase(TestUnitTypePool))
     # test_suite.addTests(test_loader.loadTestsFromTestCase(TestGroupUnit))
     # test_suite.addTests(test_loader.loadTestsFromTestCase(TestGroupUnitGenerator))
     # test_suite.addTests(test_loader.loadTestsFromTestCase(TestGroup))

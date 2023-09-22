@@ -17,10 +17,10 @@ class UnitTypeRef:
 
     def __str__(self) -> str:
         return self.alias
-    
+
     def __repr__(self) -> str:
         return f'UnitTypeRef(alias="{self.alias}")'
-    
+
     def hash_256(self):
         return hashlib.sha256(self.__repr__().encode()).hexdigest()
 
