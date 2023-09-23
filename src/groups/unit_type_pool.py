@@ -115,6 +115,8 @@ class UnitTypePool(PoolInterface):
             sys_function=UnitTypeFunction(object=eval(dict["sys_function"]["object"]), args=dict["sys_function"]["args"])
         ))
 
+        print(f"Added UnitType {dict['sys_function']['object']}")
+
     def set_types_from_json(self, path: str = None):
         """Set the UnitTypePool from a JSON file.
 

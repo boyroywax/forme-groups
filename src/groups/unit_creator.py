@@ -1,4 +1,5 @@
 from attrs import define, field, validators
+from typing import Any, Optional, Tuple, Dict
 
 from .unit import Unit
 from .unit_type_pool import UnitTypePool
@@ -8,19 +9,32 @@ from .unit_type_pool import UnitTypePool
 
 @define(slots=True)
 class UnitCreator:
-    unit_type_pool: UnitTypePool
+    unit_type_pool: UnitTypePool = field(default=None)
 
-    def __init__(self, unit_type_pool: UnitTypePool):
-        self.unit_type_pool = unit_type_pool
+    def __init__(self, unit_type_pool: UnitTypePool = None):
+        if unit_type_pool is None:
+            self.unit_type_pool = UnitTypePool()
+            self.unit_type_pool.set_types_from_json()
+            self.unit_type_pool.freeze()
+        else:
+            self.unit_type_pool = unit_type_pool
 
     def create_unit(self, alias: str, value: Any = None) -> Unit:
+        if not self.unit_type_pool.frozen:
+            raise Exception("UnitTypePool must be frozen before generating units.")
+        
         unit_type = self.unit_type_pool.get_type_from_alias(alias)
+        print(unit_type)
         if unit_type is None:
             raise ValueError(f"UnitTypePool does not contain alias {alias}.")
+        
         if value is not None:
-            return Unit(value=value, type_ref=alias)
-        else:
-            return Unit(value=unit_type.sys_function.call(), type_ref=alias)
+            if unit_type.sys_function is None:
+                return Unit(value=value, type_ref=alias)
+            else:
+                return Unit(value=unit_type.sys_function.call(value), type_ref=alias)
+        
+    
     
 
 

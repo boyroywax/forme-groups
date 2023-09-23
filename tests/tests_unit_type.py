@@ -63,6 +63,18 @@ class TestUnitTypeFunction(unittest.TestCase):
         unit_type_function = UnitTypeFunction(object=str.upper)
         self.assertEqual(unit_type_function.call("test"), "TEST")
 
+    def test_unit_type_function_call_with_buildint_string_function_and_args(self):
+        unit_type_function = UnitTypeFunction(object=dict.get, args=["test_key"])
+        self.assertEqual(unit_type_function.call({"test_key": "test_value"}), "test_value")
+
+    def test_unit_type_function_call_with_dict_and_value(self):
+        unit_type_function = UnitTypeFunction(object=dict)
+        self.assertEqual(unit_type_function.call({"test": "test"}), {"test": "test"})
+
+    def test_unit_type_function_call_with_list_and_value(self):
+        unit_type_function = UnitTypeFunction(object=list)
+        self.assertEqual(unit_type_function.call(["test"]), ["test"])
+
 
 class TestUnitType(unittest.TestCase):
     def setUp(self):

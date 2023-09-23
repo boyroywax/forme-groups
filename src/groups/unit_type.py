@@ -45,14 +45,16 @@ class UnitTypeFunction:
         Returns:
             object: The result of the function call.
         """
-        if input is not None and self.args is not None:
+        if input is not None and self.args is not None and len(self.args) > 0:
             if len(self.args) > 0:
                 new_args = list(self.args)
                 new_args.insert(0, input)
                 return self.object(*new_args)
-        elif input is not None:
+        elif input is not None and self.object is None:
+            return input
+        elif input is not None and self.object is not None and self.args is None:
             return self.object(input)
-        else:
+        elif input is None:
             return self.object(*self.args)
 
     def __str__(self) -> str:
