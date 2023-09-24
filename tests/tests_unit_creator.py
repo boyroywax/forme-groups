@@ -32,6 +32,7 @@ class TestUnitCreator(unittest.TestCase):
     def test_unit_creator_create_unit_with_no_value(self):
         unit = self.unit_creator.create_unit(value=None, alias="str")
         self.assertEqual(unit.value, None)
+        self.assertEqual(unit.type_ref, "str")
 
     def test_unit_creator_create_unit_with_no_value_and_no_alias(self):
         with self.assertRaises(ValueError):

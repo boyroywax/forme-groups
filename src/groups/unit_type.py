@@ -47,7 +47,10 @@ class UnitTypeFunction:
         """
         print(self.function_object)
         print(str(self.args))
+
         if str(self.function_object) == "<class 'str'>":
+            if input_ is None:
+                return None
             return str(input_)
         if str(self.function_object) == "<class 'dict'>":
             return dict(input_)
@@ -63,9 +66,9 @@ class UnitTypeFunction:
             
         # return self.function_object(input_)
 
-        if input is not None and self.function_object is None:
+        if input_ is not None and self.function_object is None:
             return input_
-        if input is not None and self.function_object is not None and self.args is None:
+        if input_ is not None and self.function_object is not None and self.args is None:
             return self.function_object(input_)
 
         return self.function_object(*self.args)
