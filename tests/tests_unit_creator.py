@@ -31,7 +31,7 @@ class TestUnitCreator(unittest.TestCase):
 
     def test_unit_creator_create_unit_with_no_value(self):
         unit = self.unit_creator.create_unit(value=None, alias="str")
-        self.assertEqual(unit.value, "")
+        self.assertEqual(unit.value, None)
 
     def test_unit_creator_create_unit_with_no_value_and_no_alias(self):
         with self.assertRaises(ValueError):
@@ -40,4 +40,4 @@ class TestUnitCreator(unittest.TestCase):
     def test_unit_creator_create_unit_dict(self):
         unit = self.unit_creator.create_unit(value={"test_key": "test_value"}, alias="dict")
         print(unit)
-        self.assertEqual(unit.value, "test_value")
+        self.assertEqual(unit.value["test_key"], "test_value")

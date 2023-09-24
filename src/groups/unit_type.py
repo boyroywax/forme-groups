@@ -1,6 +1,6 @@
 import hashlib
 from attrs import define, field, validators
-from typing import Any, Optional, Tuple
+from typing import Any, Optional, Tuple, Callable
 
 
 @define(frozen=True, slots=True)
@@ -33,10 +33,10 @@ class UnitTypeFunction:
         object (callable): The function that will be called to generate a Unit.
         args (tuple): The arguments that will be passed to the function.
     """
-    object: callable = field(default=None)
+    function_object: Callable = field(default=None)
     args: tuple = field(default=None)
 
-    def call(self, input: Any = None) -> object:
+    def call(self, input_: Any = None) -> Any:
         """Call the function with the given input.
 
         Args:
@@ -45,23 +45,34 @@ class UnitTypeFunction:
         Returns:
             object: The result of the function call.
         """
-        if input is not None and self.args is not None and len(self.args) > 0:
+        print(self.function_object)
+        print(str(self.args))
+        if self.function_object == "<class 'str'>":
+            return str(input_)
+        # class_name = self.function_object.__class__.__name__.strip("<class '").strip("'>")
+        # print(class_name)
+        # class_ = eval(class_name)
+        # class_ = eval(self.function_object)
+        if input_ is not None and self.args is not None and len(self.args) > 0:
             if len(self.args) > 0:
                 new_args = list(self.args)
-                new_args.insert(0, input)
-                return self.object(*new_args)
-        elif input is not None and self.object is None:
-            return input
-        elif input is not None and self.object is not None and self.args is None:
-            return self.object(input)
-        elif input is None:
-            return self.object(*self.args)
+                new_args.insert(0, input_)
+                return self.function_object(*new_args)
+            
+        # return self.function_object(input_)
+
+        if input is not None and self.function_object is None:
+            return input_
+        if input is not None and self.function_object is not None and self.args is None:
+            return self.function_object(input_)
+
+        return self.function_object(*self.args)
 
     def __str__(self) -> str:
-        return f"{self.object.__str__}({self.args})"
+        return f"{self.function_object.__str__}({self.args})"
 
     def __repr__(self) -> str:
-        return f"UnitTypeFunction(object={str(self.object)}, args={self.args})"
+        return f"UnitTypeFunction(object={str(self.function_object)}, args={self.args})"
 
     def hash_256(self):
         return hashlib.sha256(self.__repr__().encode()).hexdigest()

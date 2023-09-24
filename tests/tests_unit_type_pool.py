@@ -59,7 +59,7 @@ class TestUnitTypePool(unittest.TestCase):
 
     def test_unit_type_pool_hash_tree(self):
         self.unit_type_pool.freeze()
-        self.assertEqual(self.unit_type_pool.hash_tree().root(), "53d9633d6d81b92b0a80f4eadcab0778fc23076c19b7bd6242f85d034cc1d45e")
+        self.assertEqual(self.unit_type_pool.hash_tree().root(), "8e1007ee6739317d3bebcbfbd02e25632dade7938d178410356ac8cd80c2e480")
 
     def test_unit_type_pool_hash_tree_with_test_value(self):
         self.unit_type_pool.add_unit_type_from_dict({

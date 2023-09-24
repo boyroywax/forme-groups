@@ -26,53 +26,53 @@ class TestUnitTypeRef(unittest.TestCase):
 
 class TestUnitTypeFunction(unittest.TestCase):
     def setUp(self):
-        self.unit_type_function = UnitTypeFunction(object=MagicMock(), args=["arg1", "arg2"])
+        self.unit_type_function = UnitTypeFunction(function_object=MagicMock(), args=["arg1", "arg2"])
 
     def test_create_unit_type_function(self):
         self.assertIsInstance(self.unit_type_function, UnitTypeFunction)
 
     def test_unit_type_function_has_object(self):
-        self.assertIsNotNone(self.unit_type_function.object)
+        self.assertIsNotNone(self.unit_type_function.function_object)
 
     def test_unit_type_function_has_args(self):
         self.assertEqual(self.unit_type_function.args, ["arg1", "arg2"])
 
     def test_unit_type_function_is_frozen(self):
-        unit_type_function = UnitTypeFunction(object=MagicMock(), args=["arg1", "arg2"])
+        unit_type_function = UnitTypeFunction(function_object=MagicMock(), args=["arg1", "arg2"])
         with self.assertRaises(FrozenInstanceError):
-            unit_type_function.object = MagicMock()
+            unit_type_function.function_object = MagicMock()
 
     def test_unit_type_function_call(self):
-        unit_type_function = UnitTypeFunction(object=lambda x, y: x + y, args=[1, 2])
+        unit_type_function = UnitTypeFunction(function_object=lambda x, y: x + y, args=[1, 2])
         self.assertEqual(unit_type_function.call(), 3)
 
     def test_unit_type_function_call_with_no_args(self):
-        unit_type_function = UnitTypeFunction(object=lambda: 1, args=[])
+        unit_type_function = UnitTypeFunction(function_object=lambda: 1, args=[])
         self.assertEqual(unit_type_function.call(), 1)
 
     def test_unit_type_function_call_with_builtin_function(self):
-        unit_type_function = UnitTypeFunction(object=len, args=[[]])
+        unit_type_function = UnitTypeFunction(function_object=len, args=[[]])
         self.assertEqual(unit_type_function.call(), 0)
 
     def test_unit_type_function_args_is_frozen(self):
-        unit_type_function = UnitTypeFunction(object=MagicMock(), args=["arg1", "arg2"])
+        unit_type_function = UnitTypeFunction(function_object=MagicMock(), args=["arg1", "arg2"])
         with self.assertRaises(FrozenInstanceError):
             unit_type_function.args = ["new_arg1", "new_arg2"]
 
     def test_unit_type_function_call_with_buildint_string_function(self):
-        unit_type_function = UnitTypeFunction(object=str.upper)
+        unit_type_function = UnitTypeFunction(function_object=str.upper)
         self.assertEqual(unit_type_function.call("test"), "TEST")
 
     def test_unit_type_function_call_with_buildint_string_function_and_args(self):
-        unit_type_function = UnitTypeFunction(object=dict.get, args=["test_key"])
+        unit_type_function = UnitTypeFunction(function_object=dict.get, args=["test_key"])
         self.assertEqual(unit_type_function.call({"test_key": "test_value"}), "test_value")
 
     def test_unit_type_function_call_with_dict_and_value(self):
-        unit_type_function = UnitTypeFunction(object=dict)
+        unit_type_function = UnitTypeFunction(function_object=dict)
         self.assertEqual(unit_type_function.call({"test": "test"}), {"test": "test"})
 
     def test_unit_type_function_call_with_list_and_value(self):
-        unit_type_function = UnitTypeFunction(object=list)
+        unit_type_function = UnitTypeFunction(function_object=list)
         self.assertEqual(unit_type_function.call(["test"]), ["test"])
 
 
@@ -84,7 +84,7 @@ class TestUnitType(unittest.TestCase):
             prefix="prefix",
             suffix="suffix",
             separator="separator",
-            sys_function=UnitTypeFunction(object=MagicMock(), args=["arg1", "arg2"]),
+            sys_function=UnitTypeFunction(function_object=MagicMock(), args=["arg1", "arg2"]),
         )
         print(self.unit_type)
 

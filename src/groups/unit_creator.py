@@ -19,7 +19,7 @@ class UnitCreator:
         else:
             self.unit_type_pool = unit_type_pool
 
-    def create_unit(self, alias: str, value: Any = None) -> Unit:
+    def create_unit(self, alias: str, value: Any = None, force: bool = True) -> Unit:
         if not self.unit_type_pool.frozen:
             raise Exception("UnitTypePool must be frozen before generating units.")
         
@@ -27,12 +27,16 @@ class UnitCreator:
         print(unit_type)
         if unit_type is None:
             raise ValueError(f"UnitTypePool does not contain alias {alias}.")
+
+        if force is True:
+            if unit_type.sys_function is not None:
+                value = unit_type.sys_function.call(value)
         
-        if value is not None:
-            if unit_type.sys_function is None:
-                return Unit(value=value, type_ref=alias)
-            else:
-                return Unit(value=unit_type.sys_function.call(value), type_ref=alias)
+        # if value is not None:
+        # if unit_type.sys_function is None:
+        return Unit(value=value, type_ref=alias)
+        # else:
+        #     return Unit(value=unit_type.sys_function.call(value), type_ref=alias)
         
     
     

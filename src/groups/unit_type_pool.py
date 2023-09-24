@@ -99,23 +99,35 @@ class UnitTypePool(PoolInterface):
             for alias in unit_type.aliases:
                 aliases.append(alias.alias)
         return aliases
+    
+    def create_unit_type_function(self, dict: dict) -> UnitTypeFunction:
+        """Create a UnitTypeFunction from a dictionary.
 
-    def add_unit_type_from_dict(self, dict: dict):
+        Args:
+            dict (dict): The dictionary to create the UnitTypeFunction from.
+
+        Returns:
+            UnitTypeFunction: The created UnitTypeFunction.
+        """
+        return UnitTypeFunction(function_object=dict["sys_function"]["object"], args=dict["sys_function"]["args"])
+
+    def add_unit_type_from_dict(self, dict_: dict):
         """Add a UnitType from a dictionary.
 
         Args:
             dict (dict): The dictionary to add.
         """
         self.add(UnitType(
-            aliases=[UnitTypeRef(alias=alias) for alias in dict["aliases"]],
-            super_type=[UnitTypeRef(alias=alias) for alias in dict["base_type"]],
-            prefix=dict["prefix"],
-            suffix=dict["suffix"],
-            separator=dict["separator"],
-            sys_function=UnitTypeFunction(object=eval(dict["sys_function"]["object"]), args=dict["sys_function"]["args"])
+            aliases=[UnitTypeRef(alias=alias) for alias in dict_["aliases"]],
+            super_type=[UnitTypeRef(alias=alias) for alias in dict_["base_type"]],
+            prefix=dict_["prefix"],
+            suffix=dict_["suffix"],
+            separator=dict_["separator"],
+            sys_function=UnitTypeFunction(function_object=eval(dict_["sys_function"]["object"]), args=dict_["sys_function"]["args"])
         ))
 
-        print(f"Added UnitType {dict['sys_function']['object']}")
+        print(f"Added UnitType {eval(dict_['sys_function']['object'])}")
+        print(f"Added UnitTypeFunction {UnitTypeFunction(function_object=dict_['sys_function']['object'], args=dict_['sys_function']['args']).hash_256()}")
 
     def set_types_from_json(self, path: str = None):
         """Set the UnitTypePool from a JSON file.
