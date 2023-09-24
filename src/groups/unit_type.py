@@ -47,9 +47,11 @@ class UnitTypeFunction:
         """
         print(self.function_object)
         print(str(self.args))
-        if self.function_object == "<class 'str'>":
+        if str(self.function_object) == "<class 'str'>":
             return str(input_)
-        # class_name = self.function_object.__class__.__name__.strip("<class '").strip("'>")
+        if str(self.function_object) == "<class 'dict'>":
+            return dict(input_)
+        # class_name = str(self.function_object).strip("<class '").strip("'>")
         # print(class_name)
         # class_ = eval(class_name)
         # class_ = eval(self.function_object)

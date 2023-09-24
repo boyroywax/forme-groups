@@ -30,6 +30,7 @@ class UnitCreator:
 
         if force is True:
             if unit_type.sys_function is not None:
+                print(unit_type.sys_function.function_object)
                 value = unit_type.sys_function.call(value)
         
         # if value is not None:
