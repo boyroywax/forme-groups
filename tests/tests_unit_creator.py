@@ -42,3 +42,11 @@ class TestUnitCreator(unittest.TestCase):
         unit = self.unit_creator.create_unit(value={"test_key": "test_value"}, alias="dict")
         print(unit)
         self.assertEqual(unit.value["test_key"], "test_value")
+
+    def test_unit_creator_create_unit_list(self):
+        unit = self.unit_creator.create_unit(value=["test_value"], alias="list")
+        self.assertEqual(unit.value[0], "test_value")
+
+    def test_unit_creator_create_unit_tuple(self):
+        unit = self.unit_creator.create_unit(value=("test_value",), alias="tuple")
+        self.assertEqual(unit.value[0], "test_value")

@@ -18,7 +18,7 @@ class MerkleTree:
             self.levels.append(hashed_level)
             level = self.levels[-1]
             # print(level)
-           
+
     def hash_level(self, level: List[str]) -> List[str]:
         hashed_level = []
         for i in range(0, len(level), 2):
@@ -27,11 +27,11 @@ class MerkleTree:
             else:
                 hashed_level.append(self.hash_func(level[i] + level[i + 1]))
         return hashed_level
-    
+
     @staticmethod
     def hash_func(data):
         return hashlib.sha256(data.encode()).hexdigest()
-    
+
     def root(self):
         return self.levels[-1][0]
 
@@ -47,9 +47,9 @@ class MerkleTree:
                 current_hash = self.hash_func(self.levels[i][index - 1] + current_hash)
             index //= 2
         return current_hash == root_hash
-    
+
     def __str__(self):
-        return f"{self.levels}"
-    
+        return f"{self.root()}"
+
     def __repr__(self):
-        return f"{self.__class__.__name__}(levels={self.levels})"
+        return f"{self.__class__.__name__}(root={self.root()})"

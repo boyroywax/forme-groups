@@ -10,7 +10,7 @@ class TestUnitTypePool(unittest.TestCase):
 
     def setUp(self):
         self.unit_type_pool = UnitTypePool()
-        self.unit_type_pool.set_types_from_json()
+        self.unit_type_pool.set_system_types_from_json()
 
     def test_create_unit_type_pool(self):
         self.assertIsInstance(self.unit_type_pool, UnitTypePool)

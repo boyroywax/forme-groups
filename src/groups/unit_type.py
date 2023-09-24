@@ -30,7 +30,7 @@ class UnitTypeFunction:
     """A function that can be used to generate a Unit.
 
     Attributes:
-        object (callable): The function that will be called to generate a Unit.
+        function_object (Callable): The function that will be called to generate a Unit.
         args (tuple): The arguments that will be passed to the function.
     """
     function_object: Callable = field(default=None)
@@ -40,7 +40,7 @@ class UnitTypeFunction:
         """Call the function with the given input.
 
         Args:
-            input (Any): The input to the function.
+            input_ (Any): The input to the function.
 
         Returns:
             object: The result of the function call.
@@ -54,6 +54,10 @@ class UnitTypeFunction:
             return str(input_)
         if str(self.function_object) == "<class 'dict'>":
             return dict(input_)
+        if str(self.function_object) == "<class 'list'>":
+            return list(input_)
+        if str(self.function_object) == "<class 'tuple'>":
+            return tuple(input_)
         # class_name = str(self.function_object).strip("<class '").strip("'>")
         # print(class_name)
         # class_ = eval(class_name)
@@ -113,7 +117,7 @@ class UnitType:
         for type in self.super_type:
             super_type += type.__repr__() + ", "
         return super_type[:-2]
-    
+
     def __repr__(self) -> str:
         return f"UnitType(aliases=[{self.__aliases_repr__()}], super_type=[{self.__super_type_repr__()}], prefix={self.prefix}, suffix={self.suffix}, separator={self.separator}, sys_function={self.sys_function.__repr__()})"
 
