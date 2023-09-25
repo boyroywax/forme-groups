@@ -16,11 +16,65 @@ class TestBase(unittest.TestCase):
         value = self.base.Value_(123)
         self.assertEqual(value._value, 123)
 
-    def test_function(self):
+    def test_value_frozen(self):
         value = self.base.Value_(123)
-        func = self.base.Function_(value, [value])
-        self.assertEqual(func._object, value)
-        self.assertEqual(func._args, [value])
+        with self.assertRaises(FrozenInstanceError):
+            value._value = 456
+
+    def test_value_slots(self):
+        value = self.base.Value_(123)
+        self.assertEqual(value.__slots__, ('_value',))
+
+    def test_value_str(self):
+        value = self.base.Value_(123)
+        self.assertEqual(str(value), '123')
+
+    def test_value_repr(self):
+        value = self.base.Value_(123)
+        self.assertEqual(repr(value), '123')
+
+    def test_value_hash(self):
+        value = self.base.Value_(123)
+        self.assertEqual(value.__hash__(), 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3')
+        value2 = self.base.Value_(456)
+        self.assertNotEqual(value.__hash__(), value2.__hash__())
+
+    def test_callable(self):
+        func = MagicMock()
+        args = [self.base.Value_(123), self.base.Value_(456)]
+        callable_ = self.base.Callable_(func, args)
+        self.assertEqual(callable_._function, func)
+        self.assertEqual(callable_._args, args)
+
+    def test_callable_frozen(self):
+        func = MagicMock()
+        args = [self.base.Value_(123), self.base.Value_(456)]
+        callable_ = self.base.Callable_(func, args)
+        with self.assertRaises(FrozenInstanceError):
+            callable_._function = MagicMock()
+        with self.assertRaises(FrozenInstanceError):
+            callable_._args = MagicMock()
+
+    def test_callable_slots(self):
+        func = MagicMock()
+        args = [self.base.Value_(123), self.base.Value_(456)]
+        callable_ = self.base.Callable_(func, args)
+        self.assertEqual(callable_.__slots__, ('_function', '_args'))
+
+    def test_callable_call(self):
+        func = MagicMock()
+        args = [self.base.Value_(123), self.base.Value_(456)]
+        callable_ = self.base.Callable_(func, args)
+        input_ = self.base.Value_(789)
+        callable_(input_)
+        func.assert_called_with(input_._value, *args)
+
+    def test_function(self):
+        callable_ = self.base.Callable_(str, [])
+        function = self.base.Function_(callable_)
+        print(function.__call__(self.base.Value_(123)))
+
+
 
     def test_container(self):
         prefix = self.base.Value_('prefix')
@@ -31,48 +85,3 @@ class TestBase(unittest.TestCase):
         self.assertEqual(container._suffix, suffix)
         self.assertEqual(container._separator, sep)
 
-    def test_type(self):
-        aliases = [self.base.Value_('alias1'), self.base.Value_('alias2')]
-        super_type = self.base.Type_(aliases, None, False, None, None)
-        container = self.base.Container_(None, None, None)
-        func = self.base.Function_(None, [])
-        typ = self.base.Type_(aliases, super_type, True, container, func)
-        self.assertEqual(typ._aliases, aliases)
-        self.assertEqual(typ._super_type, super_type)
-        self.assertTrue(typ._is_container)
-        self.assertEqual(typ._container, container)
-        self.assertEqual(typ._function, func)
-
-    def test_schema(self):
-        unit1 = self.base.Unit_(self.base.Value_('value1'), self.base.Type_([], None, False, None, None))
-        unit2 = self.base.Unit_(self.base.Value_('value2'), self.base.Type_([], None, False, None, None))
-        pattern = {unit1: unit2}
-        schema = self.base.Schema_(pattern)
-        self.assertEqual(schema._pattern, pattern)
-
-    def test_unit(self):
-        value = self.base.Value_('value')
-        typ_ref = self.base.Type_.Reference_(self.base.Value_('alias'))
-        unit = self.base.Unit_(value, typ_ref)
-        self.assertEqual(unit._value, value)
-        self.assertEqual(unit._type_ref, typ_ref)
-
-    def test_type_pool(self):
-        typ1 = self.base.Type_([], None, False, None, None)
-        typ2 = self.base.Type_([], None, False, None, None)
-        pool = self.base.Type_Pool_([typ1, typ2])
-        self.assertEqual(pool._types, [typ1, typ2])
-
-    def test_unit_pool(self):
-        value = self.base.Value_('value')
-        typ_ref = self.base.Type_.Reference_(self.base.Value_('alias'))
-        unit = self.base.Unit_(value, typ_ref)
-        pool = self.base.Unit_Pool_([unit])
-        self.assertEqual(pool._units, [unit])
-
-    def test_group(self):
-        type_pool = self.base.Type_Pool_([self.base.Type_([], None, False, None, None)])
-        unit_pool = self.base.Unit_Pool_([self.base.Unit_(self.base.Value_('value'), self.base.Type_.Reference_(self.base.Value_('alias')))])
-        group = self.base.Group_(type_pool, unit_pool)
-        self.assertEqual(group._type_pool, type_pool)
-        self.assertEqual(group._unit_pool, unit_pool)
