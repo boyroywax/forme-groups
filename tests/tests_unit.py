@@ -5,19 +5,13 @@ from unittest.mock import MagicMock
 import sys
 sys.path.append('/Users/j/Documents/Forme/code/forme-groups')
 
-from src.groups.unit_type_pool import UnitTypePool
+from src.groups.base import Base
 
 
-class TestUnit(unittest.TestCase):
+class TestBase(unittest.TestCase):
     def setUp(self):
-        self.unit = Unit(value="test_value", type_ref="test_type_ref")
+        self.base_class = Base()
 
-    def test_create_unit(self):
-        self.assertIsInstance(self.unit, Unit)
-
-    def test_unit_has_value(self):
-        self.assertEqual(self.unit.value, "test_value")
-
-    def test_unit_has_type_ref(self):
-        self.assertEqual(self.unit.type_ref, "test_type_ref")
+    def test_base_class(self):
+        self.assertIsInstance(self.base_class, Base)
 
