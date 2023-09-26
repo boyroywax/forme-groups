@@ -71,3 +71,12 @@ class TestNonce(unittest.TestCase):
         with self.assertRaises(ValueError):
             nonce_iter = iter(nonce)
             next(nonce_iter)
+
+    def test_hash_tree(self):
+        items = [
+            Unit(value=1, type_ref=UnitTypeRef(alias="int")),
+            Unit(value="test", type_ref=UnitTypeRef(alias="str")),
+            Unit(value=True, type_ref=UnitTypeRef(alias="bool")),
+        ]
+        nonce = Nonce(items=items)
+        self.assertEqual(nonce.hash_tree().root(), "b65ad1d64f1c899fa6f6b8496453869fee99b55efbf0c36cd98d3bbe84424bc6")

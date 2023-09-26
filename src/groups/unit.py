@@ -46,17 +46,6 @@ class Unit:
     _value: Value = field(validator=validators.instance_of(Value | str | int | float | bool | dict | list | tuple | bytes | None), converter=_value_converter)
     _type_ref: UnitTypeRef = field(validator=validators.instance_of(UnitTypeRef | str), converter=_type_ref_converter)
 
-    # def __attrs_init__(self, value: Value | Any = None, type_ref: UnitTypeRef | str = None):
-    #     if isinstance(value, Value):
-    #         self.value = value
-    #     else:
-    #         self.value = Value(_value=value)
-
-    #     if isinstance(type_ref, UnitTypeRef):
-    #         self.type_ref = type_ref
-    #     else:
-    #         self.type_ref = UnitTypeRef(type_ref)
-
     @property
     def value(self) -> str | int | float | bool | dict | list | tuple | bytes | None:
         return self._value._value

@@ -40,7 +40,7 @@ class GroupUnitInterface(ABC):
         pass
 
     @abstractmethod
-    def hash_tree(self, override: bool = False) -> MerkleTree:
+    def hash_tree(self) -> MerkleTree:
         pass
 
 
@@ -76,19 +76,14 @@ class Nonce(GroupUnitInterface):
             case _:
                 raise ValueError(f"Cannot iterate on Nonce with type {active_unit.type_ref}.")
         return Nonce(items=self.items[:-1] + (Unit(value=next_nonce, type_ref=active_unit.type_ref),))
-    
+
     def __iter__(self):
         return self
 
-
-        
-    
-    def hash_tree(self, override: bool = False) -> MerkleTree:
+    def hash_tree(self) -> MerkleTree:
         nonce_items: list[Unit] = []
         for item in self.items:
             if not isinstance(item, Unit):
                 raise ValueError(f"Invalid item {item} in Nonce.")
             nonce_items.append(item.hash_256())
         return MerkleTree(hashed_data=nonce_items)
-            
-            
