@@ -58,7 +58,7 @@ class TestUnitPool(unittest.TestCase):
         self.pool.add(unit2)
         self.pool.freeze()
         tree = self.pool.hash_tree()
-        print(tree)
+        # print(tree)
         self.assertIsInstance(tree, MerkleTree)
 
     def test_hash_tree_not_frozen(self):

@@ -22,6 +22,10 @@ class TestNonce(unittest.TestCase):
         with self.assertRaises(TypeError):
             nonce = Nonce(items=None)
 
+    def test_nonce_has_slots(self):
+        nonce = Nonce(items=[Unit(value=1, type_ref=UnitTypeRef(alias="int"))])
+        self.assertEqual(nonce.__slots__, ("items",))
+
     def test_get_by_tier(self):
         items = [
             Unit(value=1, type_ref=UnitTypeRef(alias="int")),

@@ -32,7 +32,7 @@ class Value:
 
 
 def _value_converter(value: Any) -> Value:
-    print(value.__class__.__name__)
+    # print(value.__class__.__name__)
     if isinstance(value, Value):
         return value
     elif isinstance(value, str) or isinstance(value, int) or isinstance(value, float) or isinstance(value, bool) or isinstance(value, dict) or isinstance(value, list) or isinstance(value, tuple) or isinstance(value, bytes) or value is None:

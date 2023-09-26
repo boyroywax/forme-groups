@@ -33,12 +33,12 @@ class MerkleTree:
         return hashlib.sha256(data.encode()).hexdigest()
 
     def root(self) -> str | None:
-        print(self.leaves)
+        # print(self.leaves)
         if self.levels is None or self.levels == [[]] or self.leaves == []:
             return None
         return self.levels[-1][0]
 
-    def verify(self, leaf_hash):
+    def verify(self, leaf_hash: str) -> bool:
         if leaf_hash not in self.leaves:
             return False
         index = self.leaves.index(leaf_hash)
@@ -51,8 +51,8 @@ class MerkleTree:
             index //= 2
         return current_hash == self.root()
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.root()}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"{self.__class__.__name__}(root={self.root()})"

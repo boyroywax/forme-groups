@@ -23,10 +23,6 @@ class GroupUnitInterface(ABC):
     """
     items: list[Any] | tuple[Any]
 
-    # @abstractmethod
-    # def __attrs_init__(self, items: list[Any] | tuple[Any] = None):
-    #     pass
-
     @abstractmethod
     def __str__(self) -> str:
         pass
@@ -70,11 +66,11 @@ class Nonce(GroupUnitInterface):
     def __next__(self) -> 'Nonce':
         active_unit = self.items[-1]
         match(active_unit.type_ref):
-            case("int"):
+            case("int" | "integer" | "i"):
                 next_nonce: int = active_unit.value + 1
-
             case _:
                 raise ValueError(f"Cannot iterate on Nonce with type {active_unit.type_ref}.")
+
         return Nonce(items=self.items[:-1] + (Unit(value=next_nonce, type_ref=active_unit.type_ref),))
 
     def __iter__(self):
