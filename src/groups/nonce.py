@@ -44,27 +44,16 @@ class GroupUnitInterface(ABC):
         pass
 
 
+def _convert_list_to_tuple(items: list[Unit] | tuple[Unit]) -> tuple[Unit]:
+    if isinstance(items, list):
+        return tuple(items)
+    elif isinstance(items, tuple):
+        return items
+
+
 @define(frozen=True, slots=True)
 class Nonce(GroupUnitInterface):
-    items: list[Unit] | tuple[Unit] = field(default=None)
-
-    def __pre_init__(self, items: list[Unit] | tuple[Unit] = None):
-        print(items)
-        if items is None:
-            raise ValueError("Nonce must be provided.")
-        for item in items:
-            if not isinstance(item, Unit):
-                raise ValueError(f"Invalid item {item} in Nonce.")
-
-        self.items = items
-        if isinstance(self.items, list):
-            self.items = tuple(self.items)
-
-    #     self.__post_init__(self)
-    
-    # def __post_init__(self):
-    #     if self.items is None:
-    #         raise ValueError("Nonce must be provided.")
+    items: tuple[Unit] = field(validator=validators.instance_of(tuple | list), converter=_convert_list_to_tuple)
 
     def get_by_tier(self, tier: int) -> Unit:
         return self.items[tier]
@@ -86,7 +75,7 @@ class Nonce(GroupUnitInterface):
 
             case _:
                 raise ValueError(f"Cannot iterate on Nonce with type {active_unit.type_ref}.")
-        return Nonce(items=self.items[:-1] + [Unit(value=next_nonce, type_ref=active_unit.type_ref)])
+        return Nonce(items=self.items[:-1] + (Unit(value=next_nonce, type_ref=active_unit.type_ref),))
     
     def __iter__(self):
         return self

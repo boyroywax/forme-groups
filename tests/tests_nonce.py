@@ -11,7 +11,7 @@ class TestNonce(unittest.TestCase):
     def test_init(self):
         items = [Unit(value=1, type_ref=UnitTypeRef(alias="int"))]
         nonce = Nonce(items=items)
-        self.assertEqual(nonce.items, items)
+        self.assertEqual(nonce.items, tuple(items))
 
     def test_init_with_tuple(self):
         items = (Unit(value=1, type_ref=UnitTypeRef(alias="int")),)
@@ -19,7 +19,7 @@ class TestNonce(unittest.TestCase):
         self.assertEqual(nonce.items, tuple(items))
 
     def test_init_with_none(self):
-        with self.assertRaises(ValueError):
+        with self.assertRaises(TypeError):
             nonce = Nonce(items=None)
 
     def test_get_by_tier(self):
