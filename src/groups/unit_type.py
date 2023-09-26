@@ -58,6 +58,8 @@ class UnitTypeFunction:
             return list(input_)
         if str(self.function_object) == "<class 'tuple'>":
             return tuple(input_)
+        if str(self.function_object) == "<class 'bytes'>":
+            return bytes(input_)
         # class_name = str(self.function_object).strip("<class '").strip("'>")
         # print(class_name)
         # class_ = eval(class_name)

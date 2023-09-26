@@ -50,3 +50,7 @@ class TestUnitCreator(unittest.TestCase):
     def test_unit_creator_create_unit_tuple(self):
         unit = self.unit_creator.create_unit(value=("test_value",), alias="tuple")
         self.assertEqual(unit.value[0], "test_value")
+
+    def test_unit_creator_create_unit_bytes(self):
+        unit = self.unit_creator.create_unit(value=b"test_value", alias="bytes")
+        self.assertEqual(unit.value, b"test_value")
