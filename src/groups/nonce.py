@@ -54,6 +54,20 @@ class Nonce(GroupUnitInterface):
     def get_by_tier(self, tier: int) -> Unit:
         return self.items[tier]
 
+    def _create_next_tier(self, type_ref: Unit | str = None) -> 'Nonce':
+        if isinstance(type_ref, Unit):
+            type_ref = type_ref.type_ref
+        if type_ref is None:
+            type_ref = self.items[-1].type_ref
+
+        match(type_ref):
+            case("int" | "integer" | "i"):
+                return Nonce(items=self.items + (Unit(value=0, type_ref="int"),))
+            case("str" | "string" | "s"):
+                return Nonce(items=self.items + (Unit(value="a", type_ref="str"),))
+            case _:
+                raise ValueError(f"Cannot create next tier for Nonce with type {type_ref}.")
+
     def __str__(self) -> str:
         output = ""
         for item in self.items:
@@ -68,6 +82,8 @@ class Nonce(GroupUnitInterface):
         match(active_unit.type_ref):
             case("int" | "integer" | "i"):
                 next_nonce: int = active_unit.value + 1
+            case("str" | "string" | "s"):
+                next_nonce: str = active_unit.value[:-1] + chr(ord(active_unit.value[-1]) + 1)
             case _:
                 raise ValueError(f"Cannot iterate on Nonce with type {active_unit.type_ref}.")
 

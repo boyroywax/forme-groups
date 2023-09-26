@@ -37,6 +37,24 @@ class TestNonce(unittest.TestCase):
         self.assertEqual(nonce.get_by_tier(1), items[1])
         self.assertEqual(nonce.get_by_tier(2), items[2])
 
+    def test_get_next_tier(self):
+        items = [
+            Unit(value=1, type_ref=UnitTypeRef(alias="int")),
+            Unit(value="test", type_ref=UnitTypeRef(alias="str")),
+            Unit(value=1, type_ref=UnitTypeRef(alias="int")),
+        ]
+        nonce = Nonce(items=items)
+        print(nonce)
+        self.assertEqual(nonce._create_next_tier(), Nonce(items=items + [Unit(value=0, type_ref=UnitTypeRef(alias="int"))]))
+
+    def test_get_next_tier_with_str(self):
+        items = [
+            Unit(value=1, type_ref=UnitTypeRef(alias="int")),
+            Unit(value="test", type_ref=UnitTypeRef(alias="str")),
+        ]
+        nonce = Nonce(items=items)
+        self.assertEqual(nonce._create_next_tier(), Nonce(items=items + [Unit(value="a", type_ref=UnitTypeRef(alias="str"))]))
+
     def test_str(self):
         items = [
             Unit(value=1, type_ref=UnitTypeRef(alias="int")),
@@ -45,6 +63,14 @@ class TestNonce(unittest.TestCase):
         ]
         nonce = Nonce(items=items)
         self.assertEqual(str(nonce), "1.test.True")
+
+    def test_increment_nonce_str(self):
+        items = [
+            Unit(value=1, type_ref=UnitTypeRef(alias="int")),
+            Unit(value="test", type_ref=UnitTypeRef(alias="str")),
+        ]
+        nonce = Nonce(items=items)
+        self.assertEqual(nonce.__next__().__str__(), "1.tesu")
 
     def test_nonce_all_ints(self):
         items = [
