@@ -22,8 +22,8 @@ class TestUnitCreator(unittest.TestCase):
 
     def test_unit_creator_create_unit(self):
         unit = self.unit_creator.create_unit(value="test_value", alias="str")
-        self.assertEqual(unit.value, "test_value")
-        self.assertEqual(unit.type_ref, "str")
+        self.assertEqual(unit.value.__str__(), "test_value")
+        self.assertEqual(unit.type_ref.__str__(), "str")
 
     def test_unit_creator_create_unit_with_no_alias(self):
         with self.assertRaises(ValueError):
@@ -31,8 +31,8 @@ class TestUnitCreator(unittest.TestCase):
 
     def test_unit_creator_create_unit_with_no_value(self):
         unit = self.unit_creator.create_unit(value=None, alias="str")
-        self.assertEqual(unit.value, None)
-        self.assertEqual(unit.type_ref, "str")
+        self.assertEqual(unit.value.__str__(), 'None')
+        self.assertEqual(unit.type_ref.__str__(), "str")
 
     def test_unit_creator_create_unit_with_no_value_and_no_alias(self):
         with self.assertRaises(ValueError):
@@ -41,12 +41,12 @@ class TestUnitCreator(unittest.TestCase):
     def test_unit_creator_create_unit_dict(self):
         unit = self.unit_creator.create_unit(value={"test_key": "test_value"}, alias="dict")
         print(unit)
-        self.assertEqual(unit.value["test_key"], "test_value")
+        self.assertEqual(unit.value._value["test_key"], "test_value")
 
     def test_unit_creator_create_unit_list(self):
         unit = self.unit_creator.create_unit(value=["test_value"], alias="list")
-        self.assertEqual(unit.value[0], "test_value")
+        self.assertEqual(unit.value._value[0], "test_value")
 
     def test_unit_creator_create_unit_tuple(self):
         unit = self.unit_creator.create_unit(value=("test_value",), alias="tuple")
-        self.assertEqual(unit.value[0], "test_value")
+        self.assertEqual(unit.value._value[0], "test_value")

@@ -126,8 +126,8 @@ class UnitTypePool(PoolInterface):
             sys_function=UnitTypeFunction(function_object=eval(dict_["sys_function"]["object"]), args=dict_["sys_function"]["args"])
         ))
 
-        print(f"Added UnitType {eval(dict_['sys_function']['object'])}")
-        print(f"Added UnitTypeFunction {UnitTypeFunction(function_object=dict_['sys_function']['object'], args=dict_['sys_function']['args']).hash_256()}")
+        # print(f"Added UnitType {eval(dict_['sys_function']['object'])}")
+        # print(f"Added UnitTypeFunction {UnitTypeFunction(function_object=dict_['sys_function']['object'], args=dict_['sys_function']['args']).hash_256()}")
 
     def set_system_types_from_json(self, path: str = None):
         """Set the UnitTypePool from a JSON file.

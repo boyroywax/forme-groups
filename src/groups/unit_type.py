@@ -19,7 +19,7 @@ class UnitTypeRef:
         return self.alias
 
     def __repr__(self) -> str:
-        return f'UnitTypeRef(alias="{self.alias}")'
+        return f'UnitTypeRef(alias={self.alias})'
 
     def hash_256(self):
         return hashlib.sha256(self.__repr__().encode()).hexdigest()
@@ -45,8 +45,8 @@ class UnitTypeFunction:
         Returns:
             object: The result of the function call.
         """
-        print(self.function_object)
-        print(str(self.args))
+        # print(self.function_object)
+        # print(str(self.args))
 
         if str(self.function_object) == "<class 'str'>":
             if input_ is None:

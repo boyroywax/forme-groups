@@ -6,6 +6,7 @@ from tests_pool import TestPool
 from tests_unit_type_pool import TestUnitTypePool
 from tests_unit_creator import TestUnitCreator
 from tests_unit_pool import TestUnitPool
+from tests_unit import TestUnit
 
 
 def main():
@@ -23,6 +24,8 @@ def main():
     test_suite.addTests(test_loader.loadTestsFromTestCase(TestUnitTypePool))
     test_suite.addTests(test_loader.loadTestsFromTestCase(TestUnitCreator))
     test_suite.addTests(test_loader.loadTestsFromTestCase(TestUnitPool))
+    test_suite.addTests(test_loader.loadTestsFromTestCase(TestUnit))
+
 
     # Run the test suite
     runner = unittest.TextTestRunner()
