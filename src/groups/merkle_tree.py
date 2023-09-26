@@ -38,7 +38,7 @@ class MerkleTree:
             return None
         return self.levels[-1][0]
 
-    def verify(self, leaf_hash, root_hash):
+    def verify(self, leaf_hash):
         if leaf_hash not in self.leaves:
             return False
         index = self.leaves.index(leaf_hash)
@@ -49,7 +49,7 @@ class MerkleTree:
             else:
                 current_hash = self.hash_func(self.levels[i][index - 1] + current_hash)
             index //= 2
-        return current_hash == root_hash
+        return current_hash == self.root()
 
     def __str__(self):
         return f"{self.root()}"
