@@ -83,7 +83,10 @@ class Nonce(GroupUnitInterface):
             case("int" | "integer" | "i"):
                 next_nonce: int = active_unit.value + 1
             case("str" | "string" | "s"):
-                next_nonce: str = active_unit.value[:-1] + chr(ord(active_unit.value[-1]) + 1)
+                if active_unit.value[-1] == "z":
+                    next_nonce: str = active_unit.value + "a"
+                else:
+                    next_nonce: str = active_unit.value[:-1] + chr(ord(active_unit.value[-1]) + 1)
             case _:
                 raise ValueError(f"Cannot iterate on Nonce with type {active_unit.type_ref}.")
 

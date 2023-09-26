@@ -84,6 +84,22 @@ class TestNonce(unittest.TestCase):
         self.assertEqual(nonce.get_by_tier(2).value, 3)
         self.assertEqual(nonce.__str__(), "1.2.3")
 
+    def test_nonce_append_string(self):
+        items = [
+            Unit(value=1, type_ref=UnitTypeRef(alias="int")),
+            Unit(value="xz", type_ref=UnitTypeRef(alias="str")),
+        ]
+        nonce = Nonce(items=items)
+        self.assertEqual(nonce.get_by_tier(0).value, 1)
+        self.assertEqual(nonce.get_by_tier(1).value, "xz")
+
+        nonce = nonce.__next__()
+        self.assertEqual(nonce.__str__(), "1.xza")
+
+        nonce = nonce._create_next_tier("int")
+        self.assertEqual(nonce.__str__(), "1.xza.0")
+
+
     def test_repr(self):
         items = [
             Unit(value=1, type_ref=UnitTypeRef(alias="int")),
