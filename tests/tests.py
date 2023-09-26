@@ -1,7 +1,7 @@
 import unittest
 
+from tests_merkle_tree import TestMerkleTree
 from tests_unit_type import TestUnitTypeRef, TestUnitTypeFunction, TestUnitType
-# from tests_group import TestGroupUnit, TestGroup, TestSchema
 from tests_pool import TestPool
 from tests_unit_type_pool import TestUnitTypePool
 from tests_unit_creator import TestUnitCreator
@@ -17,6 +17,7 @@ def main():
     test_loader = unittest.TestLoader()
 
     # Add the test cases to the test suite
+    test_suite.addTests(test_loader.loadTestsFromTestCase(TestMerkleTree))
     test_suite.addTests(test_loader.loadTestsFromTestCase(TestUnitTypeRef))
     test_suite.addTests(test_loader.loadTestsFromTestCase(TestUnitTypeFunction))
     test_suite.addTests(test_loader.loadTestsFromTestCase(TestUnitType))

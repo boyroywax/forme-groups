@@ -3,7 +3,7 @@ from typing import List
 
 
 class MerkleTree:
-    def __init__(self, hashed_data: list[str]):
+    def __init__(self, hashed_data: list[str] = []):
         self.leaves: List[str] = hashed_data
         self.levels: List[List[str]] = [self.leaves]
         self.build()
@@ -32,7 +32,10 @@ class MerkleTree:
     def hash_func(data):
         return hashlib.sha256(data.encode()).hexdigest()
 
-    def root(self):
+    def root(self) -> str | None:
+        print(self.leaves)
+        if self.levels is None or self.levels == [[]] or self.leaves == []:
+            return None
         return self.levels[-1][0]
 
     def verify(self, leaf_hash, root_hash):

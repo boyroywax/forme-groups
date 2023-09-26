@@ -14,18 +14,18 @@ class PoolInterface(ABC):
     """An abstract interface for a Pool Object.
 
     Attributes:
-        - _frozen (bool): Whether or not the Pool is frozen.
-        - items (list[Any] | tuple[Any]): The items in the Pool.]
+        _frozen (bool): Whether or not the Pool is frozen.
+        items (list[Any] | tuple[Any]): The items in the Pool.]
 
     Methods:
-        - __init__(items: list[Any] | tuple[Any] = None, freeze: bool = False)
-        - freeze() -> None
-        - contains(item: Any) -> bool
-        - add(item: Any) -> None
-        - __str__() -> str
-        - __repr__() -> str
-        - __iter__() -> Any
-        - hash_tree(override: bool = False) -> MerkleTree
+        __init__(items: list[Any] | tuple[Any] = None, freeze: bool = False)
+        freeze() -> None
+        contains(item: Any) -> bool
+        add(item: Any) -> None
+        __str__() -> str
+        __repr__() -> str
+        __iter__() -> Any
+        hash_tree(override: bool = False) -> MerkleTree
     """
     _frozen: bool
     items: list[Any] | tuple[Any]
