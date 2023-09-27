@@ -31,7 +31,6 @@ class Value:
 
 
 def _value_converter(value: Any) -> Value:
-    # print(value.__class__.__name__)
     if isinstance(value, Value):
         return value
     elif isinstance(value, str) or isinstance(value, int) or isinstance(value, float) or isinstance(value, bool) or isinstance(value, dict) or isinstance(value, list) or isinstance(value, tuple) or isinstance(value, bytes) or value is None:
@@ -48,11 +47,11 @@ class Unit:
     @property
     def value(self) -> str | int | float | bool | dict | list | tuple | bytes | None:
         return self._value._value
-    
+
     @property
     def type_ref(self) -> str:
         return self._type_ref.__str__()
-    
+
     def to_dict(self) -> dict:
         return {
             "value": self.value,
@@ -67,6 +66,6 @@ class Unit:
 
     def hash_256(self) -> str:
         return hashlib.sha256(self.__repr__().encode()).hexdigest()
-    
+
     def hash_tree(self) -> MerkleTree:
         return MerkleTree([self._value.hash_256(), self._type_ref.hash_256()])

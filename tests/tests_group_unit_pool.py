@@ -76,7 +76,7 @@ class TestGroupUnitPool(unittest.TestCase):
         pool.freeze()
         self.assertEqual(
             pool.hash_tree().root(),
-            "0e80260fe576848e54bb6207320002e7f139ab64eb64758411de7bcee376e737",
+            "6e6e87afafd1f09476fdac70881e85cb4d283d796975a6dfd1c452fdc3ff7cb3",
         )
 
     def test_hash_tree_with_new_item(self):
@@ -98,7 +98,7 @@ class TestGroupUnitPool(unittest.TestCase):
         pool.freeze()
         self.assertNotEqual(
             pool.hash_tree().root(),
-            "0e80260fe576848e54bb6207320002e7f139ab64eb64758411de7bcee376e737",
+            "6e6e87afafd1f09476fdac70881e85cb4d283d796975a6dfd1c452fdc3ff7cb3",
         )
 
     def test_str(self):
@@ -106,6 +106,6 @@ class TestGroupUnitPool(unittest.TestCase):
         self.maxDiff = None
         self.assertEqual(
             pool.__str__(),
-            'Nonce: 1, Owners: Alice, Creds: password123, Data: False; Nonce: 2, Owners: Bob, Creds: password456, Data: True'
+            'Nonce: 1, Owners: Alice, Creds: password123, Data: (Unit(value=False, type_ref=bool),), Nonce: 2, Owners: Bob, Creds: password456, Data: (Unit(value=True, type_ref=bool),),'
         )
 

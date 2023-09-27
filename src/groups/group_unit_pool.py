@@ -53,6 +53,12 @@ class GroupUnitPool(PoolInterface):
 
     def contains(self, item: GroupUnit) -> bool:
         return item in self.items
+    
+    def contains_nonce(self, nonce: Nonce) -> bool:
+        for item in self.items:
+            if item.nonce == nonce:
+                return True
+        return False
 
     def __str__(self) -> str:
         output = ""
