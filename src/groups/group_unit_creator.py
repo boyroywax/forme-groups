@@ -25,24 +25,39 @@ class GroupUnitCreator:
         else:
             self._unit_creator = unit_creator
 
+    def check_unit_pool(self, unit: Unit) -> bool:
+        return self._unit_pool.contains(unit)
+
     def create_unit(self, alias: str, value: Any = None, force: bool = True) -> Unit:
-        return self._unit_creator.create_unit(alias=alias, value=value, force=force)
+        # print(value)
+        created_unit = self._unit_creator.create_unit(alias=alias, value=value, force=force)
+        # print(created_unit)
+        if self.check_unit_pool(created_unit) is False:
+            self._unit_pool.add(created_unit)
+        else:
+            print(ValueError(f"Unit {created_unit} already in UnitPool."))
+        return created_unit
 
     def create_nonce(self, items: list[Unit] | tuple[Unit] | None = None) -> Nonce:
         if items is None:
             items = []
         for item in items:
             assert isinstance(item, Unit)
-            if self._unit_pool.contains(item) is False:
-                print(ValueError(f"UnitPool does not contain item {item}. Adding to Unit Pool."))
+            if self.check_unit_pool(item) is False:
+                print(ValueError(f"Unit {item} is not in the UnitPool."))
                 self._unit_pool.add(item)
-            else:
-                print(ValueError(f"UnitPool already contains item {item}."))        
+             
         return Nonce(items=items)
 
     def create_group_subunit(self, items: list[Unit] | tuple[Unit] | None = None) -> GroupSubUnit:
         if items is None:
             items = []
+        for item in items:
+            assert isinstance(item, Unit)
+            if self.check_unit_pool(item) is False:
+                print(ValueError(f"Unit {item} is not in the UnitPool."))
+                self._unit_pool.add(item)
+        
         return GroupSubUnit(items=items)
 
     def create_group_unit(self, nonce: Nonce, owners: GroupSubUnit, creds: GroupSubUnit, data: GroupSubUnit) -> GroupUnit:

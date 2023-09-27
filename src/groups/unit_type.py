@@ -52,6 +52,10 @@ class UnitTypeFunction:
             if input_ is None:
                 return None
             return str(input_)
+        if str(self.function_object) == "<class 'int'>":
+            if input_ is None:
+                return None
+            return int(input_)
         if str(self.function_object) == "<class 'dict'>":
             return dict(input_)
         if str(self.function_object) == "<class 'list'>":

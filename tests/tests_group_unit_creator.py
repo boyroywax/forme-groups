@@ -22,7 +22,7 @@ class TestGroupUnitCreator(unittest.TestCase):
         unit = self.group_unit_creator.create_unit(alias="int", value=1)
         self.assertIsInstance(unit, Unit)
         self.assertEqual(unit.type_ref, "int")
-        self.assertEqual(unit.value, 0)
+        self.assertEqual(unit.value, 1)
 
     def test_create_nonce(self):
         unit1 = self.group_unit_creator.create_unit(alias="int", value=1)
@@ -47,3 +47,45 @@ class TestGroupUnitCreator(unittest.TestCase):
         self.assertEqual(group_unit.owners, owners)
         self.assertEqual(group_unit.creds, creds)
         self.assertEqual(group_unit.data, data)
+
+    def test_create_group_unit_with_no_nonce(self):
+        owners = GroupSubUnit(items=[Unit(value="Alice", type_ref=UnitTypeRef(alias="str"))])
+        creds = GroupSubUnit(items=[Unit(value="password", type_ref=UnitTypeRef(alias="str"))])
+        data = GroupSubUnit(items=[Unit(value=True, type_ref=UnitTypeRef(alias="bool"))])
+        with self.assertRaises(TypeError):
+            self.group_unit_creator.create_group_unit(nonce=None, owners=owners, creds=creds, data=data)
+
+    def test_create_unit_with_no_alias(self):
+        with self.assertRaises(ValueError):
+            self.group_unit_creator.create_unit(alias="not_an_alias", value="test_value")
+
+    def test_create_unit_already_in_pool(self):
+        unit1 = self.group_unit_creator.create_unit(alias="int", value=1)
+        unit2 = self.group_unit_creator.create_unit(alias="int", value=1)
+        self.assertEqual(unit1, unit2)
+        self.assertEqual(len(self.group_unit_creator._unit_pool.items), 1)
+
+    def test_create_nonce_with_unit_not_in_pool(self):
+        unit1 = self.group_unit_creator.create_unit(alias="int", value=1)
+        unit2 = self.group_unit_creator.create_unit(alias="str", value="test")
+        nonce = self.group_unit_creator.create_nonce([unit1, unit2])
+        self.assertEqual(nonce.items, (unit1, unit2))
+        self.assertEqual(len(self.group_unit_creator._unit_pool.items), 2)
+
+    def test_create_multiple_units(self):
+        num_units: int = 1000
+        for i in range(num_units):
+            # print(i)
+            unit = self.group_unit_creator.create_unit(alias="int", value=i)
+        self.assertEqual(len(self.group_unit_creator._unit_pool.items), num_units)
+
+    def test_create_multiple_nonces_and_get_pool_hash(self):
+        num_units: int = 1000
+        for i in range(num_units):
+            # print(i)
+            unit = self.group_unit_creator.create_unit(alias="int", value=i)
+        self.assertEqual(len(self.group_unit_creator._unit_pool.items), num_units)
+        self.group_unit_creator._unit_pool.freeze()
+        pool_hash = self.group_unit_creator._unit_pool.hash_tree()
+        self.assertEqual(pool_hash.root(), "99785fbfa2ad2f241e35df0703f90c02befc76b2461f171f8066433ab9b37d48")
+
