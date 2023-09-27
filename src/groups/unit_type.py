@@ -5,7 +5,7 @@ from typing import Any, Optional, Tuple, Callable
 from .merkle_tree import MerkleTree
 
 
-@define(frozen=True, slots=True)
+@define(frozen=True, slots=True, weakref_slot=False)
 class UnitTypeRef:
     """A reference to a UnitType.
 
@@ -28,7 +28,7 @@ class UnitTypeRef:
 
 
 
-@define(frozen=True, slots=True)
+@define(frozen=True, slots=True, weakref_slot=False)
 class UnitTypeFunction:
     """A function that can be used to generate a Unit.
 
@@ -73,8 +73,6 @@ class UnitTypeFunction:
                 new_args = list(self.args)
                 new_args.insert(0, input_)
                 return self.function_object(*new_args)
-            
-        # return self.function_object(input_)
 
         if input_ is not None and self.function_object is None:
             return input_
@@ -93,7 +91,7 @@ class UnitTypeFunction:
         return hashlib.sha256(self.__repr__().encode()).hexdigest()
 
 
-@define(frozen=True, slots=True)
+@define(frozen=True, slots=True, weakref_slot=False)
 class UnitType:
     """A type of Unit.
 
@@ -129,3 +127,11 @@ class UnitType:
 
     def hash_256(self):
         return hashlib.sha256(self.__repr__().encode()).hexdigest()
+
+    def hash_tree(self) -> MerkleTree:
+        aliases_hash_tree = MerkleTree(hashed_data=[alias.hash_256() for alias in self.aliases])
+        super_type_hash_tree = MerkleTree(hashed_data=[type.hash_256() for type in self.super_type])
+        prefix_hash = hashlib.sha256(self.prefix.encode()).hexdigest()
+        suffix_hash = hashlib.sha256(self.suffix.encode()).hexdigest()
+        separator_hash = hashlib.sha256(self.separator.encode()).hexdigest()
+        return MerkleTree(hashed_data=[aliases_hash_tree.root(), super_type_hash_tree.root(), prefix_hash, suffix_hash, separator_hash, self.sys_function.hash_256()])

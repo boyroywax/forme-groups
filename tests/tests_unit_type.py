@@ -23,6 +23,12 @@ class TestUnitTypeRef(unittest.TestCase):
         with self.assertRaises(FrozenInstanceError):
             unit_type_ref.alias = "new_alias"
 
+    def test_unit_type_ref_slots(self):
+        self.assertEqual(self.unit_type_ref.__slots__, ("alias",))
+
+    def test_unit_type_ref_hash(self):
+        self.assertEqual(self.unit_type_ref.hash_256(), "8f245b629f9dbd96e39c50751394daf5b1791a35ec4e9213ecec3d157aaf5702")
+
 
 class TestUnitTypeFunction(unittest.TestCase):
     def setUp(self):
@@ -84,7 +90,7 @@ class TestUnitType(unittest.TestCase):
             prefix="prefix",
             suffix="suffix",
             separator="separator",
-            sys_function=UnitTypeFunction(function_object=MagicMock(), args=["arg1", "arg2"]),
+            sys_function=UnitTypeFunction(function_object="str.upper", args=[]),
         )
         print(self.unit_type)
 
@@ -113,4 +119,13 @@ class TestUnitType(unittest.TestCase):
         unit_type = UnitType(aliases=[], super_type=[], prefix="prefix", suffix="suffix", separator="separator")
         with self.assertRaises(FrozenInstanceError):
             unit_type.prefix = "new_prefix"
+
+    def test_unit_type_slots(self):
+        self.assertEqual(self.unit_type.__slots__, ("aliases", "super_type", "prefix", "suffix", "separator", "sys_function",))
+
+    def test_unit_type_hash(self):
+        self.assertEqual(self.unit_type.hash_256(), "09cc56132215e2c8d3805879e3fd5ece1242d3eaf5681643c03bfce6f75615f6")
+
+    def test_unit_type_hash_tree(self):
+        self.assertEqual(self.unit_type.hash_tree().root(), "7f6cce3f1a1f604510cdb35d0c3cf533033cd7ab3333c2d3f71b16144df5601f")
 
