@@ -8,8 +8,10 @@ from tests_unit_creator import TestUnitCreator
 from tests_unit_pool import TestUnitPool
 from tests_unit import TestUnit
 from tests_nonce import TestNonce
+from tests_data_schema import TestDataSchema
 from tests_group_unit_creator import TestGroupUnitCreator
 from tests_group_unit_pool import TestGroupUnitPool
+
 
 
 def main():
@@ -30,6 +32,7 @@ def main():
     test_suite.addTests(test_loader.loadTestsFromTestCase(TestUnitPool))
     test_suite.addTests(test_loader.loadTestsFromTestCase(TestUnit))
     test_suite.addTests(test_loader.loadTestsFromTestCase(TestNonce))
+    test_suite.addTests(test_loader.loadTestsFromTestCase(TestDataSchema))
     test_suite.addTests(test_loader.loadTestsFromTestCase(TestGroupUnitCreator))
     test_suite.addTests(test_loader.loadTestsFromTestCase(TestGroupUnitPool))
 
