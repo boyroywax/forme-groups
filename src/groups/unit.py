@@ -4,9 +4,7 @@ import json
 from typing import Any, Optional, Tuple
 
 from .unit_type import UnitType, UnitTypeRef, UnitTypeFunction
-
-
-
+from .merkle_tree import MerkleTree
 
 
 def _type_ref_converter(type_ref: UnitTypeRef | str) -> UnitTypeRef:
@@ -16,6 +14,7 @@ def _type_ref_converter(type_ref: UnitTypeRef | str) -> UnitTypeRef:
         return UnitTypeRef(alias=type_ref)
     else:
         raise ValueError(f"Invalid type_ref {type_ref}.")
+
 
 @define(frozen=True, slots=True)
 class Value:
@@ -68,3 +67,6 @@ class Unit:
 
     def hash_256(self) -> str:
         return hashlib.sha256(self.__repr__().encode()).hexdigest()
+    
+    def hash_tree(self) -> MerkleTree:
+        return MerkleTree([self._value.hash_256(), self._type_ref.hash_256()])

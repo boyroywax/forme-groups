@@ -2,6 +2,8 @@ import hashlib
 from attrs import define, field, validators
 from typing import Any, Optional, Tuple, Callable
 
+from .merkle_tree import MerkleTree
+
 
 @define(frozen=True, slots=True)
 class UnitTypeRef:
@@ -21,8 +23,9 @@ class UnitTypeRef:
     def __repr__(self) -> str:
         return f'UnitTypeRef(alias={self.alias})'
 
-    def hash_256(self):
+    def hash_256(self) -> str:
         return hashlib.sha256(self.__repr__().encode()).hexdigest()
+
 
 
 @define(frozen=True, slots=True)
