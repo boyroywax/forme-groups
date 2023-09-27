@@ -9,9 +9,9 @@ from .nonce import Nonce
 from .group_unit import GroupUnit
 
 
-@define(slots=True)
+@define(slots=True, weakref_slot=False)
 class GroupUnitCreator:
-    _unit_pool: Optional[UnitPool] = field(default=None)
+    _unit_pool: Optional[UnitPool] = field(default=None, validator=validators.instance_of(UnitPool))
     _unit_creator: Optional[UnitCreator] = field(default=None)
 
     def __init__(self, unit_pool: UnitPool = None, unit_creator: UnitCreator = None):
@@ -46,7 +46,7 @@ class GroupUnitCreator:
             if self.check_unit_pool(item) is False:
                 print(ValueError(f"Unit {item} is not in the UnitPool."))
                 self._unit_pool.add(item)
-             
+
         return Nonce(items=items)
 
     def create_group_subunit(self, items: list[Unit] | tuple[Unit] | None = None) -> GroupSubUnit:
@@ -57,9 +57,8 @@ class GroupUnitCreator:
             if self.check_unit_pool(item) is False:
                 print(ValueError(f"Unit {item} is not in the UnitPool."))
                 self._unit_pool.add(item)
-        
+
         return GroupSubUnit(items=items)
 
     def create_group_unit(self, nonce: Nonce, owners: GroupSubUnit, creds: GroupSubUnit, data: GroupSubUnit) -> GroupUnit:
         return GroupUnit(nonce=nonce, owners=owners, creds=creds, data=data)
-

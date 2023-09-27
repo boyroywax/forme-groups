@@ -147,3 +147,36 @@ class TestNonce(unittest.TestCase):
         ]
         nonce = Nonce(items=items)
         self.assertEqual(nonce.hash_tree().root(), "b65ad1d64f1c899fa6f6b8496453869fee99b55efbf0c36cd98d3bbe84424bc6")
+
+    def test_next_float_nonce(self):
+        items = [
+            Unit(value=1.0, type_ref=UnitTypeRef(alias="float")),
+        ]
+        nonce = Nonce(items=items)
+        self.assertEqual(nonce.__str__(), "1.0")
+        nonce = nonce.__next__()
+        self.assertEqual(nonce.__str__(), "2.0")
+        nonce = nonce.__next__()
+        self.assertEqual(nonce.__str__(), "3.0")
+
+    def test_next_str_nonce(self):
+        items = [
+            Unit(value="a", type_ref=UnitTypeRef(alias="str")),
+        ]
+        nonce = Nonce(items=items)
+        self.assertEqual(nonce.__str__(), "a")
+        nonce = nonce.__next__()
+        self.assertEqual(nonce.__str__(), "b")
+        nonce = nonce.__next__()
+        self.assertEqual(nonce.__str__(), "c")
+
+    def test_next_str_nonce_with_z(self):
+        items = [
+            Unit(value="z", type_ref=UnitTypeRef(alias="str")),
+        ]
+        nonce = Nonce(items=items)
+        self.assertEqual(nonce.__str__(), "z")
+        nonce = nonce.__next__()
+        self.assertEqual(nonce.__str__(), "za")
+        nonce = nonce.__next__()
+        self.assertEqual(nonce.__str__(), "zb")

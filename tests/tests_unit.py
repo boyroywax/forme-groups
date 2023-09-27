@@ -33,4 +33,7 @@ class TestUnit(unittest.TestCase):
     def test_unit_repr(self):
         self.assertEqual(repr(self.unit), "Unit(value=test_value, type_ref=test_type_ref)")
 
+    def test_unit_slots(self):
+        self.assertEqual(self.unit.__slots__, ("_value", "_type_ref",))
+
 

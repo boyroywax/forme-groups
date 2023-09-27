@@ -24,6 +24,9 @@ class TestGroupUnitCreator(unittest.TestCase):
         self.assertEqual(unit.type_ref, "int")
         self.assertEqual(unit.value, 1)
 
+    def test_contains_slots(self):
+        self.assertEqual(self.group_unit_creator.__slots__, ("_unit_pool", "_unit_creator",))
+
     def test_create_nonce(self):
         unit1 = self.group_unit_creator.create_unit(alias="int", value=1)
         unit2 = self.group_unit_creator.create_unit(alias="str", value="test")
@@ -88,4 +91,16 @@ class TestGroupUnitCreator(unittest.TestCase):
         self.group_unit_creator._unit_pool.freeze()
         pool_hash = self.group_unit_creator._unit_pool.hash_tree()
         self.assertEqual(pool_hash.root(), "99785fbfa2ad2f241e35df0703f90c02befc76b2461f171f8066433ab9b37d48")
+
+    def test_create_multiple_nonces_and_get_pool_hash_with_multiple_types(self):
+        num_units: int = 1000
+        for i in range(num_units):
+            # print(i)
+            self.group_unit_creator.create_unit(alias="int", value=i)
+            self.group_unit_creator.create_unit(alias="str", value=str(i))
+            self.group_unit_creator.create_unit(alias="float", value=float(i))
+        self.assertEqual(len(self.group_unit_creator._unit_pool.items), num_units * 3)
+        self.group_unit_creator._unit_pool.freeze()
+        pool_hash = self.group_unit_creator._unit_pool.hash_tree()
+        self.assertEqual(pool_hash.root(), "51c317c60e8a5c9f20ecc78243791049eae62f5f93d9f87e93dcac5f133098bb")
 

@@ -44,7 +44,7 @@ def _convert_list_to_tuple(items: list[Unit] | tuple[Unit]) -> tuple[Unit]:
     elif isinstance(items, tuple):
         return items
 
-@define(frozen=True, slots=True)
+@define(frozen=True, slots=True, weakref_slot=False)
 class GroupSubUnit(GroupSubUnitInterface):
     items: tuple[Unit] = field(validator=validators.instance_of(tuple | list), converter=_convert_list_to_tuple)
 

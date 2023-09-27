@@ -25,6 +25,8 @@ class Nonce(GroupSubUnitInterface):
         match(type_ref):
             case("int" | "integer" | "i"):
                 return Nonce(items=self.items + (Unit(value=0, type_ref="int"),))
+            case("float" | "f"):
+                return Nonce(items=self.items + (Unit(value=0.0, type_ref="float"),))
             case("str" | "string" | "s"):
                 return Nonce(items=self.items + (Unit(value="a", type_ref="str"),))
             case _:
@@ -44,6 +46,8 @@ class Nonce(GroupSubUnitInterface):
         match(active_unit.type_ref):
             case("int" | "integer" | "i"):
                 next_nonce: int = active_unit.value + 1
+            case("float" | "f"):
+                next_nonce: float = active_unit.value + 1.0
             case("str" | "string" | "s"):
                 if active_unit.value[-1] == "z":
                     next_nonce: str = active_unit.value + "a"

@@ -52,13 +52,13 @@ class UnitTypeFunction:
         # print(str(self.args))
 
         if str(self.function_object) == "<class 'str'>":
-            if input_ is None:
-                return None
             return str(input_)
         if str(self.function_object) == "<class 'int'>":
-            if input_ is None:
-                return None
             return int(input_)
+        if str(self.function_object) == "<class 'float'>":
+            return float(input_)
+        if str(self.function_object) == "<class 'bool'>":
+            return bool(input_)
         if str(self.function_object) == "<class 'dict'>":
             return dict(input_)
         if str(self.function_object) == "<class 'list'>":
@@ -67,10 +67,7 @@ class UnitTypeFunction:
             return tuple(input_)
         if str(self.function_object) == "<class 'bytes'>":
             return bytes(input_)
-        # class_name = str(self.function_object).strip("<class '").strip("'>")
-        # print(class_name)
-        # class_ = eval(class_name)
-        # class_ = eval(self.function_object)
+
         if input_ is not None and self.args is not None and len(self.args) > 0:
             if len(self.args) > 0:
                 new_args = list(self.args)

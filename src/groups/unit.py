@@ -40,7 +40,7 @@ def _value_converter(value: Any) -> Value:
         raise ValueError(f"Invalid value {value}.")
 
 
-@define(frozen=True, slots=True)
+@define(frozen=True, slots=True, weakref_slot=False)
 class Unit:
     _value: Value = field(validator=validators.instance_of(Value | str | int | float | bool | dict | list | tuple | bytes | None), converter=_value_converter)
     _type_ref: UnitTypeRef = field(validator=validators.instance_of(UnitTypeRef | str), converter=_type_ref_converter)
