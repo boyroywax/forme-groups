@@ -99,6 +99,15 @@ class TestNonce(unittest.TestCase):
         nonce = nonce._create_next_tier("int")
         self.assertEqual(nonce.__str__(), "1.xza.0")
 
+    def test_nonce_string_str_sample(self):
+        items = [
+            Unit(value="forme", type_ref=UnitTypeRef(alias="str")),
+            Unit(value="news", type_ref=UnitTypeRef(alias="str")),
+        ]
+        nonce = Nonce(items=items)
+        print(nonce)
+        self.assertEqual(nonce.get_by_tier(0).value, "forme")
+        self.assertEqual(nonce.get_by_tier(1).value, "news")
 
     def test_repr(self):
         items = [

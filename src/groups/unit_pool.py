@@ -44,7 +44,7 @@ class UnitPool(PoolInterface):
         if self.frozen is True:
             raise ValueError("Cannot add to a frozen UnitPool.")
 
-        if item in self.items:
+        if self.contains(item) is True:
             raise ValueError(f"UnitPool already contains item {item}.")
 
         self.items.append(item)

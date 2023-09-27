@@ -3,52 +3,14 @@ from attrs import define, field, validators
 from typing import List, Any
 
 from .unit import Unit
+from .group_subunit import GroupSubUnitInterface, _convert_list_to_tuple
 from .merkle_tree import MerkleTree
 
 __DEFAULT_NONCE_SEPARATOR__ = "."
 
 
-class GroupUnitInterface(ABC):
-    """An abstract interface for a GroupUnit Object.
-
-    Attributes:
-        items (list[Any] | tuple[Any]): The items in the GroupUnit.]
-
-    Methods:
-        __init__(items: list[Any] | tuple[Any] = None, freeze: bool = False)
-        __str__() -> str
-        __repr__() -> str
-        __iter__() -> Any
-        hash_tree(override: bool = False) -> MerkleTree
-    """
-    items: list[Any] | tuple[Any]
-
-    @abstractmethod
-    def __str__(self) -> str:
-        pass
-
-    @abstractmethod
-    def __repr__(self) -> str:
-        pass
-
-    @abstractmethod
-    def __iter__(self) -> Any:
-        pass
-
-    @abstractmethod
-    def hash_tree(self) -> MerkleTree:
-        pass
-
-
-def _convert_list_to_tuple(items: list[Unit] | tuple[Unit]) -> tuple[Unit]:
-    if isinstance(items, list):
-        return tuple(items)
-    elif isinstance(items, tuple):
-        return items
-
-
 @define(frozen=True, slots=True)
-class Nonce(GroupUnitInterface):
+class Nonce(GroupSubUnitInterface):
     items: tuple[Unit] = field(validator=validators.instance_of(tuple | list), converter=_convert_list_to_tuple)
 
     def get_by_tier(self, tier: int) -> Unit:
