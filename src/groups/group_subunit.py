@@ -43,7 +43,6 @@ def _convert_list_to_tuple(items: list[Unit] | tuple[Unit]) -> tuple[Unit]:
         return tuple(items)
     elif isinstance(items, tuple):
         return items
-    
 
 @define(frozen=True, slots=True)
 class GroupSubUnit(GroupSubUnitInterface):

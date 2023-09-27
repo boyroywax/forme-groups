@@ -19,6 +19,11 @@ class TestUnitPool(unittest.TestCase):
         self.pool.add(unit1)
         self.assertIn(unit1, self.pool.items)
 
+    def test_add_from_dict(self):
+        unit1 = self.unit_creator.create_unit(value="test_value", alias="str")
+        self.pool.add_from_dict(unit1.to_dict())
+        self.assertIn(unit1, self.pool.items)
+
     def test_add_frozen(self):
         unit1 = self.unit_creator.create_unit(value="test_value", alias="str")
         self.pool.freeze()

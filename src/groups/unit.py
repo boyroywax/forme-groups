@@ -53,6 +53,12 @@ class Unit:
     @property
     def type_ref(self) -> str:
         return self._type_ref.__str__()
+    
+    def to_dict(self) -> dict:
+        return {
+            "value": self.value,
+            "type_ref": self.type_ref
+        }
 
     def __str__(self) -> str:
         return f"{self.value.__str__()}"

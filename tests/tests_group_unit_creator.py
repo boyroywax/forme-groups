@@ -76,14 +76,14 @@ class TestGroupUnitCreator(unittest.TestCase):
         num_units: int = 1000
         for i in range(num_units):
             # print(i)
-            unit = self.group_unit_creator.create_unit(alias="int", value=i)
+            self.group_unit_creator.create_unit(alias="int", value=i)
         self.assertEqual(len(self.group_unit_creator._unit_pool.items), num_units)
 
     def test_create_multiple_nonces_and_get_pool_hash(self):
         num_units: int = 1000
         for i in range(num_units):
             # print(i)
-            unit = self.group_unit_creator.create_unit(alias="int", value=i)
+            self.group_unit_creator.create_unit(alias="int", value=i)
         self.assertEqual(len(self.group_unit_creator._unit_pool.items), num_units)
         self.group_unit_creator._unit_pool.freeze()
         pool_hash = self.group_unit_creator._unit_pool.hash_tree()

@@ -49,6 +49,9 @@ class UnitPool(PoolInterface):
 
         self.items.append(item)
 
+    def add_from_dict(self, item: dict):
+        self.add(Unit(value=item["value"], type_ref=item["type_ref"]))
+
     def contains(self, item: Unit) -> bool:
         return item in self.items
 
