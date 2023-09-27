@@ -28,3 +28,6 @@ class TestDataSchema(unittest.TestCase):
 
     def test_data_schema_slots(self):
         self.assertEqual(self.data_schema.__slots__, ("items",))
+
+    def test_data_schema_verify(self):
+        self.assertTrue(self.data_schema.verify(self.group_unit_creator._unit_creator.unit_type_pool))
