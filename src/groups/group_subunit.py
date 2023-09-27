@@ -5,8 +5,6 @@ from typing import List, Any
 from .unit import Unit
 from .merkle_tree import MerkleTree
 
-__DEFAULT_NONCE_SEPARATOR__ = "."
-
 
 class GroupSubUnitInterface(ABC):
     """An abstract interface for a GroupUnit Object.

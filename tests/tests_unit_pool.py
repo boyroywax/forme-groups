@@ -25,6 +25,9 @@ class TestUnitPool(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.pool.add(unit1)
 
+    def test_check_slots(self):
+        self.assertEqual(self.pool.__slots__, ("_frozen", "items",))
+
     def test_add_duplicate(self):
         unit1 = self.unit_creator.create_unit(value="test_value", alias="str")
         self.pool.add(unit1)

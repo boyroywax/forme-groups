@@ -8,6 +8,7 @@ from tests_unit_creator import TestUnitCreator
 from tests_unit_pool import TestUnitPool
 from tests_unit import TestUnit
 from tests_nonce import TestNonce
+from tests_group_unit_creator import TestGroupUnitCreator
 
 
 def main():
@@ -28,7 +29,7 @@ def main():
     test_suite.addTests(test_loader.loadTestsFromTestCase(TestUnitPool))
     test_suite.addTests(test_loader.loadTestsFromTestCase(TestUnit))
     test_suite.addTests(test_loader.loadTestsFromTestCase(TestNonce))
-
+    test_suite.addTests(test_loader.loadTestsFromTestCase(TestGroupUnitCreator))
 
     # Run the test suite
     runner = unittest.TextTestRunner()
