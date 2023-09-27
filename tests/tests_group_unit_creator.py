@@ -6,6 +6,7 @@ sys.path.append("/Users/j/Documents/Forme/code/forme-groups")
 from src.groups.group_unit_creator import GroupUnitCreator
 from src.groups.unit_pool import UnitPool
 from src.groups.unit_creator import UnitCreator
+from src.groups.data import Data
 from src.groups.nonce import Nonce
 from src.groups.group_subunit import GroupSubUnit
 from src.groups.group_unit import GroupUnit
@@ -43,7 +44,7 @@ class TestGroupUnitCreator(unittest.TestCase):
         nonce = Nonce(items=[Unit(value=1, type_ref=UnitTypeRef(alias="int"))])
         owners = GroupSubUnit(items=[Unit(value="Alice", type_ref=UnitTypeRef(alias="str"))])
         creds = GroupSubUnit(items=[Unit(value="password", type_ref=UnitTypeRef(alias="str"))])
-        data = GroupSubUnit(items=[Unit(value=True, type_ref=UnitTypeRef(alias="bool"))])
+        data = Data(items=[Unit(value=True, type_ref=UnitTypeRef(alias="bool"))], schema=None)
         group_unit = self.group_unit_creator.create_group_unit(nonce=nonce, owners=owners, creds=creds, data=data)
         self.assertIsInstance(group_unit, GroupUnit)
         self.assertEqual(group_unit.nonce, nonce)

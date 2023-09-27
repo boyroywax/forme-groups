@@ -7,6 +7,8 @@ from .unit_pool import UnitPool
 from .group_subunit import GroupSubUnit
 from .nonce import Nonce
 from .group_unit import GroupUnit
+from .data_schema import DataSchema
+from .data import Data
 
 
 @define(slots=True, weakref_slot=False)
@@ -48,6 +50,17 @@ class GroupUnitCreator:
                 self._unit_pool.add(item)
 
         return Nonce(items=items)
+
+    def create_data(self, items: list[Unit] | tuple[Unit] | None = None, schema: Optional[DataSchema] = None) -> Data:
+        if items is None:
+            items = []
+        for item in items:
+            assert isinstance(item, Unit)
+            if self.check_unit_pool(item) is False:
+                print(ValueError(f"Unit {item} is not in the UnitPool."))
+                self._unit_pool.add(item)
+
+        return Data(items=items, schema=schema)
 
     def create_group_subunit(self, items: list[Unit] | tuple[Unit] | None = None) -> GroupSubUnit:
         if items is None:

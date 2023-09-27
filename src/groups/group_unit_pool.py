@@ -55,10 +55,13 @@ class GroupUnitPool(PoolInterface):
         return item in self.items
 
     def __str__(self) -> str:
-        return [item.__str__() for item in self.items]
+        output = ""
+        for item in self.items:
+            output += str(item) + ", "
+        return output[:-1]
 
     def __repr__(self) -> str:
-        return f"GroupUnitPool(items={[item.__repr__() for item in self.items]})"
+        return f"GroupUnitPool(items={[item.__str__() for item in self.items]})"
 
     def __iter__(self) -> Any:
         for item in self.items:

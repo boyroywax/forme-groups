@@ -25,8 +25,8 @@ class TestGroupUnitPool(unittest.TestCase):
         creds = self.group_unit_creator.create_group_subunit(
             [self.group_unit_creator.create_unit(alias="str", value="password123")]
         )
-        data = self.group_unit_creator.create_group_subunit(
-            [self.group_unit_creator.create_unit(alias="bool", value=False)]
+        data = self.group_unit_creator.create_data(
+            [self.group_unit_creator.create_unit(alias="bool", value=False)], None
         )
         self.group_unit1 = self.group_unit_creator.create_group_unit(nonce, owners, creds, data)
 
@@ -39,8 +39,8 @@ class TestGroupUnitPool(unittest.TestCase):
         creds2 = self.group_unit_creator.create_group_subunit(
             [self.group_unit_creator.create_unit(alias="str", value="password456")]
         )
-        data2 = self.group_unit_creator.create_group_subunit(
-            [self.group_unit_creator.create_unit(alias="bool", value=True)]
+        data2 = self.group_unit_creator.create_data(
+            [self.group_unit_creator.create_unit(alias="bool", value=True)], None
         )
         self.group_unit2 = self.group_unit_creator.create_group_unit(nonce2, owners2, creds2, data2)
 
@@ -89,8 +89,8 @@ class TestGroupUnitPool(unittest.TestCase):
         creds3 = self.group_unit_creator.create_group_subunit(
             [self.group_unit_creator.create_unit(alias="str", value="password789")]
         )
-        data3 = self.group_unit_creator.create_group_subunit(
-            [self.group_unit_creator.create_unit(alias="bool", value=True)]
+        data3 = self.group_unit_creator.create_data(
+            [self.group_unit_creator.create_unit(alias="bool", value=True)], None
         )
         group_unit3 = self.group_unit_creator.create_group_unit(nonce3, owners3, creds3, data3)
 
@@ -106,6 +106,6 @@ class TestGroupUnitPool(unittest.TestCase):
         self.maxDiff = None
         self.assertEqual(
             pool.__str__(),
-            ['Nonce: 1, Owners: Alice, Creds: password123, Data: False', 'Nonce: 2, Owners: Bob, Creds: password456, Data: True']
+            'Nonce: 1, Owners: Alice, Creds: password123, Data: False; Nonce: 2, Owners: Bob, Creds: password456, Data: True'
         )
 
