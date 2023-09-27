@@ -1,23 +1,25 @@
 from attrs import define, field, validators
-from typing import Any, Optional, Tuple, Dict
+from typing import Any
 
 from .merkle_tree import MerkleTree
-from .unit import Unit, UnitType, UnitTypeRef, UnitTypeFunction
+from .group_subunit import GroupSubUnit
+from .nonce import Nonce
+from .group_unit import GroupUnit
 from .pool import PoolInterface
 
 
-@define(slots=True)
-class UnitPool(PoolInterface):
+@define(slots=True, weakref_slot=False)
+class GroupUnitPool(PoolInterface):
     _frozen: bool = field(default=False, validator=validators.instance_of(bool))
-    items: list[Unit] | tuple[Unit] = field(factory=list, validator=validators.instance_of(list | tuple))
+    items: list[GroupUnit] | tuple[GroupUnit] = field(factory=list, validator=validators.instance_of(list | tuple))
 
-    def __init__(self, items: list[Unit] | tuple[Unit] = None, freeze: bool = False):
+    def __init__(self, items: list[GroupUnit] | tuple[GroupUnit] = None, freeze: bool = False):
         self._frozen = False
         self.items = []
         # super().__init__(items=items, freeze=freeze)
         if items is not None:
             for item in items:
-                assert isinstance(item, Unit)
+                assert isinstance(item, GroupUnit)
                 self.add(item)
 
         if freeze is True:
@@ -40,33 +42,32 @@ class UnitPool(PoolInterface):
     def frozen(self) -> bool:
         return self._frozen
 
-    def add(self, item: Unit):
+    def add(self, item: GroupUnit):
         if self.frozen is True:
-            raise ValueError("Cannot add to a frozen UnitPool.")
+            raise ValueError("Cannot add to a frozen GroupUnitPool.")
 
         if self.contains(item) is True:
-            raise ValueError(f"UnitPool already contains item {item}.")
+            raise ValueError(f"GroupUnitPool already contains item {item}.")
 
         self.items.append(item)
 
-    def add_from_dict(self, item: dict):
-        self.add(Unit(value=item["value"], type_ref=item["type_ref"]))
-
-    def contains(self, item: Unit) -> bool:
+    def contains(self, item: GroupUnit) -> bool:
         return item in self.items
 
     def __str__(self) -> str:
-        return f"[{[item.__str__() for item in self.items]}]"
+        return [item.__str__() for item in self.items]
 
     def __repr__(self) -> str:
-        return f"UnitPool(items={[item.__repr__() for item in self.items]})"
+        return f"GroupUnitPool(items={[item.__repr__() for item in self.items]})"
 
-    def __iter__(self) -> Unit:
+    def __iter__(self) -> Any:
         for item in self.items:
             yield item
 
     def hash_tree(self, override: bool = False) -> MerkleTree:
-        if self.frozen is False and override is False:
-            raise ValueError("Cannot hash a non-frozen Pool.")
-
-        return MerkleTree(hashed_data=[item.hash_256() for item in self.items])
+        group_unit_items: list[GroupSubUnit] = []
+        for item in self.items:
+            if not isinstance(item, GroupUnit):
+                raise ValueError(f"Invalid item {item} in GroupUnitPool.")
+            group_unit_items.append(item.hash_tree().root())
+        return MerkleTree(hashed_data=group_unit_items)

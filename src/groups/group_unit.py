@@ -14,12 +14,12 @@ class GroupUnit:
 
     def __str__(self) -> str:
         output_str: str = ""
-        output_str += "Nonce: " + str(self.nonce) + "\n"
-        output_str += "Owners: " + str(self.owners) + "\n"
-        output_str += "Creds: " + str(self.creds) + "\n"
-        output_str += "Data: " + str(self.data) + "\n"
+        output_str += "Nonce: " + str(self.nonce) + ", "
+        output_str += "Owners: " + str(self.owners) + ", "
+        output_str += "Creds: " + str(self.creds) + ", "
+        output_str += "Data: " + str(self.data)
 
-        return output_str[:-1]
+        return output_str
 
     def __repr__(self) -> str:
         return f"GroupUnit(nonce={self.nonce.__repr__()}, owners={self.owners.__repr__()}, creds={self.creds.__repr__()}, data={self.data.__repr__()})"
