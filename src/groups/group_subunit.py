@@ -51,7 +51,7 @@ class GroupSubUnit(GroupSubUnitInterface):
     def __str__(self) -> str:
         output = ""
         for item in self.items:
-            output += str(item) + "\n"
+            output += str(item)
         return output[:-1]
 
     def __repr__(self) -> str:
