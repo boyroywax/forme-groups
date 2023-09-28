@@ -62,7 +62,7 @@ class UnitTypePool(PoolInterface):
     def contains(self, item: UnitType) -> bool:
         return item in self.items
 
-    def get_type_from_alias(self, alias: str) -> UnitType | None:
+    def get_type_from_alias(self, alias: str | UnitTypeRef) -> UnitType | None:
         """Get a UnitType from an alias.
 
         Args:
@@ -71,6 +71,9 @@ class UnitTypePool(PoolInterface):
         Returns:
             UnitType | None: The UnitType with the given alias, or None if the UnitTypePool does not contain the alias.
         """
+        if isinstance(alias, UnitTypeRef):
+            alias = alias.alias
+
         for unit_type in self.items:
             for aliases in unit_type.aliases:
                 if aliases.alias == alias:

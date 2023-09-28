@@ -1,15 +1,16 @@
 from attrs import define, field, validators
-from typing import Any
+from typing import Any, Optional
 
-from .unit import Unit
+from .unit import Unit, Value
+from .unit_type import UnitTypeRef
 from .unit_type_pool import UnitTypePool
 
 
 @define(slots=True)
 class UnitCreator:
-    unit_type_pool: UnitTypePool = field(default=None)
+    unit_type_pool: Optional[UnitTypePool] = field(default=None, validator=validators.instance_of(Optional[UnitTypePool]))
 
-    def __init__(self, unit_type_pool: UnitTypePool = None):
+    def __init__(self, unit_type_pool: Optional[UnitTypePool] = None):
         if unit_type_pool is None:
             self.unit_type_pool = UnitTypePool()
             self.unit_type_pool.set_system_types_from_json()
@@ -17,7 +18,7 @@ class UnitCreator:
         else:
             self.unit_type_pool = unit_type_pool
 
-    def create_unit(self, alias: str, value: Any = None, force: bool = True) -> Unit:
+    def create_unit(self, alias: str | UnitTypeRef, value: Optional[Any | Value] = None, force: Optional[bool] = True) -> Unit:
         if not self.unit_type_pool.frozen:
             raise Exception("UnitTypePool must be frozen before generating units.")
 

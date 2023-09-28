@@ -8,6 +8,7 @@ from src.groups.unit_type import UnitTypeRef
 from src.groups.unit_pool import UnitPool
 from src.groups.unit_creator import UnitCreator
 from src.groups.nonce import Nonce
+from src.groups.data import Data
 from src.groups.group_subunit import GroupSubUnit
 from src.groups.group_unit import GroupUnit
 from src.groups.unit import Unit, UnitTypeRef
@@ -18,7 +19,7 @@ class TestGroupUnit(unittest.TestCase):
         self.nonce = Nonce(items=[Unit(value=1, type_ref=UnitTypeRef(alias="int"))])
         self.owners = GroupSubUnit(items=[Unit(value="Alice", type_ref=UnitTypeRef(alias="str"))])
         self.creds = GroupSubUnit(items=[Unit(value="password", type_ref=UnitTypeRef(alias="str"))])
-        self.data = GroupSubUnit(items=[Unit(value=True, type_ref=UnitTypeRef(alias="bool"))])
+        self.data = Data(items=[Unit(value=True, type_ref=UnitTypeRef(alias="bool"))])
         self.group_unit = GroupUnit(nonce=self.nonce, owners=self.owners, creds=self.creds, data=self.data)
 
     def test_init(self):

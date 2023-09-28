@@ -20,10 +20,10 @@ class TestGroupSubUnit(unittest.TestCase):
         self.group_subunit = GroupSubUnit(items=[self.unit1, self.unit2])
 
     def test_init(self):
-        self.assertEqual(self.group_subunit.items, [self.unit1, self.unit2])
+        self.assertEqual(self.group_subunit.items, (self.unit1, self.unit2))
 
     def test_str(self):
-        expected_str = f"GroupSubUnit(items=[{str(self.unit1)}, {str(self.unit2)}])"
+        expected_str = f"GroupSubUnit(items=({str(self.unit1)}, {str(self.unit2)}))"
         self.assertEqual(str(self.group_subunit), expected_str)
 
     def test_eq(self):

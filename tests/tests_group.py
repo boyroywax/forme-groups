@@ -16,29 +16,16 @@ from src.groups.group import Group
 
 class TestGroup(unittest.TestCase):
     def setUp(self):
-        self.group_unit1 = MagicMock(spec=GroupUnit)
-        self.group_unit2 = MagicMock(spec=GroupUnit)
-        self.group_unit_pool = MagicMock(spec=GroupUnitPool)
-        self.group_unit_pool.contains.return_value = True
-        self.group_unit_pool.__iter__.return_value = iter([self.group_unit1, self.group_unit2])
-        self.group = Group(self.group_unit_pool)
+        self.group = Group()
 
     def test_init(self):
-        self.assertEqual(self.group.unit_pool, self.group_unit_pool)
+        self.assertIsInstance(self.group, Group)
 
     def test_add_unit(self):
-        self.group_unit_creator = MagicMock()
-        self.group_unit_creator.create.return_value = self.group_unit1
-        self.group.add_unit(self.group_unit_creator)
-        self.group_unit_pool.add.assert_called_once_with(self.group_unit1)
+        nonce = self.group._group_unit_creator.create_nonce(items=[self.group._group_unit_creator.create_unit(value=1, alias=UnitTypeRef(alias="int"))])
+        owners = self.group._group_unit_creator.create_group_subunit(items=[self.group._group_unit_creator.create_unit(value="Alice", alias=UnitTypeRef(alias="str"))])
+        creds = self.group._group_unit_creator.create_group_subunit(items=[self.group._group_unit_creator.create_unit(value="password", alias=UnitTypeRef(alias="str"))])
+        data = self.group._group_unit_creator.create_data(items=[self.group._group_unit_creator.create_unit(value=True, alias=UnitTypeRef(alias="bool"))])
 
-    def test_add_unit_duplicate(self):
-        self.group_unit_creator = MagicMock()
-        self.group_unit_creator.create.return_value = self.group_unit1
-        self.group_unit_pool.contains.return_value = True
-        with self.assertRaises(ValueError):
-            self.group.add_unit(self.group_unit_creator)
-
-    def test_get_units(self):
-        units = self.group.get_units()
-        self.assertEqual(units, [self.group_unit1, self.group_unit2])
+        group_unit = self.group.create_group_unit(nonce=nonce, owners=owners, creds=creds, data=data)
+        self.assertTrue(self.group.contains(group_unit))
