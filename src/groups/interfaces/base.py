@@ -19,11 +19,16 @@ class BaseInterface(ABC):
         Returns:
             str: A string containing the attributes of the object.
 
-        Example:
-            >>> from src.groups.unit_type import UnitTypeRef
-            >>> unit_type_ref = UnitTypeRef(alias="str")
-            >>> print(unit_type_ref)
-            "str"
+        Example::
+    
+            @define(slots=True, frozen=True, weakref_slot=False)
+            class InterfaceExample(BaseInterface):
+                example: str = field(validator=validators.instance_of(str))
+            
+            base_interface_example = InterfaceExample("test")
+            print(base_interface_example.__str__())
+            "test"
+
         """
         slots = self.__slots__
         output = ""
@@ -37,17 +42,15 @@ class BaseInterface(ABC):
         Returns:
             str: A string containing the representation of the object.
 
-        Example:
-            >>> from src.groups.unit_type import UnitTypeRef
-            >>> unit_type_ref = UnitTypeRef(alias="str")
-            >>> print(unit_type_ref.__repr__())
-            "UnitTypeRef(alias='str')"
+        Example::
 
-        Example:
-            >>> from src.groups.unit_type import UnitTypeRef
-            >>> unit_type_ref = UnitTypeRef(alias=("str", "int",))
-            >>> print(unit_type_ref.__repr__())
-            "UnitTypeRef(alias='str')"
+            @define(slots=True, frozen=True, weakref_slot=False)
+            class InterfaceExample(BaseInterface):
+                example: str = field(validator=validators.instance_of(str))
+
+            base_interface_example = InterfaceExample("test")
+            print(base_interface_example.__repr__())
+            >>> 'InterfaceExample(example="test")'
         """
         slots = self.__slots__
         output = ""
@@ -68,9 +71,9 @@ class BaseInterface(ABC):
             Iterator[Any]: An iterator over the attributes of the object.
 
         Example:
-            >>> from src.groups.unit_type import UnitTypeRef
-            >>> unit_type_ref = UnitTypeRef(alias="str")
-            >>> for attribute in unit_type_ref:
+            >>> from src.groups.base import UnitTypeRef
+            >>> base_ref = UnitTypeRef(alias="str")
+            >>> for attribute in base_ref:
             ...     print(attribute)
             "str"
         """
@@ -88,9 +91,9 @@ class BaseInterface(ABC):
             str: The hash of the object.
 
         Example:
-            >>> from src.groups.unit_type import UnitTypeRef
-            >>> unit_type_ref = UnitTypeRef(alias="str")
-            >>> print(unit_type_ref.__hash__())
+            >>> from src.groups.base import UnitTypeRef
+            >>> base_ref = UnitTypeRef(alias="str")
+            >>> print(base_ref.__hash__())
             "8f245b629f9dbd96e39c50751394daf5b1791a35ec4e9213ecec3d157aaf5702"
         """
         attribute_hashes = []
@@ -112,9 +115,26 @@ class BaseInterface(ABC):
             MerkleTree: The hash tree of the object.
 
         Example:
-            >>> from src.groups.unit_type import UnitTypeRef
-            >>> unit_type_ref = UnitTypeRef(alias="str")
-            >>> print(unit_type_ref.hash_tree())
+            >>> from src.groups.base import UnitTypeRef
+            >>> base_ref = UnitTypeRef(alias="str")
+            >>> print(base_ref.hash_tree())
             MerkleTree(hashed_data=["8f245b629f9dbd96e39c50751394daf5b1791a35ec4e9213ecec3d157aaf5702"])
         """
         return self.hash_tree().root()
+    
+    def contains_hash(self, hash: str) -> bool:
+        """Return whether the object contains the hash.
+
+        Args:
+            hash (str): The hash to check.
+
+        Returns:
+            bool: Whether the object contains the hash.
+
+        Example:
+            >>> from src.groups.base import UnitTypeRef
+            >>> base_ref = UnitTypeRef(alias="str")
+            >>> print(base_ref.contains_hash("8f245b629f9dbd96e39c50751394daf5b1791a35ec4e9213ecec3d157aaf5702"))
+            True
+        """
+        return hash in self.hash_tree().leaves
