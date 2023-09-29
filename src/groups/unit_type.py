@@ -7,10 +7,11 @@ Rules on hashing:
 '''
 
 import hashlib
-from abc import ABCMeta, ABC
+
 from attrs import define, field, validators
 from typing import Any, Optional, Tuple, Callable
 
+from .interfaces.base import BaseInterface
 from .merkle_tree import MerkleTree
 
 
@@ -19,136 +20,14 @@ __DEFAULT_UNIT_TYPE__ = str
 __DEFAULT_COLLECTION_TYPES__ = list | tuple | dict | set
 
 
-@define(slots=True, weakref_slot=False)
-class ReferenceInterface(ABC):
-    """An abstract interface for a hashable Reference Object.
-    """
-
-    def __str__(self) -> str:
-        """Return a string containing the attributes of the object.
-
-        Returns:
-            str: A string containing the attributes of the object.
-
-        Example:
-            >>> from src.groups.unit_type import UnitTypeRef
-            >>> unit_type_ref = UnitTypeRef(alias="str")
-            >>> print(unit_type_ref)
-            "str"
-        """
-        slots = self.__slots__
-        output = ""
-        for slot in slots:
-            output += f"{getattr(self, slot)}, "
-        return output[:-2]
-
-    def __repr__(self) -> str:
-        """Return a string containing the representation of the object.
-
-        Returns:
-            str: A string containing the representation of the object.
-
-        Example:
-            >>> from src.groups.unit_type import UnitTypeRef
-            >>> unit_type_ref = UnitTypeRef(alias="str")
-            >>> print(unit_type_ref.__repr__())
-            "UnitTypeRef(alias="str")"
-        """
-        slots = self.__slots__
-        output = ""
-        for slot in slots:
-            if getattr(self, slot) is __DEFAULT_COLLECTION_TYPES__:
-                output += f"{slot}=["
-                for item in getattr(self, slot):
-                    output += f"{item.__repr__()}, "
-                output = output[:-2] + "], "
-            else:
-                output += f"{slot}={getattr(self, slot).__repr__()}, "
-        return f"{self.__class__.__name__}({output[:-2]})"
-
-    def __iter__(self):
-        """Return an iterator over the attributes of the object.
-
-        Returns:
-            Iterator[Any]: An iterator over the attributes of the object.
-
-        Example:
-            >>> from src.groups.unit_type import UnitTypeRef
-            >>> unit_type_ref = UnitTypeRef(alias="str")
-            >>> for attribute in unit_type_ref:
-            ...     print(attribute)
-            "str"
-        """
-        slots = self.__slots__
-        for slot in slots:
-            if getattr(self, slot) is __DEFAULT_COLLECTION_TYPES__:
-                for item in getattr(self, slot):
-                    yield item
-            yield getattr(self, slot)
-
-    def hash_tree(self) -> MerkleTree:
-        """Return the hash of the object.
-
-        Returns:
-            str: The hash of the object.
-
-        Example:
-            >>> from src.groups.unit_type import UnitTypeRef
-            >>> unit_type_ref = UnitTypeRef(alias="str")
-            >>> print(unit_type_ref.__hash__())
-            "8f245b629f9dbd96e39c50751394daf5b1791a35ec4e9213ecec3d157aaf5702"
-        """
-        attribute_hashes = []
-        for slot in self.__slots__:
-            if getattr(self, slot) is __DEFAULT_COLLECTION_TYPES__:
-                unit_hashes = []
-                for item in getattr(self, slot):
-                    unit_hashes.append(MerkleTree.hash_func(item.__repr__()))
-                attribute_hashes.append(MerkleTree(hashed_data=unit_hashes).root())
-                
-            else:
-                attribute_hashes.append(MerkleTree.hash_func(self.__repr__()))
-
-        return MerkleTree(attribute_hashes)
-
-    def hash_sha256(self) -> MerkleTree:
-        """Return the hash tree of the object.
-
-        Returns:
-            MerkleTree: The hash tree of the object.
-
-        Example:
-            >>> from src.groups.unit_type import UnitTypeRef
-            >>> unit_type_ref = UnitTypeRef(alias="str")
-            >>> print(unit_type_ref.hash_tree())
-            MerkleTree(hashed_data=["8f245b629f9dbd96e39c50751394daf5b1791a35ec4e9213ecec3d157aaf5702"])
-        """
-        return self.hash_tree().root()
-
-
 @define(frozen=True, slots=True, weakref_slot=False)
-class UnitTypeRef(ReferenceInterface):
+class UnitTypeRef(BaseInterface):
     """A reference to a UnitType.
 
     Attributes:
         alias (str): The alias of the UnitType.
     """
     alias: str = field(default=__DEFAULT_UNIT_TYPE_REF__, validator=validators.instance_of(str))
-
-    # def __str__(self) -> str:
-    #     return super().__str__()
-
-    # def __repr__(self) -> str:
-    #     return super().__repr__()
-
-    # def __iter__(self):
-    #     return super().__iter__()
-
-    # def hash_sha256(self):
-    #     return super().hash_sha256()
-
-    # def hash_tree(self) -> MerkleTree:
-    #     return super().hash_tree()
 
 
 @define(frozen=True, slots=True, weakref_slot=False)
@@ -160,7 +39,7 @@ class UnitTypeFunction:
         args (tuple): The arguments that will be passed to the function.
     """
     function_object: Optional[Callable] = field(default=None, validator=validators.optional(validators.instance_of(Callable)))
-    args: Optional[Tuple] = field(default=None, validator=validators.optional(validators.instance_of(tuple)))
+    args: Optional[Tuple] = field(default=None, validator=validators.optional(validators.instance_of(tuple | list)))
 
     def call(self, input_: Any = None) -> Any:
         """Call the function with the given input.
@@ -242,7 +121,7 @@ class UnitType:
     prefix: Optional[str] = field(default=None, validator=validators.optional(validators.instance_of(str)))
     suffix: Optional[str] = field(default=None, validator=validators.optional(validators.instance_of(str)))
     separator: Optional[str] = field(default=None, validator=validators.optional(validators.instance_of(str)))
-    sys_function: Optional[UnitTypeFunction] = field(default=None)
+    sys_function: Optional[UnitTypeFunction] = field(default=None, validator=validators.optional(validators.instance_of(UnitTypeFunction)))
 
     def __aliases_repr__(self) -> str:
         aliases = ""
@@ -259,12 +138,12 @@ class UnitType:
     def __repr__(self) -> str:
         return f"UnitType(aliases=[{self.__aliases_repr__()}], super_type=[{self.__super_type_repr__()}], prefix={self.prefix}, suffix={self.suffix}, separator={self.separator}, sys_function={self.sys_function.__repr__()})"
 
-    def hash_256(self):
+    def hash_sha256(self):
         return hashlib.sha256(self.__repr__().encode()).hexdigest()
 
     def hash_tree(self) -> MerkleTree:
-        aliases_hash_tree = MerkleTree(hashed_data=[alias.hash_256() for alias in self.aliases])
-        super_type_hash_tree = MerkleTree(hashed_data=[type.hash_256() for type in self.super_type])
+        aliases_hash_tree = MerkleTree(hashed_data=[alias.hash_sha256() for alias in self.aliases])
+        super_type_hash_tree = MerkleTree(hashed_data=[type.hash_sha256() for type in self.super_type])
         prefix_hash = hashlib.sha256(self.prefix.encode()).hexdigest()
         suffix_hash = hashlib.sha256(self.suffix.encode()).hexdigest()
         separator_hash = hashlib.sha256(self.separator.encode()).hexdigest()

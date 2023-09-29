@@ -8,7 +8,7 @@ from .unit_type_pool import UnitTypePool
 
 @define(slots=True)
 class UnitCreator:
-    unit_type_pool: Optional[UnitTypePool] = field(default=None, validator=validators.instance_of(Optional[UnitTypePool]))
+    unit_type_pool: Optional[UnitTypePool] = field(default=None, validator=validators.optional(validators.instance_of(UnitTypePool)))
 
     def __init__(self, unit_type_pool: Optional[UnitTypePool] = None):
         if unit_type_pool is None:

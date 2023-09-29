@@ -130,7 +130,7 @@ class UnitTypePool(PoolInterface):
         ))
 
         # print(f"Added UnitType {eval(dict_['sys_function']['object'])}")
-        # print(f"Added UnitTypeFunction {UnitTypeFunction(function_object=dict_['sys_function']['object'], args=dict_['sys_function']['args']).hash_256()}")
+        # print(f"Added UnitTypeFunction {UnitTypeFunction(function_object=dict_['sys_function']['object'], args=dict_['sys_function']['args']).hash_sha256()}")
 
     def set_system_types_from_json(self, path: str = None):
         """Set the UnitTypePool from a JSON file.
@@ -164,4 +164,4 @@ class UnitTypePool(PoolInterface):
         if self.frozen is False and override is True:
             print("Warning: Hashing an unfrozen UnitTypePool.")
 
-        return MerkleTree([item.hash_256() for item in self.items])
+        return MerkleTree([item.hash_sha256() for item in self.items])

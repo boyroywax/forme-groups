@@ -69,4 +69,4 @@ class UnitPool(PoolInterface):
         if self.frozen is False and override is False:
             raise ValueError("Cannot hash a non-frozen Pool.")
 
-        return MerkleTree(hashed_data=[item.hash_256() for item in self.items])
+        return MerkleTree(hashed_data=[item.hash_sha256() for item in self.items])

@@ -65,5 +65,5 @@ class GroupSubUnit(GroupSubUnitInterface):
         for item in self.items:
             if not isinstance(item, Unit):
                 raise ValueError(f"Invalid item {item} in GroupUnit.")
-            group_unit_items.append(item.hash_256())
+            group_unit_items.append(item.hash_sha256())
         return MerkleTree(hashed_data=group_unit_items)

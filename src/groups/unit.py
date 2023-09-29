@@ -26,7 +26,7 @@ class Value:
     def __repr__(self) -> str:
         return f"{self._value}"
 
-    def hash_256(self) -> str:
+    def hash_sha256(self) -> str:
         return hashlib.sha256(self.__repr__().encode()).hexdigest()
 
 
@@ -64,8 +64,8 @@ class Unit:
     def __repr__(self) -> str:
         return f"Unit(value={self.value}, type_ref={self.type_ref})"
 
-    def hash_256(self) -> str:
+    def hash_sha256(self) -> str:
         return hashlib.sha256(self.__repr__().encode()).hexdigest()
 
     def hash_tree(self) -> MerkleTree:
-        return MerkleTree([self._value.hash_256(), self._type_ref.hash_256()])
+        return MerkleTree([self._value.hash_sha256(), self._type_ref.hash_sha256()])

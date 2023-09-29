@@ -13,10 +13,10 @@ from .data import Data
 
 @define(slots=True, weakref_slot=False)
 class GroupUnitCreator:
-    _unit_pool: Optional[UnitPool] = field(default=None, validator=validators.instance_of(UnitPool))
-    _unit_creator: Optional[UnitCreator] = field(default=None)
+    _unit_pool: Optional[UnitPool] = field(default=None, validator=validators.optional(validators.instance_of(UnitPool)))
+    _unit_creator: Optional[UnitCreator] = field(default=None, validator=validators.optional(validators.instance_of(UnitCreator)))
 
-    def __init__(self, unit_pool: UnitPool = None, unit_creator: UnitCreator = None):
+    def __init__(self, unit_pool: Optional[UnitPool] = None, unit_creator: Optional[UnitCreator] = None):
         if unit_pool is None:
             self._unit_pool = UnitPool()
         else:

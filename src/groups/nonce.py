@@ -66,5 +66,5 @@ class Nonce(GroupSubUnitInterface):
         for item in self.items:
             if not isinstance(item, Unit):
                 raise ValueError(f"Invalid item {item} in Nonce.")
-            nonce_items.append(item.hash_256())
+            nonce_items.append(item.hash_sha256())
         return MerkleTree(hashed_data=nonce_items)
