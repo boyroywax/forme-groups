@@ -28,6 +28,9 @@ class TestGroupUnit(unittest.TestCase):
         self.assertEqual(self.group_unit.creds, self.creds)
         self.assertEqual(self.group_unit.data, self.data)
 
+    def tests_hash_slots(self):
+        self.assertEqual(self.group_unit.__slots__, ("nonce", "owners", "creds", "data"))
+
     def test_str(self):
         expected_str = f"GroupUnit(nonce={self.nonce}, owners={self.owners}, creds={self.creds}, data={self.data})"
         self.assertEqual(str(self.group_unit), expected_str)

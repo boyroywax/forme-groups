@@ -6,7 +6,7 @@ from .nonce import Nonce
 from .data import Data
 
 
-@define(frozen=True, slots=True)
+@define(frozen=True, slots=True, weakref_slot=False)
 class GroupUnit:
     nonce: Nonce = field(validator=validators.instance_of(Nonce))
     owners: GroupSubUnit = field(validator=validators.instance_of(GroupSubUnit))
@@ -14,11 +14,11 @@ class GroupUnit:
     data: Data = field(validator=validators.instance_of(Data))
 
     def __str__(self) -> str:
-        output_str: str = ""
+        output_str: str = "["
         output_str += "Nonce: " + str(self.nonce) + ", "
         output_str += "Owners: " + str(self.owners) + ", "
         output_str += "Creds: " + str(self.creds) + ", "
-        output_str += "Data: " + str(self.data)
+        output_str += "Data: " + str(self.data) + "]"
 
         return output_str
 

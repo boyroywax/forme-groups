@@ -1,30 +1,78 @@
+'''
+The Unit Type 
+
+
+
+'''
+
+
+
+
 import hashlib
+from abc import ABCMeta, abstractmethod
 from attrs import define, field, validators
 from typing import Any, Optional, Tuple, Callable
 
 from .merkle_tree import MerkleTree
 
 
+__DEFAULT_UNIT_TYPE_REF__ = "str"
+
+@define(slots=True, weakref_slot=False)
+class ReferenceInterface(metaclass=ABCMeta):
+    
+    def __str__(self) -> str:
+        slots = self.__slots__
+        output = ""
+        for slot in slots:
+            output += f"{getattr(self, slot)}, "
+        return output[:-2]
+    
+    def __repr__(self) -> str:
+        slots = self.__slots__
+        output = ""
+        for slot in slots:
+            output += f"{getattr(self, slot)}, "
+        return f"{self.__class__.__name__}({output[:-2]})"
+    
+    def __iter__(self):
+        slots = self.__slots__
+        for slot in slots:
+            yield getattr(self, slot)
+
+    def hash_256(self) -> str:
+        return hashlib.sha256(self.__repr__().encode()).hexdigest()
+    
+    def hash_tree(self) -> MerkleTree:
+        slots = self.__slots__
+        return MerkleTree(hashed_data=[getattr(self, slot).hash_256() for slot in slots])
+
+
+
 @define(frozen=True, slots=True, weakref_slot=False)
-class UnitTypeRef:
+class UnitTypeRef(ReferenceInterface):
     """A reference to a UnitType.
 
     Attributes:
         alias (str): The alias of the UnitType.
     """
-    alias: str = field(default=None, validator=validators.instance_of(str))
+    # pass
+    alias: str = field(default=__DEFAULT_UNIT_TYPE_REF__, validator=validators.instance_of(str))
 
-    def __iter__(self):
-        yield self.alias
+    # def __pre_init__(self, alias: str = __DEFAULT_UNIT_TYPE_REF__) -> None:
+    #     self.alias = alias
 
-    def __str__(self) -> str:
-        return self.alias
+    # def __iter__(self):
+    #     yield self.alias
 
-    def __repr__(self) -> str:
-        return f'UnitTypeRef(alias={self.alias})'
+    # def __str__(self) -> str:
+    #     return self.alias
 
-    def hash_256(self) -> str:
-        return hashlib.sha256(self.__repr__().encode()).hexdigest()
+    # def __repr__(self) -> str:
+    #     return f'UnitTypeRef(alias={self.alias})'
+
+    # def hash_256(self) -> str:
+    #     return hashlib.sha256(self.__repr__().encode()).hexdigest()
 
 
 
@@ -80,12 +128,23 @@ class UnitTypeFunction:
             return self.function_object(input_)
 
         return self.function_object(*self.args)
+    
+    @property
+    def function_object_str(self) -> str:
+        return f"<class '{self.function_object.__class__.__name__}'>"
+    
+    @property
+    def args_str(self) -> str:
+        output_str = ""
+        for arg in self.args:
+            output_str += str(arg) + ", "
+        return output_str[:-2]
 
     def __str__(self) -> str:
-        return f"{self.function_object.__str__}({self.args})"
+        return f"{self.function_object_str}({self.args_str})"
 
     def __repr__(self) -> str:
-        return f"UnitTypeFunction(object={str(self.function_object)}, args={self.args})"
+        return f"UnitTypeFunction(function_object={self.function_object_str}, args=[{self.args_str}])"
 
     def hash_256(self):
         return hashlib.sha256(self.__repr__().encode()).hexdigest()

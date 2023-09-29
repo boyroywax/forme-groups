@@ -1,5 +1,6 @@
-import hashlib
 from typing import List
+
+from .utilities import hash_sha256
 
 
 class MerkleTree:
@@ -30,7 +31,7 @@ class MerkleTree:
 
     @staticmethod
     def hash_func(data):
-        return hashlib.sha256(data.encode()).hexdigest()
+        return hash_sha256(data)
 
     def root(self) -> str | None:
         # print(self.leaves)

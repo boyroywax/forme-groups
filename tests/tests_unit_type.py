@@ -5,7 +5,16 @@ from unittest.mock import MagicMock
 import sys
 sys.path.append('/Users/j/Documents/Forme/code/forme-groups')
 
-from src.groups.unit_type import UnitTypeRef, UnitTypeFunction, UnitType
+from src.groups.unit_type import UnitTypeRef, UnitTypeFunction, UnitType, ReferenceInterface
+
+
+class TestReferenceInterface(unittest.TestCase):
+    def setUp(self) -> None:
+
+        class InterfaceExample(ReferenceInterface):
+            pass
+
+        self.unit_type_interface_example = InterfaceExample()
 
 
 class TestUnitTypeRef(unittest.TestCase):
@@ -28,6 +37,8 @@ class TestUnitTypeRef(unittest.TestCase):
 
     def test_unit_type_ref_hash(self):
         self.assertEqual(self.unit_type_ref.hash_256(), "8f245b629f9dbd96e39c50751394daf5b1791a35ec4e9213ecec3d157aaf5702")
+
+    
 
 
 class TestUnitTypeFunction(unittest.TestCase):
@@ -80,6 +91,12 @@ class TestUnitTypeFunction(unittest.TestCase):
     def test_unit_type_function_call_with_list_and_value(self):
         unit_type_function = UnitTypeFunction(function_object=list)
         self.assertEqual(unit_type_function.call(["test"]), ["test"])
+
+
+
+    def test_unit_type_function_repr(self):
+        unit_type_function = UnitTypeFunction(function_object=dict(), args=[])
+        self.assertEqual(repr(unit_type_function), "UnitTypeFunction(function_object=<class 'dict'>, args=[])")
 
 
 class TestUnitType(unittest.TestCase):
