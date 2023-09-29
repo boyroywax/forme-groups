@@ -25,8 +25,8 @@ class TestReferenceInterface(unittest.TestCase):
             def __iter__(self):
                 return super().__iter__()
 
-            def __hash__(self):
-                return super().__hash__()
+            def hash_256(self):
+                return super().hash_sha256()
 
         self.unit_type_interface_example = InterfaceExample("test")
 
@@ -34,7 +34,7 @@ class TestReferenceInterface(unittest.TestCase):
         self.assertIsInstance(self.unit_type_interface_example, ReferenceInterface)
 
     def test_unit_type_interface_has_hash(self):
-        self.assertIsNotNone(self.unit_type_interface_example.__hash__())
+        self.assertIsNotNone(self.unit_type_interface_example.hash_sha256())
 
     def test_unit_type_interface_has_iter(self):
         self.assertEqual(list(self.unit_type_interface_example), ["test"])
@@ -54,35 +54,40 @@ class TestReferenceInterface(unittest.TestCase):
             def __iter__(self):
                 return super().__iter__()
 
-            def __hash__(self):
-                return super().__hash__()
+            def hash_sha256(self):
+                return super().hash_sha256()
 
         unit_type_interface_example2 = InterfaceExample2(("test", "test2",))
         self.assertEqual(list(unit_type_interface_example2.example), ["test", "test2"])
 
     def test_unit_type_interface_slot_contains_dict(self):
-            
+
             @define(slots=True, frozen=True, weakref_slot=False)
             class InterfaceExample3(ReferenceInterface):
                 example: dict = field(validator=validators.instance_of(dict))
-    
+
                 def __str__(self) -> str:
                     return super().__str__()
-    
+
                 def __repr__(self) -> str:
                     return super().__repr__()
-    
+
                 def __iter__(self):
                     return super().__iter__()
-    
-                def __hash__(self):
-                    return super().__hash__()
+
+                def hash_sha256(self):
+                    return super().hash_sha256()
+
             unit_type_interface_example3 = InterfaceExample3({"testdict": {"test": "test", "test2": "test2"}, "testdict2": {"test3": "test3"}})
             print(unit_type_interface_example3)
             print(unit_type_interface_example3.example)
             self.assertEqual(list(unit_type_interface_example3), [{"testdict": {"test": "test", "test2": "test2"}, "testdict2": {"test3": "test3"}}])
 
             self.assertEqual(list(unit_type_interface_example3.example), ["testdict", "testdict2"])
+            self.assertEqual(unit_type_interface_example3.example, {"testdict": {"test": "test", "test2": "test2"}, "testdict2": {"test3": "test3"}})
+
+            self.assertNotEqual(unit_type_interface_example3.hash_sha256(), self.unit_type_interface_example.hash_sha256())
+    
 
 
 
@@ -111,7 +116,7 @@ class TestUnitTypeRef(unittest.TestCase):
         self.assertEqual(repr(self.unit_type_ref), "UnitTypeRef(alias=test_alias)")
 
     def test_unit_type_ref_hash(self):
-        self.assertEqual(self.unit_type_ref.__hash__(), "8f245b629f9dbd96e39c50751394daf5b1791a35ec4e9213ecec3d157aaf5702")
+        self.assertEqual(self.unit_type_ref.hash_sha256(), "8f245b629f9dbd96e39c50751394daf5b1791a35ec4e9213ecec3d157aaf5702")
 
     def test_unit_type_ref_iter(self):
         self.assertEqual(list(self.unit_type_ref), ["test_alias"])

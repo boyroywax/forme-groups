@@ -86,7 +86,7 @@ class ReferenceInterface(metaclass=ABCMeta):
                     yield item
             yield getattr(self, slot)
 
-    def __hash__(self) -> str:
+    def hash_sha256(self) -> MerkleTree:
         """Return the hash of the object.
 
         Returns:
@@ -121,7 +121,7 @@ class ReferenceInterface(metaclass=ABCMeta):
             MerkleTree(hashed_data=["8f245b629f9dbd96e39c50751394daf5b1791a35ec4e9213ecec3d157aaf5702"])
         """
         slots = self.__slots__
-        return MerkleTree(hashed_data=[getattr(self, slot).__hash__() for slot in slots])
+        return MerkleTree(hashed_data=[getattr(self, slot).hash_256() for slot in slots])
 
 
 @define(frozen=True, slots=True, weakref_slot=False)
@@ -142,8 +142,8 @@ class UnitTypeRef(ReferenceInterface):
     def __iter__(self):
         return super().__iter__()
 
-    def __hash__(self):
-        return super().__hash__()
+    def hash_sha256(self):
+        return super().hash_sha256()
 
     def hash_tree(self) -> MerkleTree:
         return super().hash_tree()
