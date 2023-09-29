@@ -7,7 +7,7 @@ Rules on hashing:
 '''
 
 import hashlib
-from abc import ABCMeta
+from abc import ABCMeta, ABC
 from attrs import define, field, validators
 from typing import Any, Optional, Tuple, Callable
 
@@ -20,7 +20,7 @@ __DEFAULT_COLLECTION_TYPES__ = list | tuple | dict | set
 
 
 @define(slots=True, weakref_slot=False)
-class ReferenceInterface(metaclass=ABCMeta):
+class ReferenceInterface(ABC):
     """An abstract interface for a hashable Reference Object.
     """
 
@@ -60,10 +60,10 @@ class ReferenceInterface(metaclass=ABCMeta):
             if getattr(self, slot) is __DEFAULT_COLLECTION_TYPES__:
                 output += f"{slot}=["
                 for item in getattr(self, slot):
-                    output += f"{item}, "
+                    output += f"{item.__repr__()}, "
                 output = output[:-2] + "], "
             else:
-                output += f"{slot}={getattr(self, slot)}, "
+                output += f"{slot}={getattr(self, slot).__repr__()}, "
         return f"{self.__class__.__name__}({output[:-2]})"
 
     def __iter__(self):
@@ -86,7 +86,7 @@ class ReferenceInterface(metaclass=ABCMeta):
                     yield item
             yield getattr(self, slot)
 
-    def hash_sha256(self) -> MerkleTree:
+    def hash_tree(self) -> MerkleTree:
         """Return the hash of the object.
 
         Returns:
@@ -100,15 +100,18 @@ class ReferenceInterface(metaclass=ABCMeta):
         """
         attribute_hashes = []
         for slot in self.__slots__:
-            if getattr(self, slot) is tuple | list | dict | set:
+            if getattr(self, slot) is __DEFAULT_COLLECTION_TYPES__:
+                unit_hashes = []
                 for item in getattr(self, slot):
-                    attribute_hashes.append(MerkleTree.hash_func(item))
+                    unit_hashes.append(MerkleTree.hash_func(item.__repr__()))
+                attribute_hashes.append(MerkleTree(hashed_data=unit_hashes).root())
+                
             else:
                 attribute_hashes.append(MerkleTree.hash_func(self.__repr__()))
 
-        return MerkleTree(attribute_hashes).root()
+        return MerkleTree(attribute_hashes)
 
-    def hash_tree(self) -> MerkleTree:
+    def hash_sha256(self) -> MerkleTree:
         """Return the hash tree of the object.
 
         Returns:
@@ -120,8 +123,7 @@ class ReferenceInterface(metaclass=ABCMeta):
             >>> print(unit_type_ref.hash_tree())
             MerkleTree(hashed_data=["8f245b629f9dbd96e39c50751394daf5b1791a35ec4e9213ecec3d157aaf5702"])
         """
-        slots = self.__slots__
-        return MerkleTree(hashed_data=[getattr(self, slot).hash_256() for slot in slots])
+        return self.hash_tree().root()
 
 
 @define(frozen=True, slots=True, weakref_slot=False)
@@ -133,20 +135,20 @@ class UnitTypeRef(ReferenceInterface):
     """
     alias: str = field(default=__DEFAULT_UNIT_TYPE_REF__, validator=validators.instance_of(str))
 
-    def __str__(self) -> str:
-        return super().__str__()
+    # def __str__(self) -> str:
+    #     return super().__str__()
 
-    def __repr__(self) -> str:
-        return super().__repr__()
+    # def __repr__(self) -> str:
+    #     return super().__repr__()
 
-    def __iter__(self):
-        return super().__iter__()
+    # def __iter__(self):
+    #     return super().__iter__()
 
-    def hash_sha256(self):
-        return super().hash_sha256()
+    # def hash_sha256(self):
+    #     return super().hash_sha256()
 
-    def hash_tree(self) -> MerkleTree:
-        return super().hash_tree()
+    # def hash_tree(self) -> MerkleTree:
+    #     return super().hash_tree()
 
 
 @define(frozen=True, slots=True, weakref_slot=False)
