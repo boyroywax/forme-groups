@@ -9,11 +9,10 @@ __DEFAULT_UNIT_TYPE__ = str
 __DEFAULT_COLLECTION_TYPES__ = list | tuple | dict | set
 
 
-@define(slots=True, weakref_slot=False)
+@define(slots=True)
 class BaseInterface(ABC):
     """An abstract interface for a hashable Reference Object.
     """
-
     def __str__(self) -> str:
         """Return a string containing the attributes of the object.
 
@@ -42,10 +41,13 @@ class BaseInterface(ABC):
             >>> from src.groups.unit_type import UnitTypeRef
             >>> unit_type_ref = UnitTypeRef(alias="str")
             >>> print(unit_type_ref.__repr__())
-            "UnitTypeRef(alias="str")"
+            "UnitTypeRef(alias='str')"
 
         Example:
-
+            >>> from src.groups.unit_type import UnitTypeRef
+            >>> unit_type_ref = UnitTypeRef(alias=("str", "int",))
+            >>> print(unit_type_ref.__repr__())
+            "UnitTypeRef(alias='str')"
         """
         slots = self.__slots__
         output = ""
