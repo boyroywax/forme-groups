@@ -1,4 +1,5 @@
 import unittest
+from attr import define, field, validators
 from attr.exceptions import FrozenInstanceError
 from unittest.mock import MagicMock
 
@@ -11,10 +12,78 @@ from src.groups.unit_type import UnitTypeRef, UnitTypeFunction, UnitType, Refere
 class TestReferenceInterface(unittest.TestCase):
     def setUp(self) -> None:
 
+        @define(slots=True, frozen=True, weakref_slot=False)
         class InterfaceExample(ReferenceInterface):
-            pass
+            example: str = field(validator=validators.instance_of(str))
 
-        self.unit_type_interface_example = InterfaceExample()
+            def __str__(self) -> str:
+                return super().__str__()
+
+            def __repr__(self) -> str:
+                return super().__repr__()
+
+            def __iter__(self):
+                return super().__iter__()
+
+            def __hash__(self):
+                return super().__hash__()
+
+        self.unit_type_interface_example = InterfaceExample("test")
+
+    def test_create_unit_type_interface(self):
+        self.assertIsInstance(self.unit_type_interface_example, ReferenceInterface)
+
+    def test_unit_type_interface_has_hash(self):
+        self.assertIsNotNone(self.unit_type_interface_example.__hash__())
+
+    def test_unit_type_interface_has_iter(self):
+        self.assertEqual(list(self.unit_type_interface_example), ["test"])
+
+    def test_unit_type_interface_slot_contains_list(self):
+
+        @define(slots=True, frozen=True, weakref_slot=False)
+        class InterfaceExample2(ReferenceInterface):
+            example: tuple = field(validator=validators.instance_of(tuple))
+
+            def __str__(self) -> str:
+                return super().__str__()
+
+            def __repr__(self) -> str:
+                return super().__repr__()
+
+            def __iter__(self):
+                return super().__iter__()
+
+            def __hash__(self):
+                return super().__hash__()
+
+        unit_type_interface_example2 = InterfaceExample2(("test", "test2",))
+        self.assertEqual(list(unit_type_interface_example2.example), ["test", "test2"])
+
+    def test_unit_type_interface_slot_contains_dict(self):
+            
+            @define(slots=True, frozen=True, weakref_slot=False)
+            class InterfaceExample3(ReferenceInterface):
+                example: dict = field(validator=validators.instance_of(dict))
+    
+                def __str__(self) -> str:
+                    return super().__str__()
+    
+                def __repr__(self) -> str:
+                    return super().__repr__()
+    
+                def __iter__(self):
+                    return super().__iter__()
+    
+                def __hash__(self):
+                    return super().__hash__()
+            unit_type_interface_example3 = InterfaceExample3({"testdict": {"test": "test", "test2": "test2"}, "testdict2": {"test3": "test3"}})
+            print(unit_type_interface_example3)
+            print(unit_type_interface_example3.example)
+            self.assertEqual(list(unit_type_interface_example3), [{"testdict": {"test": "test", "test2": "test2"}, "testdict2": {"test3": "test3"}}])
+
+            self.assertEqual(list(unit_type_interface_example3.example), ["testdict", "testdict2"])
+
 
 
 class TestUnitTypeRef(unittest.TestCase):
@@ -35,10 +104,27 @@ class TestUnitTypeRef(unittest.TestCase):
     def test_unit_type_ref_slots(self):
         self.assertEqual(self.unit_type_ref.__slots__, ("alias",))
 
-    def test_unit_type_ref_hash(self):
-        self.assertEqual(self.unit_type_ref.hash_256(), "8f245b629f9dbd96e39c50751394daf5b1791a35ec4e9213ecec3d157aaf5702")
+    def test_unit_type_ref_str(self):
+        self.assertEqual(str(self.unit_type_ref), "test_alias")
 
-    
+    def test_unit_type_ref_repr(self):
+        self.assertEqual(repr(self.unit_type_ref), "UnitTypeRef(alias=test_alias)")
+
+    def test_unit_type_ref_hash(self):
+        self.assertEqual(self.unit_type_ref.__hash__(), "8f245b629f9dbd96e39c50751394daf5b1791a35ec4e9213ecec3d157aaf5702")
+
+    def test_unit_type_ref_iter(self):
+        self.assertEqual(list(self.unit_type_ref), ["test_alias"])
+
+    def test_unit_type_ref_list(self):
+        ref_list = ["str", "int"]
+        with self.assertRaises(TypeError):
+            UnitTypeRef(alias=ref_list)
+
+    def test_unit_type_ref_dict(self):
+        ref_dict = {"alias": "str"}
+        with self.assertRaises(TypeError):
+            UnitTypeRef(alias=ref_dict)
 
 
 class TestUnitTypeFunction(unittest.TestCase):
