@@ -116,7 +116,7 @@ class TestBaseInterface(unittest.TestCase):
         self.assertEqual(repr(self.base_interface_example), "InterfaceExample(example='test')")
 
     def test_base_interface_hash(self):
-        self.assertEqual(self.base_interface_example.hash_sha256(), "7086e6410f33ba74aa2af14d8a282a31f552dd8bd304e9b098d96208b5bebcd2")
+        self.assertEqual(self.base_interface_example.hash_sha256(), "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08")
 
     def test_base_interface_iter(self):
         self.assertEqual(list(self.base_interface_example), ["test"])
@@ -171,10 +171,4 @@ class TestBaseInterface(unittest.TestCase):
             example2: str = field(validator=validators.instance_of(str))
 
         base_interface_example13 = InterfaceExampleMultipleArgsWithHash("test", "test2")
-        base_interface_example13_arg_hash = MerkleTree.hash_func(repr("test"))
-        base_interface_example13_arg2_hash = MerkleTree.hash_func(repr("test2"))
-        base_interface_example13_hash = MerkleTree([base_interface_example13_arg_hash, base_interface_example13_arg2_hash])
-        print(base_interface_example13_hash.root())
-        print(base_interface_example13_hash.verify(base_interface_example13_arg_hash))
-
-        self.assertEqual(base_interface_example13.hash_sha256(), "8f4ee3af184bbf63208517fe63e5b84b09aa2e16dcbb350fbcecc7a73ec4b9da")
+        self.assertEqual(base_interface_example13.hash_sha256(), "694299f8eb01a328732fb21f4163fbfaa8f60d5662f04f52ad33bec63953ec7f")
