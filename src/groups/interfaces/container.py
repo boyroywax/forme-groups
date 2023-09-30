@@ -12,8 +12,6 @@ from .base import BaseInterface
 from ..utils.merkle_tree import MerkleTree
 
 
-__DEFAULT_UNIT_TYPE_REF__ = "str"
-__DEFAULT_UNIT_TYPE__ = str
 __DEFAULT_COLLECTION_TYPES__ = list | tuple | dict | set
     
 
@@ -21,6 +19,7 @@ __DEFAULT_COLLECTION_TYPES__ = list | tuple | dict | set
 class ContainerInterface(BaseInterface, metaclass=ABCMeta):
     """An abstract interface for a collection of hashable BaseInterface objects.
     """
+    _items: Optional[__DEFAULT_COLLECTION_TYPES__] = field(default=None, validator=validators.optional(validators.instance_of(__DEFAULT_COLLECTION_TYPES__)))
 
     def __init__(self, items: Optional[__DEFAULT_COLLECTION_TYPES__] = None):
         """Initialize the ContainerInterface.
@@ -30,4 +29,4 @@ class ContainerInterface(BaseInterface, metaclass=ABCMeta):
         """
         if items is None:
             raise ValueError("Cannot initialize ContainerInterface with None.")
-        setattr(self, "items", items)
+        setattr(self, "_items", items)

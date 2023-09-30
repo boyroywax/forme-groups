@@ -3,7 +3,7 @@ import hashlib
 
 import sys
 sys.path.append('/Users/j/Documents/Forme/code/forme-groups')
-from groups.utils.merkle_tree import MerkleTree
+from src.groups.utils.merkle_tree import MerkleTree
 
 
 class TestMerkleTree(unittest.TestCase):
@@ -14,8 +14,8 @@ class TestMerkleTree(unittest.TestCase):
     def test_tree_with_one_leaf(self):
         leaf = "test_leaf"
         leaf_hashed = hashlib.sha256(leaf.encode()).hexdigest()
-        tree = MerkleTree(leaf_hashed)
-        self.assertEqual(tree.root(), "a279c6691eb3035528a0fd8b65a607ed73896d0685a9605f2a1eb6484d8c3eca")
+        tree = MerkleTree([leaf_hashed])
+        self.assertEqual(tree.root(), "1a79b3d0b140695414229501d6a350140e406de8824290c17fe5d51520cbd9ec")
 
     def test_tree_with_two_leaves(self):
         leaf1 = "test_leaf1"
