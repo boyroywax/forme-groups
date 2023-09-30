@@ -241,39 +241,3 @@ class TestBaseInterface(unittest.TestCase):
         print([item for item in base_interface_example17.__iter__()])
         self.assertTrue(base_interface_example17.contains_item("test"))
         self.assertTrue(base_interface_example17.contains_item({"test2": "test3"}))
-
-    # def test_base_interface_item_verify_with_list_of_dicts(self):
-            
-    #     @define(slots=True, frozen=True, weakref_slot=False)
-    #     class InterfaceExampleHashVerifyWithDictAndList(BaseInterface):
-    #         example: str = field(validator=validators.instance_of(str))
-    #         example2: list = field(validator=validators.instance_of(list))
-
-    #     base_interface_example18 = InterfaceExampleHashVerifyWithDictAndList("test", [{"test2": "test3"}, {"test4": "test5"}])
-    #     print([item for item in base_interface_example18.__iter__()])
-    #     self.assertTrue(base_interface_example18.contains_item({"test2": "test3"}))
-    #     self.assertTrue(base_interface_example18.contains_item({"test4": "test5"}))
-
-    # def test_base_interface_item_verify_with_list_of_dicts_and_lists(self):
-
-    #     @define(slots=True, frozen=True, weakref_slot=False)
-    #     class InterfaceExampleHashVerifyWithDictAndList(BaseInterface):
-    #         example: str = field(validator=validators.instance_of(str))
-    #         example2: list = field(validator=validators.instance_of(list))
-
-    #     base_interface_example19 = InterfaceExampleHashVerifyWithDictAndList("test", [{"test2": "test3"}, ["test4", "test5"]])
-    #     print([item for item in base_interface_example19.__iter__()])
-    #     self.assertTrue(base_interface_example19.contains_item({"test2": "test3"}))
-    #     self.assertTrue(base_interface_example19.contains_item(["test4", "test5"]))
-
-    # def test_base_interface_iterate_subunits(self):
-
-    #     @define(slots=True, frozen=True, weakref_slot=False)
-    #     class InterfaceExampleHashVerifyWithDictAndList(BaseInterface):
-    #         example: str = field(validator=validators.instance_of(str))
-    #         example2: list = field(validator=validators.instance_of(list))
-
-    #     base_interface_example20 = InterfaceExampleHashVerifyWithDictAndList("test", [{"test2": "test3"}, ["test4", "test5"]])
-    #     print([item for item in base_interface_example20.__iter__()])
-    #     self.assertTrue(base_interface_example20.contains_item({"test2": "test3"}))
-    #     self.assertTrue(base_interface_example20.contains_item(["test4", "test5"]))
