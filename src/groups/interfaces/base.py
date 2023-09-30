@@ -8,7 +8,7 @@ from abc import ABC
 from attrs import define, field, validators
 from typing import Any, Optional, Tuple, List
 
-from ..merkle_tree import MerkleTree
+from ..utils.merkle_tree import MerkleTree
 
 
 __DEFAULT_UNIT_TYPE_REF__ = "str"
@@ -114,6 +114,26 @@ class BaseInterface(ABC):
         for slot in self.__slots__:
             yield getattr(self, slot)
 
+    def hash_items(self) -> List[str]:
+        """Return the hash of the object.
+
+        Returns:
+            List[str]: The hash of the object.
+
+        Example::
+
+            @define(slots=True, frozen=True, weakref_slot=False)
+            class InterfaceExample(BaseInterface):
+                example: str = field(validator=validators.instance_of(str))
+
+            base_interface_example = InterfaceExample("test")
+            print(base_interface_example.hash_items())
+            >>> ["6e94a0aef218fd7aef18b257f0ba9fc33c92a2bc9788fc751868e43ab398137f"]
+        """
+        attribute_hashes: List[str] = []
+        for attribute in self.__iter__():
+            attribute_hashes.append(MerkleTree.hash_func(attribute))
+        return attribute_hashes
 
     def hash_tree(self) -> MerkleTree:
         """Return the hash of the object.
@@ -131,11 +151,7 @@ class BaseInterface(ABC):
             print(base_interface_example.hash_tree())
             >>> "6e94a0aef218fd7aef18b257f0ba9fc33c92a2bc9788fc751868e43ab398137f"
         """
-        attribute_hashes = []
-        for item in self.__iter__():
-            attribute_hashes.append(MerkleTree.hash_func(repr(item)))
-
-        return MerkleTree(attribute_hashes)
+        return MerkleTree(hashed_data=self.hash_items())
 
     def hash_sha256(self) -> str:
         """Return the hash tree of the object.
@@ -155,28 +171,28 @@ class BaseInterface(ABC):
         """
         return self.hash_tree().root()
     
-    # def contains_item(self, item: Any) -> bool:
-    #     """Return whether the object contains the item.
+    def contains_item(self, item: Any) -> bool:
+        """Return whether the object contains the item.
 
-    #     Args:
-    #         item (Any): The item to check.
+        Args:
+            item (Any): The item to check.
 
-    #     Returns:
-    #         bool: Whether the object contains the item.
+        Returns:
+            bool: Whether the object contains the item.
 
-    #     Example::
+        Example::
 
-    #         @define(slots=True, frozen=True, weakref_slot=False)
-    #         class InterfaceExample(BaseInterface):
-    #             example: str = field(validator=validators.instance_of(str))
+            @define(slots=True, frozen=True, weakref_slot=False)
+            class InterfaceExample(BaseInterface):
+                example: str = field(validator=validators.instance_of(str))
 
-    #         base_interface_example = InterfaceExample("test")
-    #         print(base_interface_example.contains_item("test"))
-    #         >>> True
-    #     """
-    #     if item in self.__iter__():
-    #         return True
-    #     return False
+            base_interface_example = InterfaceExample("test")
+            print(base_interface_example.contains_item("test"))
+            >>> True
+        """
+        if item in self.__iter__():
+            return True
+        return False
 
     # def contains_hash(self, hash: str) -> bool:
     #     """Return whether the object contains the hash.

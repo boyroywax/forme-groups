@@ -1,7 +1,7 @@
 from attrs import define, field, validators
 from typing import Any
 
-from .merkle_tree import MerkleTree
+from .utils.merkle_tree import MerkleTree
 from .group_subunit import GroupSubUnit
 from .nonce import Nonce
 from .group_unit import GroupUnit

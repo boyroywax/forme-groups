@@ -5,7 +5,7 @@ from attrs import exceptions as excs
 sys.path.append("/Users/j/Documents/Forme/code/forme-groups")
 from src.groups.unit_pool import UnitPool
 from src.groups.unit import Unit
-from src.groups.merkle_tree import MerkleTree
+from groups.utils.merkle_tree import MerkleTree
 from src.groups.unit_creator import UnitCreator
 
 

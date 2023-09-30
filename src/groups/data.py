@@ -3,7 +3,7 @@ from typing import Any, Optional
 
 from .unit import Unit
 from .data_schema import DataSchema
-from .merkle_tree import MerkleTree
+from .utils.merkle_tree import MerkleTree
 from .group_subunit import GroupSubUnitInterface, _convert_list_to_tuple
 
 

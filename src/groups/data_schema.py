@@ -4,7 +4,7 @@ from typing import Any, Optional, Tuple, Dict
 
 from .unit_type import UnitType, UnitTypeRef, UnitTypeFunction
 from .unit_type_pool import UnitTypePool
-from .merkle_tree import MerkleTree
+from .utils.merkle_tree import MerkleTree
 from .group_subunit import GroupSubUnitInterface, _convert_list_to_tuple
 
 

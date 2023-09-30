@@ -12,7 +12,7 @@ from attrs import define, field, validators
 from typing import Any, Optional, Tuple, Callable
 
 from .interfaces.base import BaseInterface
-from .merkle_tree import MerkleTree
+from .utils.merkle_tree import MerkleTree
 
 
 __DEFAULT_UNIT_TYPE_REF__ = "str"

@@ -3,7 +3,7 @@ from attrs import define, field, validators
 from typing import List, Any
 
 from .unit import Unit
-from .merkle_tree import MerkleTree
+from .utils.merkle_tree import MerkleTree
 
 
 class GroupSubUnitInterface(ABC):

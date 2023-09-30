@@ -4,7 +4,7 @@ from typing import List, Any
 
 from .unit import Unit
 from .group_subunit import GroupSubUnitInterface, _convert_list_to_tuple
-from .merkle_tree import MerkleTree
+from .utils.merkle_tree import MerkleTree
 
 __DEFAULT_NONCE_SEPARATOR__ = "."
 

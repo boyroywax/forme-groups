@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 from attrs import define, field, validators
 from typing import Any, Optional, Tuple, Dict
 
-from .merkle_tree import MerkleTree
+from .utils.merkle_tree import MerkleTree
 from .unit import Unit, UnitType, UnitTypeRef, UnitTypeFunction
 
 __DEFAULT_SYSTEM_TYPES_PATH__ = "src/groups"

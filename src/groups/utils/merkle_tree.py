@@ -1,9 +1,20 @@
+import hashlib
 from typing import List
+from attrs import define, field, validators
 
-from .utilities import hash_sha256
+
+def hash_sha256(data: str) -> str:
+    return hashlib.sha256(data.encode()).hexdigest()
 
 
+@define(slots=True)
 class MerkleTree:
+    """A Merkle Tree object.
+    """
+
+    leaves: List[str] = field(default=[], validator=validators.instance_of(list))
+    levels: List[List[str]] = field(default=[], validator=validators.instance_of(list))
+
     def __init__(self, hashed_data: list[str] = []):
         self.leaves: List[str] = hashed_data
         self.levels: List[List[str]] = [self.leaves]

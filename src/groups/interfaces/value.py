@@ -1,9 +1,9 @@
-from abc import ABC
+from abc import ABC, abstractmethod, ABCMeta
 from attrs import define, field, validators
 from typing import Any, Optional, Tuple, List
 
 from .base import BaseInterface
-from ..merkle_tree import MerkleTree
+from ..utils.merkle_tree import MerkleTree
 
 
 __DEFAULT_UNIT_TYPE_REF__ = "str"
@@ -11,7 +11,7 @@ __DEFAULT_VALUE_TYPES__ = str | int | float | bool | bytes | type(None)
 
 
 @define(frozen=True, slots=True, weakref_slot=False)
-class ValueInterface(BaseInterface):
+class ValueInterface(BaseInterface, metaclass=ABCMeta):
     """A Value object.
     """
     _value: Optional[__DEFAULT_VALUE_TYPES__] = field(default=None, validator=validators.optional(validators.instance_of(__DEFAULT_VALUE_TYPES__)))

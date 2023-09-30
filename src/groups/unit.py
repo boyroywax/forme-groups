@@ -5,8 +5,8 @@ from typing import Any, Optional, Tuple
 
 from .interfaces.base import BaseInterface
 from .unit_type import UnitType, UnitTypeRef, UnitTypeFunction
-from .merkle_tree import MerkleTree
-from .converters import _value_converter, _type_ref_converter
+from .utils.merkle_tree import MerkleTree
+from .utils.converters import _value_converter, _type_ref_converter
 
 
 # def _type_ref_converter(type_ref: UnitTypeRef | str) -> UnitTypeRef:

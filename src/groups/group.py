@@ -7,7 +7,7 @@ from .group_unit import GroupUnit
 from .nonce import Nonce
 from .data import Data
 from .group_subunit import GroupSubUnit
-from .merkle_tree import MerkleTree
+from .utils.merkle_tree import MerkleTree
 from .group_unit_pool import GroupUnitPool
 
 

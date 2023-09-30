@@ -1,6 +1,6 @@
 from attrs import define, field, validators
 
-from .merkle_tree import MerkleTree
+from .utils.merkle_tree import MerkleTree
 from .group_subunit import GroupSubUnit
 from .nonce import Nonce
 from .data import Data

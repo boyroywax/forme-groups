@@ -3,7 +3,7 @@ import hashlib
 
 import sys
 sys.path.append('/Users/j/Documents/Forme/code/forme-groups')
-from src.groups.merkle_tree import MerkleTree
+from groups.utils.merkle_tree import MerkleTree
 
 
 class TestMerkleTree(unittest.TestCase):

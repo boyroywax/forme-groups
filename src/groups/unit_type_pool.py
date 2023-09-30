@@ -2,7 +2,7 @@ import json
 from attrs import define, field, validators
 from typing import Any, Optional, Tuple, Dict
 
-from .merkle_tree import MerkleTree
+from .utils.merkle_tree import MerkleTree
 from .unit_type import UnitType, UnitTypeRef, UnitTypeFunction
 from .pool import PoolInterface
 
