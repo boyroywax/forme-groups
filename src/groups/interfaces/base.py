@@ -1,3 +1,9 @@
+"""
+
+
+
+"""
+
 from abc import ABC
 from attrs import define
 from typing import Any, Optional, Tuple, List
@@ -86,12 +92,12 @@ class BaseInterface(ABC):
             >>> 'InterfaceExample(example="test")'
         """
         return f"{self.__class__.__name__}({self._slots_to_string(values_only=False, keys_only=False)})"
-
+    
     def __iter__(self):
-        """Return an iterator over the attributes of the object.
+        """Return an iterator for the object.
 
         Returns:
-            Iterator[Any]: An iterator over the attributes of the object.
+            Iterator: An iterator for the object.
 
         Example::
 
@@ -99,23 +105,26 @@ class BaseInterface(ABC):
             class InterfaceExample(BaseInterface):
                 example: str = field(validator=validators.instance_of(str))
 
-            base_ref = InterfaceExample("test")
-            for attribute in base_ref:
-                print(attribute)
-            >>> "str"
+            base_interface_example = InterfaceExample("test")
+            for item in base_interface_example:
+                print(item)
+            >>> "test"
         """
-        slots = self.__slots__
-        for slot in slots:
-            if isinstance(getattr(self, slot), (list, tuple)):
-                for item in getattr(self, slot):
-                    yield item
-            elif isinstance(getattr(self, slot), dict):
-                for key, value in getattr(self, slot).items():
-                    yield key
-                    yield value
-                    yield {key: value}
+        for slot in self.__slots__:
+            yield getattr(self, slot)
+
+    def __iter_all__(self, sub_item: Any = None):
+        if sub_item is None:
+            for item in self.__iter__():
+                yield self.__iter_all__(item)
+        else:
+            if isinstance(item, __DEFAULT_COLLECTION_TYPES__):
+                for sub_item in item:
+                    yield self.__iter_all__(sub_item)
             else:
-                yield getattr(self, slot)
+                yield item
+
+
 
     def hash_item(self, item: Any) -> str:
         """Return the hash of the item.
@@ -200,7 +209,7 @@ class BaseInterface(ABC):
             print(base_interface_example.contains_item("test"))
             >>> True
         """
-        if item in self.__iter__():
+        if item in self.__iter_all__():
             return True
         return False
 
