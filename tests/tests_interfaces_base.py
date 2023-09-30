@@ -212,7 +212,7 @@ class TestBaseInterface(unittest.TestCase):
             example2: dict = field(validator=validators.instance_of(dict))
 
         base_interface_example17 = InterfaceExampleHashVerifyWithDict("test", {"test2": "test3"})
-        print(base_interface_example17.__iter__())
+        print([item for item in base_interface_example17.__iter__()])
         self.assertTrue(base_interface_example17.contains_item("test2"))
         self.assertTrue(base_interface_example17.contains_item("test3"))
         self.assertTrue(base_interface_example17.contains_item({"test2": "test3"}))
