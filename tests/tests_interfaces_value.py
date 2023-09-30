@@ -76,3 +76,60 @@ class TestValueInterface(unittest.TestCase):
     def test_value_interface_repr(self):
         value_interface = ValueInterface(value="test")
         self.assertEqual(repr(value_interface), "ValueInterface(_value='test')")
+
+    def test_value_interface_hash(self):
+        value_interface = ValueInterface(value="test")
+        self.assertEqual(value_interface.hash_sha256(), "6e94a0aef218fd7aef18b257f0ba9fc33c92a2bc9788fc751868e43ab398137f")
+
+    def test_value_interface_iter(self):
+        value_interface = ValueInterface(value="test")
+        self.assertEqual(list(value_interface), ["test"])
+
+    def test_value_interface_type_ref(self):
+        value_interface = ValueInterface(value="test")
+        self.assertEqual(value_interface.type_ref, "str")
+
+    def test_value_interface_type_ref_with_int(self):
+        value_interface = ValueInterface(value=1)
+        self.assertEqual(value_interface.type_ref, "int")
+
+    def test_value_interface_type_ref_with_bool(self):
+        value_interface = ValueInterface(value=True)
+        self.assertEqual(value_interface.type_ref, "bool")
+
+    def test_value_interface_type_ref_with_none(self):
+        value_interface = ValueInterface(value=None)
+        self.assertEqual(value_interface.type_ref, "NoneType")
+
+    def test_value_interface_type_ref_with_bytes(self):
+        value_interface = ValueInterface(value=b"test")
+        self.assertEqual(value_interface.type_ref, "bytes")
+
+    def test_value_interface_convert_to_int(self):
+        value_interface = ValueInterface(value="1")
+        self.assertEqual(value_interface.convert_to_type("int"), 1)
+
+    def test_value_interface_convert_to_int_with_int(self):
+        value_interface = ValueInterface(value=1)
+        self.assertEqual(value_interface.convert_to_type("int"), 1)
+
+    def test_value_interface_convert_to_int_with_float(self):
+        value_interface = ValueInterface(value=1.0)
+        self.assertEqual(value_interface.convert_to_type("int"), 1)
+
+    def test_value_interface_convert_to_int_with_str(self):
+        value_interface = ValueInterface(value="test")
+        with self.assertRaises(ValueError):
+            value_interface.convert_to_type("int")
+
+    def test_value_interface_convert_to_int_with_bool(self):
+        value_interface = ValueInterface(value=True)
+        self.assertEquals(value_interface.convert_to_type("int"), 1)
+
+    def test_value_interface_convert_to_none(self):
+        value_interface = ValueInterface(value="test")
+        self.assertIsNone(value_interface.convert_to_type("NoneType"))
+
+    def test_value_interface_convert_to_none_with_none(self):
+        value_interface = ValueInterface(value=None)
+        self.assertIsNone(value_interface.convert_to_type("NoneType"))

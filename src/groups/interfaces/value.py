@@ -32,3 +32,37 @@ class ValueInterface(BaseInterface):
             __DEFAULT_VALUE_TYPES__: The value of the Value object.
         """
         return self._value
+
+    @property
+    def type_ref(self) -> str:
+        """Get the type_ref of the Value object.
+
+        Returns:
+            str: The type_ref of the Value object.
+        """
+        return type(self._value).__name__
+
+    def convert_to_type(self, type_ref: str) -> __DEFAULT_VALUE_TYPES__:
+        """Convert the Value object to a type.
+
+        Args:
+            type_ref (str): The type to convert the Value object to.
+
+        Returns:
+            __DEFAULT_VALUE_TYPES__: The converted Value object.
+        """
+        match(type_ref):
+            case("str"):
+                return str(self._value)
+            case("int"):
+                return int(self._value)
+            case("float"):
+                return float(self._value)
+            case("bool"):
+                return bool(self._value)
+            case("bytes"):
+                return bytes(self._value)
+            case("NoneType"):
+                return None
+            case _:
+                raise ValueError(f"Cannot convert Value to type {type_ref}.")

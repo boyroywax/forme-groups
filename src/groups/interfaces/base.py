@@ -20,7 +20,7 @@ __DEFAULT_COLLECTION_TYPES__ = list | tuple | dict | set
 class BaseInterface(ABC):
     """An abstract interface for a hashable Reference Object.
     """
-    
+
     def _slots_to_string(
         self,
         values_only: Optional[bool] = True,
@@ -115,45 +115,45 @@ class BaseInterface(ABC):
             yield getattr(self, slot)
 
 
-    # def hash_tree(self) -> MerkleTree:
-    #     """Return the hash of the object.
+    def hash_tree(self) -> MerkleTree:
+        """Return the hash of the object.
 
-    #     Returns:
-    #         MerkleTree: The hash tree of the object.
+        Returns:
+            MerkleTree: The hash tree of the object.
 
-    #     Example::
+        Example::
 
-    #         @define(slots=True, frozen=True, weakref_slot=False)
-    #         class InterfaceExample(BaseInterface):
-    #             example: str = field(validator=validators.instance_of(str))
+            @define(slots=True, frozen=True, weakref_slot=False)
+            class InterfaceExample(BaseInterface):
+                example: str = field(validator=validators.instance_of(str))
 
-    #         base_interface_example = InterfaceExample("test")
-    #         print(base_interface_example.hash_tree())
-    #         >>> "6e94a0aef218fd7aef18b257f0ba9fc33c92a2bc9788fc751868e43ab398137f"
-    #     """
-    #     attribute_hashes = []
-    #     for item in self.__iter__():
-    #         attribute_hashes.append(MerkleTree.hash_func(repr(item)))
+            base_interface_example = InterfaceExample("test")
+            print(base_interface_example.hash_tree())
+            >>> "6e94a0aef218fd7aef18b257f0ba9fc33c92a2bc9788fc751868e43ab398137f"
+        """
+        attribute_hashes = []
+        for item in self.__iter__():
+            attribute_hashes.append(MerkleTree.hash_func(repr(item)))
 
-    #     return MerkleTree(attribute_hashes)
+        return MerkleTree(attribute_hashes)
 
-    # def hash_sha256(self) -> str:
-    #     """Return the hash tree of the object.
+    def hash_sha256(self) -> str:
+        """Return the hash tree of the object.
 
-    #     Returns:
-    #         MerkleTree: The hash tree of the object.
+        Returns:
+            MerkleTree: The hash tree of the object.
 
-    #     Example::
+        Example::
 
-    #         @define(slots=True, frozen=True, weakref_slot=False)
-    #         class InterfaceExample(BaseInterface):
-    #             example: str = field(validator=validators.instance_of(str))
+            @define(slots=True, frozen=True, weakref_slot=False)
+            class InterfaceExample(BaseInterface):
+                example: str = field(validator=validators.instance_of(str))
 
-    #         base_interface_example = InterfaceExample("test")
-    #         print(base_interface_example.hash_sha256())
-    #         >>> "6e94a0aef218fd7aef18b257f0ba9fc33c92a2bc9788fc751868e43ab398137f"
-    #     """
-    #     return self.hash_tree().root()
+            base_interface_example = InterfaceExample("test")
+            print(base_interface_example.hash_sha256())
+            >>> "6e94a0aef218fd7aef18b257f0ba9fc33c92a2bc9788fc751868e43ab398137f"
+        """
+        return self.hash_tree().root()
     
     # def contains_item(self, item: Any) -> bool:
     #     """Return whether the object contains the item.
