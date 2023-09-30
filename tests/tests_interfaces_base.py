@@ -116,7 +116,7 @@ class TestBaseInterface(unittest.TestCase):
         self.assertEqual(repr(self.base_interface_example), "InterfaceExample(example='test')")
 
     def test_base_interface_hash(self):
-        self.assertEqual(self.base_interface_example.hash_sha256(), "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08")
+        self.assertEqual(self.base_interface_example.hash_sha256(), "6e94a0aef218fd7aef18b257f0ba9fc33c92a2bc9788fc751868e43ab398137f")
 
     def test_base_interface_iter(self):
         self.assertEqual(list(self.base_interface_example), ["test"])
@@ -136,7 +136,7 @@ class TestBaseInterface(unittest.TestCase):
         self.assertEqual(repr(base_interface_example10), "InterfaceExampleMultipleArgs(example='test', example2='test2')")
 
     def test_base_interface_multiple_args_with_list(self):
-            
+
         @define(slots=True, frozen=True, weakref_slot=False)
         class InterfaceExampleMultipleArgsWithList(BaseInterface):
             example: str = field(validator=validators.instance_of(str))
@@ -171,4 +171,48 @@ class TestBaseInterface(unittest.TestCase):
             example2: str = field(validator=validators.instance_of(str))
 
         base_interface_example13 = InterfaceExampleMultipleArgsWithHash("test", "test2")
-        self.assertEqual(base_interface_example13.hash_sha256(), "694299f8eb01a328732fb21f4163fbfaa8f60d5662f04f52ad33bec63953ec7f")
+        self.assertEqual(base_interface_example13.hash_sha256(), "dbcebaa3668e942d85d0263fd43063e45395a3c659ccebfe7d182dcf5879df51")
+
+    def test_base_interface_hash_with_multiple_args_with_list(self):
+
+        @define(slots=True, frozen=True, weakref_slot=False)
+        class InterfaceExampleMultipleArgsWithListAndHash(BaseInterface):
+            example: str = field(validator=validators.instance_of(str))
+            example2: list = field(validator=validators.instance_of(list))
+
+        base_interface_example14 = InterfaceExampleMultipleArgsWithListAndHash("test", ["test2", "test3"])
+        self.assertEqual(base_interface_example14.hash_sha256(), "d2238b8b227b4a2c798b5b0fb0581fb622787df0d1bd8f2a3d24b4573d031773")
+
+    def test_base_interface_contains_item_verify(self):
+
+        @define(slots=True, frozen=True, weakref_slot=False)
+        class InterfaceExampleHashVerify(BaseInterface):
+            example: str = field(validator=validators.instance_of(str))
+            example2: str = field(validator=validators.instance_of(str))
+
+        base_interface_example15 = InterfaceExampleHashVerify("test", "test2")
+        self.assertTrue(base_interface_example15.contains_item("test2"))
+
+    def test_base_interface_item_verify_with_list(self):
+
+        @define(slots=True, frozen=True, weakref_slot=False)
+        class InterfaceExampleHashVerifyWithList(BaseInterface):
+            example: str = field(validator=validators.instance_of(str))
+            example2: list = field(validator=validators.instance_of(list))
+
+        base_interface_example16 = InterfaceExampleHashVerifyWithList("test", ["test2", "test3"])
+        print([item for item in base_interface_example16.__iter__()])
+        self.assertTrue(base_interface_example16.contains_item("test2"))
+
+    def test_base_interface_item_verify_with_dict(self):
+
+        @define(slots=True, frozen=True, weakref_slot=False)
+        class InterfaceExampleHashVerifyWithDict(BaseInterface):
+            example: str = field(validator=validators.instance_of(str))
+            example2: dict = field(validator=validators.instance_of(dict))
+
+        base_interface_example17 = InterfaceExampleHashVerifyWithDict("test", {"test2": "test3"})
+        print(base_interface_example17.__iter__())
+        self.assertTrue(base_interface_example17.contains_item("test2"))
+        self.assertTrue(base_interface_example17.contains_item("test3"))
+        self.assertTrue(base_interface_example17.contains_item({"test2": "test3"}))

@@ -68,7 +68,6 @@ class BaseInterface(ABC):
 
         """
         return self._slots_to_string(values_only=True)
-        
 
     def __repr__(self) -> str:
         """Return a string containing the representation of the object.
@@ -96,38 +95,71 @@ class BaseInterface(ABC):
 
         Example::
 
+            @define(slots=True, frozen=True, weakref_slot=False)
+            class InterfaceExample(BaseInterface):
+                example: str = field(validator=validators.instance_of(str))
 
+            base_ref = InterfaceExample("test")
             for attribute in base_ref:
                 print(attribute)
             >>> "str"
         """
         slots = self.__slots__
         for slot in slots:
-            if getattr(self, slot) is __DEFAULT_COLLECTION_TYPES__:
+            if isinstance(getattr(self, slot), (list, tuple)):
                 for item in getattr(self, slot):
-                    yield item.__iter__()
-            yield getattr(self, slot)
+                    yield item
+            elif isinstance(getattr(self, slot), dict):
+                for key, value in getattr(self, slot).items():
+                    yield key
+                    yield value
+                    yield {key: value}
+            else:
+                yield getattr(self, slot)
+
+    def hash_item(self, item: Any) -> str:
+        """Return the hash of the item.
+
+        Args:
+            item (Any): The item to hash.
+
+        Returns:
+            str: The hash of the item.
+
+        Example:
+            
+                @define(slots=True, frozen=True, weakref_slot=False)
+                class InterfaceExample(BaseInterface):
+                    example: str = field(validator=validators.instance_of(str))
+    
+                base_interface_example = InterfaceExample("test")
+                print(base_interface_example.hash_item("test"))
+                >>> "6e94a0aef218fd7aef18b257f0ba9fc33c92a2bc9788fc751868e43ab398137f"
+        """
+        if item in self.__iter__():
+            return MerkleTree.hash_func(item)
+        else:
+            raise ValueError(f"Item {item} not in {self}.")
 
     def hash_tree(self) -> MerkleTree:
         """Return the hash of the object.
 
         Returns:
-            str: The hash of the object.
+            MerkleTree: The hash tree of the object.
 
-        Example:
-            >>> from src.groups.base import UnitTypeRef
-            >>> base_ref = UnitTypeRef(alias="str")
-            >>> print(base_ref.__hash__())
-            "8f245b629f9dbd96e39c50751394daf5b1791a35ec4e9213ecec3d157aaf5702"
+        Example::
+
+            @define(slots=True, frozen=True, weakref_slot=False)
+            class InterfaceExample(BaseInterface):
+                example: str = field(validator=validators.instance_of(str))
+
+            base_interface_example = InterfaceExample("test")
+            print(base_interface_example.hash_tree())
+            >>> "6e94a0aef218fd7aef18b257f0ba9fc33c92a2bc9788fc751868e43ab398137f"
         """
         attribute_hashes = []
-        for slot in self.__slots__:
-            attribute = getattr(self, slot)
-            if attribute is __DEFAULT_COLLECTION_TYPES__:
-                for item in attribute:
-                    attribute_hashes.append(MerkleTree.hash_func(repr(item)))
-
-            attribute_hashes.append(MerkleTree.hash_func(getattr(self, slot)))
+        for item in self.__iter__():
+            attribute_hashes.append(MerkleTree.hash_func(repr(item)))
 
         return MerkleTree(attribute_hashes)
 
@@ -137,13 +169,40 @@ class BaseInterface(ABC):
         Returns:
             MerkleTree: The hash tree of the object.
 
-        Example:
-            >>> from src.groups.base import UnitTypeRef
-            >>> base_ref = UnitTypeRef(alias="str")
-            >>> print(base_ref.hash_tree())
-            MerkleTree(hashed_data=["8f245b629f9dbd96e39c50751394daf5b1791a35ec4e9213ecec3d157aaf5702"])
+        Example::
+
+            @define(slots=True, frozen=True, weakref_slot=False)
+            class InterfaceExample(BaseInterface):
+                example: str = field(validator=validators.instance_of(str))
+
+            base_interface_example = InterfaceExample("test")
+            print(base_interface_example.hash_sha256())
+            >>> "6e94a0aef218fd7aef18b257f0ba9fc33c92a2bc9788fc751868e43ab398137f"
         """
         return self.hash_tree().root()
+    
+    def contains_item(self, item: Any) -> bool:
+        """Return whether the object contains the item.
+
+        Args:
+            item (Any): The item to check.
+
+        Returns:
+            bool: Whether the object contains the item.
+
+        Example::
+
+            @define(slots=True, frozen=True, weakref_slot=False)
+            class InterfaceExample(BaseInterface):
+                example: str = field(validator=validators.instance_of(str))
+
+            base_interface_example = InterfaceExample("test")
+            print(base_interface_example.contains_item("test"))
+            >>> True
+        """
+        if item in self.__iter__():
+            return True
+        return False
 
     def contains_hash(self, hash: str) -> bool:
         """Return whether the object contains the hash.
@@ -154,10 +213,14 @@ class BaseInterface(ABC):
         Returns:
             bool: Whether the object contains the hash.
 
-        Example:
-            >>> from src.groups.base import UnitTypeRef
-            >>> base_ref = UnitTypeRef(alias="str")
-            >>> print(base_ref.contains_hash("8f245b629f9dbd96e39c50751394daf5b1791a35ec4e9213ecec3d157aaf5702"))
-            True
+        Example::
+
+            @define(slots=True, frozen=True, weakref_slot=False)
+            class InterfaceExample(BaseInterface):
+                example: str = field(validator=validators.instance_of(str))
+
+            base_interface_example = InterfaceExample("test")
+            print(base_interface_example.contains_hash("test"))
+            >>> True
         """
         return self.hash_tree().verify(hash)
