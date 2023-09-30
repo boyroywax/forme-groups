@@ -3,7 +3,7 @@ import unittest
 from tests_interfaces_value import TestValueInterface
 from tests_interfaces_base import TestBaseInterface
 from tests_merkle_tree import TestMerkleTree
-# from tests_unit_type import TestUnitTypeRef, TestUnitTypeFunction, TestUnitType
+from tests_unit_type import TestUnitTypeRef, TestUnitTypeFunction, TestUnitType
 # from tests_pool import TestPool
 # from tests_unit_type_pool import TestUnitTypePool
 # from tests_unit_creator import TestUnitCreator
@@ -30,7 +30,7 @@ def main():
     test_suite.addTests(test_loader.loadTestsFromTestCase(TestBaseInterface))
     test_suite.addTests(test_loader.loadTestsFromTestCase(TestValueInterface))
     test_suite.addTests(test_loader.loadTestsFromTestCase(TestMerkleTree))
-    # test_suite.addTests(test_loader.loadTestsFromTestCase(TestUnitTypeRef))
+    test_suite.addTests(test_loader.loadTestsFromTestCase(TestUnitTypeRef))
     # test_suite.addTests(test_loader.loadTestsFromTestCase(TestUnitTypeFunction))
     # test_suite.addTests(test_loader.loadTestsFromTestCase(TestUnitType))
     # test_suite.addTests(test_loader.loadTestsFromTestCase(TestPool))

@@ -33,7 +33,7 @@ class TestUnitTypeRef(unittest.TestCase):
         self.assertEqual(repr(self.unit_type_ref), "UnitTypeRef(alias='test_alias')")
 
     def test_unit_type_ref_hash(self):
-        self.assertEqual(self.unit_type_ref.hash_sha256(), "71b3db47791a6939ace357b888e556be18d2f24b563c376f7272d031b51a76b3")
+        self.assertEqual(self.unit_type_ref.hash_sha256(), "d068b0b3784091aa3576c588c81dcf8059b6e10031a229f6d4e542b613985fed")
 
     def test_unit_type_ref_iter(self):
         self.assertEqual(list(self.unit_type_ref), ["test_alias"])

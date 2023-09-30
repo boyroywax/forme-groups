@@ -3,10 +3,12 @@ from attrs import define, field, validators, converters
 import json
 from typing import Any, Optional, Tuple
 
-from .interfaces.base import BaseInterface
+from .interfaces.value import ValueInterface
+from .interfaces.container import ContainerInterface
 from .unit_type import UnitType, UnitTypeRef, UnitTypeFunction
 from .utils.merkle_tree import MerkleTree
 from .utils.converters import _value_converter, _type_ref_converter
+from .utils.defaults import __DEFAULT_UNIT_TYPE_REF__, __DEFAULT_UNIT_TYPE__, __DEFAULT_COLLECTION_TYPES__
 
 
 # def _type_ref_converter(type_ref: UnitTypeRef | str) -> UnitTypeRef:
@@ -18,48 +20,46 @@ from .utils.converters import _value_converter, _type_ref_converter
 #         raise ValueError(f"Invalid type_ref {type_ref}.")
 
 
-@define(frozen=True, slots=True)
-class Value(BaseInterface):
-    _value: Optional[Any] = field(default=None, validator=validators.optional(validators.instance_of(str | int | float | bool | dict | list | tuple | bytes | None)))
-
-    # def __str__(self) -> str:
-    #     return f"{self._value}"
-
-    # def __repr__(self) -> str:
-    #     return f"{self._value}"
-
-    # def hash_sha256(self) -> str:
-    #     return hashlib.sha256(self.__repr__().encode()).hexdigest()
-
-
-
 @define(frozen=True, slots=True, weakref_slot=False)
-class Unit(BaseInterface):
-    _value: Value = field(validator=validators.instance_of(Value | str | int | float | bool | dict | list | tuple | bytes | None), converter=_value_converter)
-    _type_ref: UnitTypeRef = field(validator=validators.instance_of(UnitTypeRef | str), converter=_type_ref_converter)
+class Unit:
+    _value: ValueInterface | ContainerInterface = field(validator=validators.instance_of(ValueInterface | ContainerInterface))
+
+    def __pre_init__(self, value: ValueInterface | ContainerInterface):
+        """Initialize the Unit object.
+
+        Args:
+            value (ValueInterface | ContainerInterface): The value of the Unit object.
+        """
+        setattr(self, "_value", value)
 
     @property
-    def value(self) -> Value | str | int | float | bool | dict | list | tuple | bytes | None:
-        return self._value._value
+    def value(self) -> ValueInterface | ContainerInterface:
+        """Get the value of the Unit object.
 
+        Returns:
+            ValueInterface | ContainerInterface: The value of the Unit object.
+        """
+        return self._value
+    
+    def _verify_type_ref(self) -> bool:
+        """Verify the type_ref of the Unit object.
+
+        Args:
+            type_ref (UnitTypeRef): The type_ref to verify.
+
+        Returns:
+            bool: Whether the type_ref is valid.
+        """
+        if isinstance(self._value, ValueInterface):
+            
+    
     @property
-    def type_ref(self) -> str:
-        return self._type_ref.__str__()
+    def type_ref(self) -> UnitTypeRef:
+        """Get the type_ref of the Unit object.
 
-    def to_dict(self) -> dict:
-        return {
-            "value": self.value,
-            "type_ref": self.type_ref
-        }
+        Returns:
+            UnitTypeRef: The type_ref of the Unit object.
+        """
+        return self._value.type_ref
+    
 
-    # def __str__(self) -> str:
-    #     return f"{self.value.__str__()}"
-
-    # def __repr__(self) -> str:
-    #     return f"Unit(value={self.value}, type_ref={self.type_ref})"
-
-    # def hash_sha256(self) -> str:
-    #     return hashlib.sha256(self.__repr__().encode()).hexdigest()
-
-    # def hash_tree(self) -> MerkleTree:
-    #     return MerkleTree([self._value.hash_sha256(), self._type_ref.hash_sha256()])

@@ -3,11 +3,11 @@ from attrs import define, field, validators
 from typing import Any, Optional, Tuple, List
 
 from .base import BaseInterface
+from ..utils.defaults import __DEFAULT_VALUE_TYPES__
 from ..utils.merkle_tree import MerkleTree
 
 
-__DEFAULT_UNIT_TYPE_REF__ = "str"
-__DEFAULT_VALUE_TYPES__ = str | int | float | bool | bytes | type(None)
+
 
 
 @define(frozen=True, slots=True, weakref_slot=False)
