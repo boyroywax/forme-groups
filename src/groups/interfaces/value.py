@@ -66,3 +66,4 @@ class ValueInterface(BaseInterface, metaclass=ABCMeta):
                 return None
             case _:
                 raise ValueError(f"Cannot convert Value to type {type_ref}.")
+

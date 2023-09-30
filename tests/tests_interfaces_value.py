@@ -130,27 +130,27 @@ class TestValueInterface(unittest.TestCase):
         value_interface = ValueInterface(value=None)
         self.assertIsNone(value_interface.convert_to_type("NoneType"))
 
-    # def test_value_interface_hash(self):
-    #     value_interface = ValueInterface(value="test")
-    #     self.assertEqual(value_interface.hash_sha256(), "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08")
+    def test_value_interface_hash(self):
+        value_interface = ValueInterface(value="test")
+        self.assertEqual(value_interface.hash_sha256(), "6e94a0aef218fd7aef18b257f0ba9fc33c92a2bc9788fc751868e43ab398137f")
 
-    # def test_value_interface_hash_tree(self):
-    #     value_interface = ValueInterface(value="test")
-    #     self.assertEqual(value_interface.hash_tree().root(), "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08")
+    def test_value_interface_hash_tree(self):
+        value_interface = ValueInterface(value="test")
+        self.assertEqual(value_interface.hash_tree().root(), "6e94a0aef218fd7aef18b257f0ba9fc33c92a2bc9788fc751868e43ab398137f")
 
-    # def test_value_interface_hash_tree_with_int(self):
-    #     value_interface = ValueInterface(value=1)
-    #     self.assertEqual(value_interface.hash_tree().root(), "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b")
+    def test_value_interface_hash_tree_with_int(self):
+        value_interface = ValueInterface(value=1)
+        self.assertEqual(value_interface.hash_tree().root(), "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b")
 
-    # def test_value_interface_hash_tree_with_bool(self):
-    #     value_interface = ValueInterface(value=True)
-    #     self.assertEqual(value_interface.hash_tree().root(), "3cbc87c7681f34db4617feaa2c8801931bc5e42d8d0f560e756dd4cd92885f18")
+    def test_value_interface_hash_tree_with_bool(self):
+        value_interface = ValueInterface(value=True)
+        self.assertEqual(value_interface.hash_tree().root(), "3cbc87c7681f34db4617feaa2c8801931bc5e42d8d0f560e756dd4cd92885f18")
 
-    # def test_value_interface_hash_tree_with_none(self):
-    #     value_interface = ValueInterface(value=None)
-    #     self.assertEqual(value_interface.hash_tree().root(), "dc937b59892604f5a86ac96936cd7ff09e25f18ae6b758e8014a24c7fa039e91")
+    def test_value_interface_hash_tree_with_none(self):
+        value_interface = ValueInterface(value=None)
+        self.assertEqual(value_interface.hash_tree().root(), "dc937b59892604f5a86ac96936cd7ff09e25f18ae6b758e8014a24c7fa039e91")
 
-    # def test_value_interface_hash_tree_equals_for_same_value(self):
-    #     value_interface1 = ValueInterface(value="test")
-    #     value_interface2 = ValueInterface(value="test")
-    #     self.assertEqual(value_interface1.hash_tree().root(), value_interface2.hash_tree().root())
+    def test_value_interface_hash_tree_equals_for_same_value(self):
+        value_interface1 = ValueInterface(value="test")
+        value_interface2 = ValueInterface(value="test")
+        self.assertEqual(value_interface1.hash_tree().root(), value_interface2.hash_tree().root())

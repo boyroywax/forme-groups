@@ -132,7 +132,7 @@ class BaseInterface(ABC):
         """
         attribute_hashes: List[str] = []
         for attribute in self.__iter__():
-            attribute_hashes.append(MerkleTree.hash_func(attribute))
+            attribute_hashes.append(MerkleTree.hash_func(repr(attribute)))
         return attribute_hashes
 
     def hash_tree(self) -> MerkleTree:
