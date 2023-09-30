@@ -27,6 +27,7 @@ class MerkleTree:
                 hashed_level.append(self.hash_func(level[i] + level[i]))
             else:
                 hashed_level.append(self.hash_func(level[i] + level[i + 1]))
+            # print(hashed_level)
         return hashed_level
 
     @staticmethod

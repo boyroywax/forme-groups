@@ -8,6 +8,7 @@ sys.path.append('/Users/j/Documents/Forme/code/forme-groups')
 
 from src.groups.interfaces.base import BaseInterface
 from src.groups.converters import _convert_list_to_tuple
+from src.groups.merkle_tree import MerkleTree
 
 
 class TestBaseInterface(unittest.TestCase):
@@ -136,14 +137,44 @@ class TestBaseInterface(unittest.TestCase):
 
     def test_base_interface_multiple_args_with_list(self):
             
-            @define(slots=True, frozen=True, weakref_slot=False)
-            class InterfaceExampleMultipleArgsWithList(BaseInterface):
-                example: str = field(validator=validators.instance_of(str))
-                example2: list = field(validator=validators.instance_of(list))
-    
-            base_interface_example11 = InterfaceExampleMultipleArgsWithList("test", ["test2", "test3"])
-            self.assertEqual(base_interface_example11.example, "test")
-            self.assertEqual(base_interface_example11.example2, ["test2", "test3"])
-    
-            self.assertEqual(str(base_interface_example11), "test, ['test2', 'test3']")
-            self.assertEqual(repr(base_interface_example11), "InterfaceExampleMultipleArgsWithList(example='test', example2=['test2', 'test3'])")
+        @define(slots=True, frozen=True, weakref_slot=False)
+        class InterfaceExampleMultipleArgsWithList(BaseInterface):
+            example: str = field(validator=validators.instance_of(str))
+            example2: list = field(validator=validators.instance_of(list))
+
+        base_interface_example11 = InterfaceExampleMultipleArgsWithList("test", ["test2", "test3"])
+        self.assertEqual(base_interface_example11.example, "test")
+        self.assertEqual(base_interface_example11.example2, ["test2", "test3"])
+
+        self.assertEqual(str(base_interface_example11), "test, ['test2', 'test3']")
+        self.assertEqual(repr(base_interface_example11), "InterfaceExampleMultipleArgsWithList(example='test', example2=['test2', 'test3'])")
+
+    def test_base_interface_multiple_args_with_dict(self):
+
+        @define(slots=True, frozen=True, weakref_slot=False)
+        class InterfaceExampleMultipleArgsWithDict(BaseInterface):
+            example: str = field(validator=validators.instance_of(str))
+            example2: dict = field(validator=validators.instance_of(dict))
+
+        base_interface_example12 = InterfaceExampleMultipleArgsWithDict("test", {"test2": "test3"})
+        self.assertEqual(base_interface_example12.example, "test")
+        self.assertEqual(base_interface_example12.example2, {"test2": "test3"})
+
+        self.assertEqual(str(base_interface_example12), "test, {'test2': 'test3'}")
+        self.assertEqual(repr(base_interface_example12), "InterfaceExampleMultipleArgsWithDict(example='test', example2={'test2': 'test3'})")
+
+    def test_base_interface_hash_with_multiple_args(self):
+
+        @define(slots=True, frozen=True, weakref_slot=False)
+        class InterfaceExampleMultipleArgsWithHash(BaseInterface):
+            example: str = field(validator=validators.instance_of(str))
+            example2: str = field(validator=validators.instance_of(str))
+
+        base_interface_example13 = InterfaceExampleMultipleArgsWithHash("test", "test2")
+        base_interface_example13_arg_hash = MerkleTree.hash_func(repr("test"))
+        base_interface_example13_arg2_hash = MerkleTree.hash_func(repr("test2"))
+        base_interface_example13_hash = MerkleTree([base_interface_example13_arg_hash, base_interface_example13_arg2_hash])
+        print(base_interface_example13_hash.root())
+        print(base_interface_example13_hash.verify(base_interface_example13_arg_hash))
+
+        self.assertEqual(base_interface_example13.hash_sha256(), "8f4ee3af184bbf63208517fe63e5b84b09aa2e16dcbb350fbcecc7a73ec4b9da")

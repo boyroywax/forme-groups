@@ -27,7 +27,7 @@ class BaseInterface(ABC):
             
             base_interface_example = InterfaceExample("test")
             print(base_interface_example.__str__())
-            "test"
+            >>> "test"
 
         """
         slots = self.__slots__
@@ -70,12 +70,12 @@ class BaseInterface(ABC):
         Returns:
             Iterator[Any]: An iterator over the attributes of the object.
 
-        Example:
-            >>> from src.groups.base import UnitTypeRef
-            >>> base_ref = UnitTypeRef(alias="str")
-            >>> for attribute in base_ref:
-            ...     print(attribute)
-            "str"
+        Example::
+
+            
+            for attribute in base_ref:
+                print(attribute)
+            >>> "str"
         """
         slots = self.__slots__
         for slot in slots:
