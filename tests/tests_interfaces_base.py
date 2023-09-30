@@ -33,8 +33,9 @@ class TestBaseInterface(unittest.TestCase):
         with self.assertRaises(FrozenInstanceError):
             self.base_interface_example.example = "test2"
 
-    def test_base_interface_has_weakref_slot_false(self):
-        self.assertFalse(self.base_interface_example.__weakref__)
+    def test_base_interface_has_weakref_slot_error(self):
+        with self.assertRaises(AttributeError):
+            self.base_interface_example.__weakref__
 
     def test_base_interface_has_str(self):
         self.assertEqual(str(self.base_interface_example), "test")
@@ -113,7 +114,7 @@ class TestBaseInterface(unittest.TestCase):
 
     def test_base_interface_slot_contains_float(self):
 
-            @define(frozen=True, slots=True)
+            @define(frozen=True, slots=True, weakref_slot=False)
             class InterfaceExampleFloat(BaseInterface):
                 example: float = field(validator=validators.instance_of(float))
 

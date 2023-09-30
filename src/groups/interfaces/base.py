@@ -4,7 +4,7 @@
 
 """
 
-from abc import ABC
+from abc import ABC, ABCMeta
 from attrs import define, field, validators
 from typing import Any, Optional, Tuple, List
 
@@ -16,7 +16,7 @@ __DEFAULT_UNIT_TYPE__ = str
 __DEFAULT_COLLECTION_TYPES__ = list | tuple | dict | set
 
 
-@define(slots=True)
+@define(frozen=True, slots=True, weakref_slot=False)
 class BaseInterface(ABC):
     """An abstract interface for a hashable Reference Object.
     """
@@ -44,18 +44,16 @@ class BaseInterface(ABC):
         """
         assert values_only is not True or keys_only is not True, "Cannot have both values_only and keys_only set to True."
 
-        if values_only:
-            _slot_values: str = ""
-            for slot in self.__slots__:
-                _slot_values += (f"{getattr(self, slot)}, ")
-            return _slot_values[:-2]
-        elif keys_only:
-            return ", ".join(self.__slots__)
-        else:
-            _slots: str = ""
-            for slot in self.__slots__:
-                _slots += (f"{slot}={getattr(self, slot)}, ")
-            return _slots[:-2]
+        _slot_str: str = ""
+        for slot in self.__slots__:
+            print(self.__slots__)
+            if values_only:
+                _slot_str += (f"{getattr(self, slot)}, ")
+            elif keys_only:
+                _slot_str += (f"{slot}, ")
+            else:
+                _slot_str += (f"{slot}={getattr(self, slot)}, ")
+        return _slot_str[:-2]
 
     def __str__(self) -> str:
         """Return a string containing the attributes of the object.
@@ -193,6 +191,15 @@ class BaseInterface(ABC):
         if item in self.__iter__():
             return True
         return False
+
+    @property
+    def __weakref__(self):
+        """Return the weak reference of the object.
+
+        Returns:
+            Any: The weak reference of the object.
+        """
+        raise NotImplementedError
 
     # def contains_hash(self, hash: str) -> bool:
     #     """Return whether the object contains the hash.

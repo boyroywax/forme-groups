@@ -2,13 +2,14 @@ import unittest
 
 from tests_interfaces_value import TestValueInterface
 from tests_interfaces_base import TestBaseInterface
+from tests_interfaces_container import TestContainerInterface
 from tests_merkle_tree import TestMerkleTree
 from tests_unit_type import TestUnitTypeRef, TestUnitTypeFunction, TestUnitType
 # from tests_pool import TestPool
 # from tests_unit_type_pool import TestUnitTypePool
 # from tests_unit_creator import TestUnitCreator
 # from tests_unit_pool import TestUnitPool
-# from tests_unit import TestUnit
+from tests_unit import TestUnit
 # from tests_nonce import TestNonce
 # from tests_data_schema import TestDataSchema
 # from tests_data import TestData
@@ -29,6 +30,7 @@ def main():
     # Add the test cases to the test suite
     test_suite.addTests(test_loader.loadTestsFromTestCase(TestBaseInterface))
     test_suite.addTests(test_loader.loadTestsFromTestCase(TestValueInterface))
+    test_suite.addTests(test_loader.loadTestsFromTestCase(TestContainerInterface))
     test_suite.addTests(test_loader.loadTestsFromTestCase(TestMerkleTree))
     test_suite.addTests(test_loader.loadTestsFromTestCase(TestUnitTypeRef))
     # test_suite.addTests(test_loader.loadTestsFromTestCase(TestUnitTypeFunction))
@@ -37,7 +39,7 @@ def main():
     # test_suite.addTests(test_loader.loadTestsFromTestCase(TestUnitTypePool))
     # test_suite.addTests(test_loader.loadTestsFromTestCase(TestUnitCreator))
     # test_suite.addTests(test_loader.loadTestsFromTestCase(TestUnitPool))
-    # test_suite.addTests(test_loader.loadTestsFromTestCase(TestUnit))
+    test_suite.addTests(test_loader.loadTestsFromTestCase(TestUnit))
     # test_suite.addTests(test_loader.loadTestsFromTestCase(TestGroupSubUnit))
     # test_suite.addTests(test_loader.loadTestsFromTestCase(TestNonce))
     # test_suite.addTests(test_loader.loadTestsFromTestCase(TestDataSchema))

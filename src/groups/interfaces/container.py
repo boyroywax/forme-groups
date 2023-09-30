@@ -14,7 +14,7 @@ from ..utils.merkle_tree import MerkleTree
 
 
 @define(frozen=True, slots=True, weakref_slot=False)
-class ContainerInterface(BaseInterface, metaclass=ABCMeta):
+class ContainerInterface(BaseInterface):
     """An abstract interface for a collection of hashable BaseInterface objects.
     """
     _items: Optional[__DEFAULT_COLLECTION_TYPES__] = field(default=None, validator=validators.optional(validators.instance_of(__DEFAULT_COLLECTION_TYPES__)))
@@ -30,7 +30,7 @@ class ContainerInterface(BaseInterface, metaclass=ABCMeta):
         setattr(self, "_items", items)
 
     @property
-    def items(self) -> __DEFAULT_COLLECTION_TYPES__:
+    def items(self) -> __DEFAULT_COLLECTION_TYPES__ | None:
         """Get the items of the ContainerInterface.
 
         Returns:

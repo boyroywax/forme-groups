@@ -11,7 +11,7 @@ from ..utils.merkle_tree import MerkleTree
 
 
 @define(frozen=True, slots=True, weakref_slot=False)
-class ValueInterface(BaseInterface, metaclass=ABCMeta):
+class ValueInterface(BaseInterface):
     """A Value object.
     """
     _value: Optional[__DEFAULT_VALUE_TYPES__] = field(default=None, validator=validators.optional(validators.instance_of(__DEFAULT_VALUE_TYPES__)))
